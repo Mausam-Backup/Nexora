@@ -9,7 +9,7 @@ export default function MainContent() {
     <div id="intro" className="intro">
       <div className="scroll-animations">
         <div className="hero-slide">
-          <div className="hero-slide__head">
+          <div className="hero-slide__head" style={{ display: "none" }}>
             <div className="hero-slide__head-is1 perspective">
               <h1 data-w-id="8995ea1c-a38e-c732-729b-3eef13438be3" className="h1 white">Interbank-grade Capital</h1>
             </div>
@@ -85,7 +85,7 @@ export default function MainContent() {
             </div>
           </div>
           <div data-w-id="37d13c98-9f01-0610-030e-fefc97e35e90" className="hero-slide__oval-container">
-            <img src="/images/arc-mask.png" loading="lazy" height="5494" width="2880" alt="" className="hero-slide__oval-img" />
+            <img src="/images/arc-mask.png?v=clean" loading="lazy" height="5494" width="2880" alt="" className="hero-slide__oval-img" />
             <div className="hero-slide__fill-side-1"></div>
             <div className="hero-slide__fill-side-2"></div>
           </div>

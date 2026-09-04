@@ -376,3 +376,14 @@
           display: block !important;
           pointer-events: none;
         }
+
+        /* -------- Hero Background Mask & Text Removal -------- */
+        .hero-slide__head {
+          display: none !important;
+        }
+
+        .hero-slide__fill-side-1,
+        .hero-slide__fill-side-2 {
+          background-color: #101a55 !important;
+        }
+        /* -------- >Hero Background Mask & Text Removal -------- */

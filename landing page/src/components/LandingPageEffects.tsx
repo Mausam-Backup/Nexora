@@ -301,19 +301,19 @@ export default function LandingPageEffects() {
             console.warn("Webflow reinit note:", e);
           }
         }
-      }, 1200);
+      }, 400);
     };
 
     // Check when scripts are ready
     let attempts = 0;
     checkScriptsInterval = setInterval(() => {
       attempts++;
-      const scriptsReady = window.$ && (window.Lenis || attempts > 30);
+      const scriptsReady = (window.$ && window.Lenis) || attempts > 15;
       if (scriptsReady) {
         if (checkScriptsInterval) clearInterval(checkScriptsInterval);
         initAll();
       }
-    }, 100);
+    }, 50);
 
     return () => {
       if (checkScriptsInterval) clearInterval(checkScriptsInterval);

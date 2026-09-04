@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 
 interface RoleRouteProps {
-  allowedRoles: Array<'student' | 'teacher' | 'admin' | 'parent'>
+  allowedRoles: Array<'student' | 'teacher' | 'admin' | 'parent' | 'examination_controller'>
   children: React.ReactNode
 }
 

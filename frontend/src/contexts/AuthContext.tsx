@@ -5,7 +5,7 @@ interface User {
   name: string;
   email: string;
   collegeName?: string;
-  role?: 'student' | 'admin' | 'teacher' | 'parent';
+  role?: 'student' | 'admin' | 'teacher' | 'parent' | 'examination_controller';
   semester?: number;
   branch?: string;
   subjects?: string[];

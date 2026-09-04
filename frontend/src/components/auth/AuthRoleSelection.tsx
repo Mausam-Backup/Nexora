@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, GraduationCap, UserCog, Users, Heart } from "lucide-react";
+import { ArrowRight, GraduationCap, UserCog, Users, Heart, Award } from "lucide-react";
 
 const userRoles = [
   {
@@ -10,6 +10,14 @@ const userRoles = [
     icon: GraduationCap,
     color: 'bg-blue-500',
     features: ['Course Management', 'Grade Tracking', 'Study Materials', 'Academic Calendar']
+  },
+  {
+    type: 'examination_controller' as const,
+    title: 'Examination Controller',
+    description: 'Manage exam cycles, seating plans, hall tickets, marks moderation & results',
+    icon: Award,
+    color: 'bg-indigo-600',
+    features: ['Exam Cycles & Timetable', 'Seating & Invigilation', 'Hall Tickets & Moderation', '1-Click Result Publish']
   },
   {
     type: 'admin' as const,
@@ -38,7 +46,7 @@ const userRoles = [
 ];
 
 interface AuthRoleSelectionProps {
-  onRoleSelect: (role: 'student' | 'admin' | 'teacher' | 'parent') => void;
+  onRoleSelect: (role: 'student' | 'admin' | 'teacher' | 'parent' | 'examination_controller') => void;
   isMobile?: boolean;
 }
 

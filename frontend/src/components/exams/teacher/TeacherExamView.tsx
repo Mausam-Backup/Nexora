@@ -3,12 +3,28 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, Clock, MapPin, Users, BookOpen, FileText, Eye } from 'lucide-react';
 import { ExamDetailDialog } from './ExamDetailDialog';
 import { StudentListDialog } from './StudentListDialog';
 import { useToast } from '@/hooks/use-toast';
 import { format, isToday, isFuture, isPast } from 'date-fns';
 import type { Exam } from '@/types/exam';
+import { coeService } from '@/services/coeService';
+import type { ExamInvigilator } from '@/types/examination-controller';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  BookOpen,
+  FileText,
+  Eye,
+  ShieldCheck,
+  AlertTriangle,
+  ArrowLeftRight,
+  CheckCircle2,
+  Lock,
+  Building2
+} from 'lucide-react';
 
 interface TeacherExamViewProps {
   teacherId: string;
@@ -17,12 +33,17 @@ interface TeacherExamViewProps {
 
 export const TeacherExamView: React.FC<TeacherExamViewProps> = ({
   teacherId,
-  teacherSubjects
+  teacherSubjects,
 }) => {
   const { toast } = useToast();
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
   const [isStudentListOpen, setIsStudentListOpen] = useState(false);
+  const [invigilatorDuties, setInvigilatorDuties] = useState<ExamInvigilator[]>(
+    coeService.getInvigilators(teacherId)
+  );
+
+  const activeCycle = coeService.getCycles()[0];
 
   // Mock data - replace with actual API calls filtered by teacher
   const [exams] = useState<Exam[]>([
@@ -33,18 +54,18 @@ export const TeacherExamView: React.FC<TeacherExamViewProps> = ({
       semester: 3,
       branch: 'CSE',
       examType: 'midterm',
-      date: '2024-08-15',
+      date: '2024-11-22',
       time: '09:00',
       duration: 180,
-      location: 'Hall A',
+      location: 'Hall LH-101',
       maxMarks: 100,
-      instructor: 'Dr. Smith',
+      instructor: 'Dr. Sarah Johnson',
       instructorId: teacherId,
       topics: ['Arrays', 'Linked Lists', 'Stacks', 'Queues'],
       status: 'scheduled',
       createdAt: '2024-07-01',
       updatedAt: '2024-07-01',
-      createdBy: 'admin_001'
+      createdBy: 'admin_001',
     },
     {
       id: '2',
@@ -53,295 +74,223 @@ export const TeacherExamView: React.FC<TeacherExamViewProps> = ({
       semester: 5,
       branch: 'CSE',
       examType: 'endterm',
-      date: '2024-08-20',
+      date: '2024-11-25',
       time: '14:00',
       duration: 180,
-      location: 'Hall B',
+      location: 'Hall LH-102',
       maxMarks: 100,
-      instructor: 'Dr. Smith',
+      instructor: 'Dr. Sarah Johnson',
       instructorId: teacherId,
       topics: ['SQL', 'Normalization', 'Transactions', 'Indexing'],
       status: 'scheduled',
       createdAt: '2024-07-01',
       updatedAt: '2024-07-01',
-      createdBy: 'admin_001'
+      createdBy: 'admin_001',
     },
-    {
-      id: '3',
-      course: 'Computer Networks',
-      courseCode: 'CSE401',
-      semester: 7,
-      branch: 'CSE',
-      examType: 'practical',
-      date: '2024-07-10',
-      time: '10:00',
-      duration: 120,
-      location: 'Lab 3',
-      maxMarks: 50,
-      instructor: 'Dr. Smith',
-      instructorId: teacherId,
-      topics: ['Packet Analysis', 'Network Configuration'],
-      status: 'completed',
-      createdAt: '2024-06-01',
-      updatedAt: '2024-07-10',
-      createdBy: 'admin_001'
-    }
   ]);
 
-  // Filter exams assigned to this teacher
-  const teacherExams = useMemo(() => 
-    exams.filter(exam => exam.instructorId === teacherId),
-    [exams, teacherId]
+  const upcomingExams = useMemo(
+    () =>
+      exams
+        .filter((exam) => isFuture(new Date(exam.date)) || isToday(new Date(exam.date)))
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+    [exams]
   );
 
-  const upcomingExams = useMemo(() => 
-    teacherExams.filter(exam => {
-      const examDate = new Date(exam.date);
-      return isFuture(examDate) || isToday(examDate);
-    }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
-    [teacherExams]
-  );
-
-  const todayExams = useMemo(() => 
-    teacherExams.filter(exam => isToday(new Date(exam.date))),
-    [teacherExams]
-  );
-
-  const completedExams = useMemo(() => 
-    teacherExams.filter(exam => exam.status === 'completed' || isPast(new Date(exam.date))),
-    [teacherExams]
-  );
-
-  const examStats = useMemo(() => ({
-    total: teacherExams.length,
-    upcoming: upcomingExams.length,
-    today: todayExams.length,
-    completed: completedExams.length
-  }), [teacherExams, upcomingExams, todayExams, completedExams]);
-
-  const getStatusColor = (exam: Exam) => {
-    const examDate = new Date(exam.date);
-    if (isToday(examDate)) return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
-    if (exam.status === 'completed') return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-    if (isFuture(examDate)) return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
-    return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
-  };
-
-  const getExamTypeColor = (type: Exam['examType']) => {
-    switch (type) {
-      case 'endterm':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      case 'midterm':
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
-      case 'sessional':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'practical':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
-    }
-  };
-
-  const handleViewDetails = (exam: Exam) => {
-    setSelectedExam(exam);
-    setIsDetailDialogOpen(true);
-  };
-
-  const handleViewStudents = (exam: Exam) => {
-    setSelectedExam(exam);
-    setIsStudentListOpen(true);
-  };
-
-  const formatDateTime = (date: string, time: string) => {
-    try {
-      const examDate = new Date(`${date}T${time}`);
-      return {
-        date: format(examDate, 'MMM dd, yyyy'),
-        time: format(examDate, 'hh:mm a'),
-        weekday: format(examDate, 'EEEE')
-      };
-    } catch {
-      return { date: date, time: time, weekday: '' };
-    }
-  };
-
-  const ExamCard: React.FC<{ exam: Exam }> = ({ exam }) => {
-    const dateTime = formatDateTime(exam.date, exam.time);
-    const isExamToday = isToday(new Date(exam.date));
-    
-    return (
-      <Card className={`transition-all duration-200 hover:shadow-md ${isExamToday ? 'ring-2 ring-orange-200 dark:ring-orange-800' : ''}`}>
-        <CardContent className="p-6">
-          <div className="flex items-start justify-between">
-            <div className="space-y-3">
-              <div>
-                <h3 className="font-semibold text-lg">{exam.course}</h3>
-                <p className="text-sm text-muted-foreground">{exam.courseCode} • Semester {exam.semester}</p>
-              </div>
-              
-              <div className="flex items-center gap-4 text-sm">
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  <span>{dateTime.date}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  <span>{dateTime.time}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
-                  <span>{exam.location}</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Badge className={getExamTypeColor(exam.examType)}>
-                  {exam.examType.charAt(0).toUpperCase() + exam.examType.slice(1)}
-                </Badge>
-                <Badge className={getStatusColor(exam)}>
-                  {isExamToday ? 'Today' : exam.status.charAt(0).toUpperCase() + exam.status.slice(1)}
-                </Badge>
-                <Badge variant="outline">
-                  {exam.branch}
-                </Badge>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => handleViewDetails(exam)}
-                className="flex items-center gap-2"
-              >
-                <Eye className="h-4 w-4" />
-                Details
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => handleViewStudents(exam)}
-                className="flex items-center gap-2"
-              >
-                <Users className="h-4 w-4" />
-                Students
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
+  const handleSwapRequest = (duty: ExamInvigilator) => {
+    coeService.updateDutyStatus(duty.id, 'swapped');
+    setInvigilatorDuties(coeService.getInvigilators(teacherId));
+    toast({
+      title: 'Duty Swap Request Logged',
+      description: `CoE notified of request to swap ${duty.roomNumber} duty on ${duty.examDate}.`,
+    });
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <BookOpen className="h-8 w-8 text-primary" />
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">My Exam Schedule</h1>
-          <p className="text-muted-foreground">View and manage your assigned exams</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <BookOpen className="h-8 w-8 text-primary" />
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold">Faculty Examination Hub</h1>
+            <p className="text-muted-foreground">Manage your assigned papers, invigilation duties, and CoE grading deadlines</p>
+          </div>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{examStats.total}</div>
-            <p className="text-xs text-muted-foreground">Total Exams</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-orange-600">{examStats.today}</div>
-            <p className="text-xs text-muted-foreground">Today</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-blue-600">{examStats.upcoming}</div>
-            <p className="text-xs text-muted-foreground">Upcoming</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-green-600">{examStats.completed}</div>
-            <p className="text-xs text-muted-foreground">Completed</p>
-          </CardContent>
-        </Card>
-      </div>
+      {/* CoE Marks Submission Deadline Notice */}
+      {activeCycle && (
+        <Card className="border-amber-300 dark:border-amber-800/80 bg-gradient-to-r from-amber-50/70 via-white to-orange-50/40 dark:from-amber-950/20 dark:via-background dark:to-orange-950/20">
+          <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 shrink-0 mt-0.5">
+                <Clock className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-sm text-foreground">
+                    CoE Grading Cutoff: {activeCycle.name}
+                  </span>
+                  <Badge variant="outline" className="border-amber-400 text-amber-700 dark:text-amber-300 text-xs">
+                    Statutory Deadline
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Final deadline to submit internal & external marks: <strong>{format(new Date(activeCycle.marksSubmissionDeadline), 'PPP p')}</strong>. Marks will lock automatically after cutoff.
+                </p>
+              </div>
+            </div>
 
-      {/* Main Content */}
-      <Tabs defaultValue="upcoming" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="upcoming">Upcoming ({upcomingExams.length})</TabsTrigger>
-          <TabsTrigger value="today">Today ({todayExams.length})</TabsTrigger>
-          <TabsTrigger value="completed">Completed ({completedExams.length})</TabsTrigger>
+            <Button
+              size="sm"
+              onClick={() => window.location.href = '/teacher/upload-marks'}
+              className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shrink-0 shadow-xs"
+            >
+              Upload Pending Marks
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Main Tabs */}
+      <Tabs defaultValue="invigilation" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-2 max-w-md">
+          <TabsTrigger value="invigilation" className="text-xs">
+            <ShieldCheck className="mr-1.5 h-3.5 w-3.5 text-indigo-500" />
+            My Invigilation Duties ({invigilatorDuties.length})
+          </TabsTrigger>
+          <TabsTrigger value="papers" className="text-xs">
+            <Calendar className="mr-1.5 h-3.5 w-3.5" />
+            My Taught Papers ({exams.length})
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="upcoming" className="space-y-4">
-          {upcomingExams.length === 0 ? (
+        {/* TAB 1: Invigilation Duties */}
+        <TabsContent value="invigilation" className="space-y-4">
+          {invigilatorDuties.length === 0 ? (
             <Card>
-              <CardContent className="py-8">
-                <div className="text-center text-muted-foreground">
-                  <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg font-medium">No upcoming exams</p>
-                  <p>You don't have any exams scheduled in the near future</p>
-                </div>
+              <CardContent className="py-8 text-center text-muted-foreground">
+                <ShieldCheck className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p className="text-lg font-medium">No invigilation duties assigned</p>
+                <p className="text-xs">Check back when the CoE issues the semester roster.</p>
               </CardContent>
             </Card>
           ) : (
             <div className="grid gap-4">
-              {upcomingExams.map(exam => (
-                <ExamCard key={exam.id} exam={exam} />
+              {invigilatorDuties.map((duty) => (
+                <Card key={duty.id} className="border hover:shadow-md transition-shadow">
+                  <CardContent className="p-5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold text-base text-foreground">{duty.examCourse}</h3>
+                          <Badge className="bg-indigo-600 text-xs">
+                            {duty.notes || 'Invigilator'}
+                          </Badge>
+                          <Badge variant="outline" className="font-mono text-xs">
+                            {duty.roomNumber}
+                          </Badge>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3.5 w-3.5 text-indigo-500" />
+                            <span>Date: <strong>{duty.examDate}</strong></span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-3.5 w-3.5 text-amber-500" />
+                            <span>Reporting Time: <strong className="font-mono text-foreground">{duty.reportingTime}</strong></span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Building2 className="h-3.5 w-3.5 text-purple-500" />
+                            <span>Exam Timing: {duty.examTime}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Badge variant={duty.dutyStatus === 'confirmed' ? 'default' : 'secondary'} className="text-xs capitalize">
+                          {duty.dutyStatus}
+                        </Badge>
+                        {duty.dutyStatus !== 'swapped' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleSwapRequest(duty)}
+                            className="text-xs h-8"
+                          >
+                            <ArrowLeftRight className="mr-1 h-3 w-3" />
+                            Request Swap
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           )}
         </TabsContent>
 
-        <TabsContent value="today" className="space-y-4">
-          {todayExams.length === 0 ? (
-            <Card>
-              <CardContent className="py-8">
-                <div className="text-center text-muted-foreground">
-                  <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg font-medium">No exams today</p>
-                  <p>You don't have any exams scheduled for today</p>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid gap-4">
-              {todayExams.map(exam => (
-                <ExamCard key={exam.id} exam={exam} />
-              ))}
-            </div>
-          )}
-        </TabsContent>
+        {/* TAB 2: Taught Papers */}
+        <TabsContent value="papers" className="space-y-4">
+          <div className="grid gap-4">
+            {upcomingExams.map((exam) => (
+              <Card key={exam.id}>
+                <CardContent className="p-5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-base">{exam.course}</h3>
+                        <Badge variant="outline" className="font-mono text-xs">{exam.courseCode}</Badge>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                        <span>{format(new Date(exam.date), 'MMM dd, yyyy')}</span>
+                        <span>•</span>
+                        <span>{exam.time}</span>
+                        <span>•</span>
+                        <span>{exam.location}</span>
+                        <span>•</span>
+                        <span>Semester {exam.semester} ({exam.branch})</span>
+                      </div>
+                    </div>
 
-        <TabsContent value="completed" className="space-y-4">
-          {completedExams.length === 0 ? (
-            <Card>
-              <CardContent className="py-8">
-                <div className="text-center text-muted-foreground">
-                  <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg font-medium">No completed exams</p>
-                  <p>Your completed exams will appear here</p>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid gap-4">
-              {completedExams.map(exam => (
-                <ExamCard key={exam.id} exam={exam} />
-              ))}
-            </div>
-          )}
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedExam(exam);
+                          setIsDetailDialogOpen(true);
+                        }}
+                        className="text-xs h-8"
+                      >
+                        <Eye className="mr-1 h-3.5 w-3.5" />
+                        Details
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedExam(exam);
+                          setIsStudentListOpen(true);
+                        }}
+                        className="text-xs h-8"
+                      >
+                        <Users className="mr-1 h-3.5 w-3.5" />
+                        Student List
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
 
-      {/* Dialogs */}
+      {/* Detail & Student List Dialogs */}
       {selectedExam && (
         <>
           <ExamDetailDialog

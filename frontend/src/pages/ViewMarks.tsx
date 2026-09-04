@@ -4,15 +4,18 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { usePageLoading } from "@/hooks/use-page-loading"
 import { GenericPageSkeleton } from "@/components/ui/page-skeleton"
-import { Download, TrendingUp, Award, FileText } from "lucide-react"
+import { Download, TrendingUp, Award, FileText, Clock, ShieldCheck } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Progress } from "@/components/ui/progress"
 import { SubjectDetailModal } from "@/components/marks/SubjectDetailModal"
+import { coeService } from "@/services/coeService"
 
 export default function ViewMarks() {
   const isLoading = usePageLoading()
   const [selectedSubject, setSelectedSubject] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const isCoEPublished = coeService.isResultsPublished()
 
   if (isLoading) {
     return <GenericPageSkeleton />
@@ -175,8 +178,23 @@ export default function ViewMarks() {
             </div>
           </CardHeader>
           <CardContent>
-            {/* Mobile View */}
-            <div className="block md:hidden space-y-3">
+            {semester.status === "Current" && !isCoEPublished ? (
+              <div className="py-10 px-4 text-center space-y-3 rounded-xl border border-dashed bg-muted/20">
+                <Clock className="h-10 w-10 text-amber-500 mx-auto" />
+                <div className="space-y-1">
+                  <Badge variant="outline" className="border-amber-400 text-amber-700 dark:text-amber-400 text-xs">
+                    OFFICIAL EVALUATION IN PROGRESS
+                  </Badge>
+                  <h4 className="font-bold text-base">Results for 6th Semester Under CoE Moderation</h4>
+                  <p className="text-xs text-muted-foreground max-w-md mx-auto">
+                    Faculty grading and grace marks moderation are currently under review by the Controller of Examinations. Official marksheet will activate upon CoE publication.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* Mobile View */}
+                <div className="block md:hidden space-y-3">
               {semester.subjects.map((subject) => (
                 <div 
                   key={subject.code} 
@@ -262,6 +280,8 @@ export default function ViewMarks() {
                 </TableBody>
               </Table>
             </div>
+            </>
+            )}
           </CardContent>
         </Card>
       ))}

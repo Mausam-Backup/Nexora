@@ -23,7 +23,7 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false)
   const [formStep, setFormStep] = useState(1)
   const [showMobileForm, setShowMobileForm] = useState(false)
-  const [selectedRole, setSelectedRole] = useState<'student' | 'admin' | 'teacher' | 'parent' | null>(null)
+  const [selectedRole, setSelectedRole] = useState<'student' | 'admin' | 'teacher' | 'parent' | 'examination_controller' | null>(null)
   const [showRoleSelection, setShowRoleSelection] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
@@ -38,14 +38,10 @@ export default function Auth() {
 
   // Update URL when mode changes
   useEffect(() => {
-    const currentParams = new URLSearchParams(searchParams)
-    if (isSignUp) {
-      currentParams.set('mode', 'signup')
-    } else {
-      currentParams.delete('mode')
-    }
-    navigate(`/auth?${currentParams.toString()}`, { replace: true })
-  }, [isSignUp, navigate, searchParams])
+    const mode = searchParams.get('mode')
+    setIsSignUp(mode === 'signup')
+    setFormStep(1)
+  }, [searchParams])
 
   // Check if we should show mobile form based on URL params
   useEffect(() => {
@@ -60,15 +56,16 @@ export default function Auth() {
     
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      await new Promise(resolve => setTimeout(resolve, 800))
       
       // Mock user data - in a real app, this would come from your auth API
       const role = selectedRole ?? 'student'
+      const isCoE = role === 'examination_controller'
       const userData = {
-        id: '1',
-        name: isSignUp ? name : 'John Doe',
-        email: email,
-        collegeName: isSignUp ? collegeName : 'Example University',
+        id: isCoE ? 'coe_001' : role === 'teacher' ? 'T001' : role === 'admin' ? 'admin_001' : '1',
+        name: isSignUp ? name : isCoE ? 'Dr. K. R. Ramanathan' : role === 'teacher' ? 'Dr. Sarah Johnson' : role === 'admin' ? 'Campus Administrator' : 'Demo User',
+        email: email || (isCoE ? 'coe@campussync.edu' : role === 'teacher' ? 'sarah.johnson@college.edu' : role === 'admin' ? 'admin@campussync.edu' : 'demo@university.edu'),
+        collegeName: isSignUp ? collegeName : 'CampusSync University',
         role,
       }
       
@@ -82,7 +79,7 @@ export default function Auth() {
       } else {
         updateUserData({
           name: userData.name,
-          email: email
+          email: userData.email
         })
       }
       
@@ -90,7 +87,14 @@ export default function Auth() {
       login(userData)
       
       // Redirect based on role
-      const panelPath = role === 'admin' ? '/admin/profile' : role === 'teacher' ? '/teacher/profile' : '/'
+      const panelPath = 
+        role === 'admin' 
+          ? '/admin/profile' 
+          : role === 'teacher' 
+          ? '/teacher/profile' 
+          : role === 'examination_controller' 
+          ? '/examination-controller' 
+          : '/'
       navigate(panelPath, { replace: true })
     } catch (error) {
       console.error('Auth error:', error)
@@ -111,7 +115,7 @@ export default function Auth() {
     }
   }
 
-  const handleRoleSelect = (role: 'student' | 'admin' | 'teacher' | 'parent') => {
+  const handleRoleSelect = (role: 'student' | 'admin' | 'teacher' | 'parent' | 'examination_controller') => {
     setSelectedRole(role)
     setIsSignUp(false)
     if (isMobile) {

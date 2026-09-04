@@ -19,6 +19,8 @@ import {
   QrCode,
   Building2,
   TrendingUp,
+  ShieldAlert,
+  Scale,
   type LucideIcon,
 } from "lucide-react"
 
@@ -383,8 +385,124 @@ export const adminSecondaryNav: SecondaryNavItem[] = [
   },
 ]
 
+// Examination Controller (CoE) Primary Navigation
+export const coePrimaryNav: NavItem[] = [
+  {
+    title: "CoE Dashboard",
+    url: "/examination-controller",
+    icon: LayoutDashboard,
+    isActive: true,
+  },
+  {
+    title: "Exam Cycles & Timetable",
+    url: "/examination-controller/cycles",
+    icon: CalendarDays,
+    badge: "Master",
+    items: [
+      {
+        title: "Active Exam Cycles",
+        url: "/examination-controller/cycles",
+      },
+      {
+        title: "Conflict Detection Engine",
+        url: "/examination-controller/cycles",
+      },
+    ],
+  },
+  {
+    title: "Seating Allocation Engine",
+    url: "/examination-controller/seating",
+    icon: Building2,
+    badge: "Anti-Cheating",
+    items: [
+      {
+        title: "Interleaved Hall Layout",
+        url: "/examination-controller/seating",
+      },
+      {
+        title: "Door Charts & Nominal Rolls",
+        url: "/examination-controller/seating",
+      },
+    ],
+  },
+  {
+    title: "Invigilation Roster",
+    url: "/examination-controller/invigilation",
+    icon: Users,
+    items: [
+      {
+        title: "Faculty Duty Allocations",
+        url: "/examination-controller/invigilation",
+      },
+      {
+        title: "Duty Swap Workflow",
+        url: "/examination-controller/invigilation",
+      },
+    ],
+  },
+  {
+    title: "Hall Ticket Gatekeeper",
+    url: "/examination-controller/hall-tickets",
+    icon: QrCode,
+    badge: "Eligibility",
+    items: [
+      {
+        title: "75% Attendance & Fee Filter",
+        url: "/examination-controller/hall-tickets",
+      },
+      {
+        title: "Debar & Bulk Release Pass",
+        url: "/examination-controller/hall-tickets",
+      },
+    ],
+  },
+  {
+    title: "Marks & Moderation",
+    url: "/examination-controller/moderation",
+    icon: BarChart3,
+    badge: "Grace Tool",
+    items: [
+      {
+        title: "Faculty Submission Tracker",
+        url: "/examination-controller/moderation",
+      },
+      {
+        title: "Grace Marks Moderation",
+        url: "/examination-controller/moderation",
+      },
+    ],
+  },
+  {
+    title: "1-Click Result Publishing",
+    url: "/examination-controller/publish",
+    icon: Award,
+    badge: "Sovereign",
+  },
+  {
+    title: "Malpractice (UFM) Desk",
+    url: "/examination-controller/malpractice",
+    icon: ShieldAlert,
+    badge: "Disciplinary",
+  },
+]
+
+export const coeSecondaryNav: SecondaryNavItem[] = [
+  {
+    name: "CoE Regulation Guide",
+    url: "/ask-ai",
+    icon: Bot,
+  },
+]
+
 export function getRoleNavigation(role: string) {
   switch (role) {
+    case "examination_controller":
+      return {
+        primary: coePrimaryNav,
+        secondary: coeSecondaryNav,
+        portalTitle: "Examination Controller (CoE)",
+        groupLabel: "Office of the Controller of Examinations",
+      }
     case "admin":
       return {
         primary: adminPrimaryNav,

@@ -5,7 +5,7 @@ import { AuthRoleSelection } from "./AuthRoleSelection";
 
 interface AuthMobileRoleSelectionProps {
   onBack: () => void;
-  onRoleSelect: (role: 'student' | 'admin' | 'teacher' | 'parent') => void;
+  onRoleSelect: (role: 'student' | 'admin' | 'teacher' | 'parent' | 'examination_controller') => void;
 }
 
 export const AuthMobileRoleSelection: React.FC<AuthMobileRoleSelectionProps> = ({ 

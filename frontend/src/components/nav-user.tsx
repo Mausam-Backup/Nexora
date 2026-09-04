@@ -11,6 +11,10 @@ import {
   Upload,
   IdCard,
   UserCog,
+  Award,
+  CalendarDays,
+  Building2,
+  LayoutDashboard,
 } from "lucide-react"
 
 import {
@@ -127,7 +131,19 @@ export function NavUser({
                   { to: '/admin/billing', label: 'Billing & Payments', icon: CreditCard },
                 ] as const
 
-                const items = role === 'teacher' ? teacherItems : role === 'admin' ? adminItems : studentItems
+                const coeItems = [
+                  { to: '/examination-controller', label: 'CoE Dashboard', icon: LayoutDashboard },
+                  { to: '/examination-controller/cycles', label: 'Exam Cycles & Timetable', icon: CalendarDays },
+                  { to: '/examination-controller/seating', label: 'Seating Allocation', icon: Building2 },
+                  { to: '/examination-controller/hall-tickets', label: 'Hall Tickets', icon: BadgeCheck },
+                  { to: '/examination-controller/publish', label: 'Result Publishing', icon: Award },
+                ] as const
+
+                const items = 
+                  role === 'examination_controller' ? coeItems :
+                  role === 'teacher' ? teacherItems : 
+                  role === 'admin' ? adminItems : 
+                  studentItems
 
                 return items.map((item) => (
                   <DropdownMenuItem key={item.to} onClick={() => navigate(item.to)}>

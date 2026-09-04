@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { AdminExamManagement } from '@/components/exams/admin/AdminExamManagement';
 import { TeacherExamView } from '@/components/exams/teacher/TeacherExamView';
@@ -17,6 +18,10 @@ const ExamSchedule = () => {
   }
 
   // Role-based rendering
+  if (user?.role === 'examination_controller') {
+    return <Navigate to="/examination-controller" replace />;
+  }
+
   if (user?.role === 'admin') {
     return <AdminExamManagement />;
   }

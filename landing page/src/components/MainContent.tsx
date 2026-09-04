@@ -8,6 +8,14 @@ export default function MainContent() {
     <div id="intro" className="intro">
       <div className="scroll-animations">
         <div className="hero-slide">
+          <div className="hero-slide__bg-media">
+            <img 
+              src="/images/vit-bhopal-hero.jpg" 
+              alt="VIT Bhopal University" 
+              className="hero-slide__bg-img" 
+            />
+            <div className="hero-slide__bg-overlay"></div>
+          </div>
           <div className="hero-slide__head">
             <div className="hero-slide__head-is1 perspective">
               <h1 data-w-id="8995ea1c-a38e-c732-729b-3eef13438be3" className="h1 white">Interbank-grade Capital</h1>

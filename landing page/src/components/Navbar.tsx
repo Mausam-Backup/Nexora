@@ -1,4 +1,11 @@
+"use client";
+
+import React, { useState } from "react";
+import LionFullscreenModal from "./LionFullscreenModal";
+
 export default function Navbar() {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
   return (
   <div className="fixed-items">
     <div className="container-menu__light">
@@ -44,7 +51,17 @@ export default function Navbar() {
       </div>
     </div>
     <div style={{"opacity":"1","WebkitTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","MozTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","msTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","transform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"}} className="bt-video">
-      <a data-w-id="ac0bb96c-bfad-8e8c-2867-bddf34b7315b" href="https://youtu.be/cFEyuG6Q3og" target="_blank" className="bt-video__wrapper w-inline-block">
+      <a
+        data-w-id="ac0bb96c-bfad-8e8c-2867-bddf34b7315b"
+        href="#video"
+        role="button"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsVideoModalOpen(true);
+        }}
+        className="bt-video__wrapper w-inline-block"
+        style={{ cursor: "pointer" }}
+      >
         <div data-w-id="181c0878-0e5c-bb24-d98e-b9028a1ae5b0" style={{"color":"rgb(81, 98, 255)","backgroundColor":"rgb(255, 255, 255)","opacity":"1"}} className="bt-video__bt">
           <div className="html-embed-2 w-embed">
             <svg width="100%" height="100%" viewBox="0 0 9 12" xmlns="http://www.w3.org/2000/svg">
@@ -93,6 +110,10 @@ export default function Navbar() {
         </a>
       </div>
     </div>
+    <LionFullscreenModal
+      isOpen={isVideoModalOpen}
+      onClose={() => setIsVideoModalOpen(false)}
+    />
   </div>
   );
 }

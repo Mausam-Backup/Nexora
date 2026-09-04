@@ -185,28 +185,9 @@ export default function LandingPageEffects() {
           }, 10);
         });
 
-        // 5. ScrollTrigger Video Reveal Expand Animation & Color triggers
+        // 5. ScrollTrigger triggers
         if (window.ScrollTrigger && window.gsap) {
-          const card = document.querySelector(".video-reveal-card");
-          const wrapper = document.querySelector(".video-reveal-wrapper");
-
-          if (card && wrapper) {
-            window.gsap.timeline({
-              scrollTrigger: {
-                trigger: wrapper,
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1,
-              },
-            }).to(card, {
-              width: "100vw",
-              height: "100vh",
-              borderRadius: "0px",
-              boxShadow: "none",
-              borderWidth: "0px",
-              ease: "power2.inOut",
-            });
-          }
+          window.ScrollTrigger.refresh();
 
           $("[data-color='blue']").each(function (this: HTMLElement) {
             window.ScrollTrigger.create({

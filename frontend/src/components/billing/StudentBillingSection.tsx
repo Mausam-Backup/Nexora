@@ -15,7 +15,7 @@ import { exportToCSV, generatePrintableReport } from "@/utils/exportUtils"
 
 export function StudentBillingSection() {
   const { toast } = useToast()
-  const { students } = useERPData()
+  const { students, markBillPaid } = useERPData()
 
   // Derive student bills dynamically from unified ERP students
   const studentBills: BillData[] = useMemo(() => {
@@ -23,7 +23,7 @@ export function StudentBillingSection() {
       student.fees.bills.map(b => ({
         id: b.id,
         studentId: `${student.rollNumber} - ${student.name}`,
-        description: b.title,
+        description: b.description || (b as any).title || 'Semester Tuition Fee',
         amount: b.amount,
         dueDate: b.dueDate,
         createdAt: `${b.dueDate}T00:00:00Z`,
@@ -184,6 +184,15 @@ export function StudentBillingSection() {
     })
   }
 
+  const handleCollectPayment = (bill: BillData) => {
+    const roll = bill.studentId?.split(' - ')[0] || ''
+    markBillPaid(roll, bill.id)
+    toast({
+      title: "Fee Payment Collected & Recorded",
+      description: `Bill ${bill.id} settled for ₹${bill.amount.toLocaleString('en-IN')}. Cross-module clearances updated.`
+    })
+  }
+
   const handleExport = () => {
     const headers = ["Bill ID", "Student Details", "Description", "Amount (INR)", "Due Date", "Status", "Payment Date", "Receipt No"]
     const rows = studentBills.map(b => [
@@ -318,6 +327,7 @@ export function StudentBillingSection() {
             onViewDetails={handleViewDetails}
             onEdit={handleEdit}
             onDownloadReceipt={handleDownloadReceipt}
+            onPay={handleCollectPayment}
             userType="admin"
             showActions={true}
           />

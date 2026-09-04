@@ -124,24 +124,24 @@ export default function Navbar() {
         </div>
       </div>
     </div>
-    <div data-w-id="3ecd4d3b-5f05-bf52-e1ba-1fc699acc23f" className="m-open-menu">
-      <a href="#intro" className="m-open-menu__link nav-1 w-inline-block">
+    <div data-w-id="3ecd4d3b-5f05-bf52-e1ba-1fc699acc23f" className="m-open-menu" suppressHydrationWarning>
+      <a href="#intro" className="m-open-menu__link nav-1 w-inline-block" suppressHydrationWarning>
         <div className="menu-text">Intro</div>
       </a>
-      <a href="#platform" className="m-open-menu__link nav-2 w-inline-block">
+      <a href="#platform" className="m-open-menu__link nav-2 w-inline-block" suppressHydrationWarning>
         <div className="menu-text">Platform</div>
       </a>
-      <a href="#about" className="m-open-menu__link nav-3 w-inline-block">
+      <a href="#about" className="m-open-menu__link nav-3 w-inline-block" suppressHydrationWarning>
         <div className="menu-text">About us</div>
       </a>
-      <a href="#investors" className="m-open-menu__link nav-4 w-inline-block">
+      <a href="#investors" className="m-open-menu__link nav-4 w-inline-block" suppressHydrationWarning>
         <div className="menu-text">Investors</div>
       </a>
-      <a href="#news" className="m-open-menu__link nav-5 w-inline-block">
+      <a href="#news" className="m-open-menu__link nav-5 w-inline-block" suppressHydrationWarning>
         <div className="menu-text">News</div>
       </a>
       <div className="m-open-menu__button-container">
-        <a href="#" data-w-id="418bead1-2a16-fae5-81f3-d14489478f36" className="m-open-menu__button to-footer w-inline-block">
+        <a href="#" data-w-id="418bead1-2a16-fae5-81f3-d14489478f36" className="m-open-menu__button to-footer w-inline-block" suppressHydrationWarning>
           <div className="button-text-t black">Contact us</div>
           <img src="/images/Vector-18.svg" loading="lazy" alt="" className="m-open-menu__ic" />
         </a>

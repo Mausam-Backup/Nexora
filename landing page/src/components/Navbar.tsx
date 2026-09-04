@@ -39,18 +39,18 @@ export default function Navbar() {
         </a>
         <a href="#" className="menu-button to-footer w-inline-block" suppressHydrationWarning>
           <div className="menu-text-non-hover">Sign up</div>
-          <div data-w-id="8312a1a5-dae7-16a1-8cec-e79ee9e966df" style={{"WebkitTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","MozTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","msTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","transform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"}} className="menu-button__bg"></div>
+          <div data-w-id="8312a1a5-dae7-16a1-8cec-e79ee9e966df" suppressHydrationWarning style={{ transform: "translate3d(0, 0, 0) scale3d(1, 1, 1)" }} className="menu-button__bg"></div>
         </a>
       </div>
     </div>
-    <div no-click="" className="container-menu__light-is-back">
+    <div no-click="" className="container-menu__light-is-back" suppressHydrationWarning>
       <div className="link-logo">
         <div className="link-logo__is2">
           <img src="/images/secured.svg" loading="lazy" alt="" className="link-logo__image" />
         </div>
       </div>
     </div>
-    <div style={{"opacity":"1","WebkitTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","MozTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","msTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","transform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"}} className="bt-video">
+    <div suppressHydrationWarning style={{ opacity: 1, transform: "translate3d(0, 0, 0) scale3d(1, 1, 1)" }} className="bt-video">
       <a
         data-w-id="ac0bb96c-bfad-8e8c-2867-bddf34b7315b"
         href="#video"
@@ -60,6 +60,7 @@ export default function Navbar() {
           setIsVideoModalOpen(true);
         }}
         className="bt-video__wrapper w-inline-block"
+        suppressHydrationWarning
         style={{
           cursor: "pointer",
           display: "flex",
@@ -69,19 +70,20 @@ export default function Navbar() {
         }}
       >
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
-          <div data-w-id="181c0878-0e5c-bb24-d98e-b9028a1ae5b0" style={{"color":"rgb(81, 98, 255)","backgroundColor":"rgb(255, 255, 255)","opacity":"1"}} className="bt-video__bt">
+          <div data-w-id="181c0878-0e5c-bb24-d98e-b9028a1ae5b0" suppressHydrationWarning style={{ color: "rgb(81, 98, 255)", backgroundColor: "rgb(255, 255, 255)", opacity: 1 }} className="bt-video__bt">
             <div className="html-embed-2 w-embed">
               <svg width="100%" height="100%" viewBox="0 0 9 12" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 11.25V0L8.65385 5.625L0 11.25Z" fill="currentColor"></path>
               </svg>
             </div>
           </div>
-          <div style={{"WebkitTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","MozTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","msTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","transform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"}} className="bt-video__container">
-            <div data-w-id="1fc59aad-fbca-f7c1-170b-17193e350b37" className="bt-video__img-container">
+          <div data-w-id="181c0878-0e5c-bb24-d98e-b9028a1ae5b1" suppressHydrationWarning style={{ transform: "translate3d(0, 0, 0) scale3d(1, 1, 1)" }} className="bt-video__container">
+            <div data-w-id="1fc59aad-fbca-f7c1-170b-17193e350b37" suppressHydrationWarning className="bt-video__img-container">
               <img
                 src="/lion_frames/frame_0001.jpg"
                 loading="eager"
                 alt="About Us"
+                suppressHydrationWarning
                 style={{
                   width: "100%",
                   height: "100%",

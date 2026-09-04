@@ -7440,16 +7440,6 @@ a {
 
     .preloader {
       display: flex;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
-
-    html.is-loaded .preloader,
-    .preloader--hidden,
-    .preloader.is-hidden {
-      opacity: 0 !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-      display: none !important;
     }
   
 

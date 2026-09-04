@@ -74,6 +74,10 @@ export default function LandingPageEffects() {
           touchMultiplier: 2,
         });
 
+        if (window.ScrollTrigger) {
+          lenisInstance.on("scroll", () => window.ScrollTrigger?.update());
+        }
+
         const raf = (time: number) => {
           lenisInstance?.raf(time);
           rafId = requestAnimationFrame(raf);
@@ -181,8 +185,29 @@ export default function LandingPageEffects() {
           }, 10);
         });
 
-        // 5. ScrollTrigger for [data-color='blue']
-        if (window.ScrollTrigger) {
+        // 5. ScrollTrigger Video Reveal Expand Animation & Color triggers
+        if (window.ScrollTrigger && window.gsap) {
+          const card = document.querySelector(".video-reveal-card");
+          const wrapper = document.querySelector(".video-reveal-wrapper");
+
+          if (card && wrapper) {
+            window.gsap.timeline({
+              scrollTrigger: {
+                trigger: wrapper,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1,
+              },
+            }).to(card, {
+              width: "100vw",
+              height: "100vh",
+              borderRadius: "0px",
+              boxShadow: "none",
+              borderWidth: "0px",
+              ease: "power2.inOut",
+            });
+          }
+
           $("[data-color='blue']").each(function (this: HTMLElement) {
             window.ScrollTrigger.create({
               trigger: this,

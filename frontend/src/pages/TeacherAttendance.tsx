@@ -205,7 +205,7 @@ const TeacherAttendance: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO 
-        title="Teacher Attendance - CampusSync"
+        title="Teacher Attendance - Nexora"
         description="Take attendance for your classes, manage student records, and track attendance analytics."
       />
       

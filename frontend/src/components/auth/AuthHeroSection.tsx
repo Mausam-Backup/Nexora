@@ -30,7 +30,7 @@ export const AuthHeroSection: React.FC = () => {
               <GraduationCap className="h-8 w-8 text-white" />
             </div>
             <div className="text-left">
-              <h1 className="text-3xl lg:text-4xl font-bold text-white font-serif tracking-tight">CampusSync</h1>
+              <h1 className="text-3xl lg:text-4xl font-bold text-white font-serif tracking-tight">Nexora</h1>
               <p className="text-sm text-blue-200 font-medium tracking-wide">Academic Excellence Platform</p>
             </div>
           </div>

@@ -156,11 +156,11 @@ export const TeacherExamView: React.FC<TeacherExamViewProps> = ({
       {/* Main Tabs */}
       <Tabs defaultValue="invigilation" className="space-y-4">
         <TabsList className="grid w-full grid-cols-2 max-w-md">
-          <TabsTrigger value="invigilation" className="text-xs">
-            <ShieldCheck className="mr-1.5 h-3.5 w-3.5 text-indigo-500" />
+          <TabsTrigger value="invigilation" className="text-xs font-serif">
+            <ShieldCheck className="mr-1.5 h-3.5 w-3.5 text-neutral-900" />
             My Invigilation Duties ({invigilatorDuties.length})
           </TabsTrigger>
-          <TabsTrigger value="papers" className="text-xs">
+          <TabsTrigger value="papers" className="text-xs font-serif">
             <Calendar className="mr-1.5 h-3.5 w-3.5" />
             My Taught Papers ({exams.length})
           </TabsTrigger>
@@ -179,31 +179,31 @@ export const TeacherExamView: React.FC<TeacherExamViewProps> = ({
           ) : (
             <div className="grid gap-4">
               {invigilatorDuties.map((duty) => (
-                <Card key={duty.id} className="border hover:shadow-md transition-shadow">
+                <Card key={duty.id} className="border border-neutral-200 hover:shadow-md transition-shadow">
                   <CardContent className="p-5">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-base text-foreground">{duty.examCourse}</h3>
-                          <Badge className="bg-indigo-600 text-xs">
+                          <h3 className="font-bold text-base text-neutral-900 font-serif">{duty.examCourse}</h3>
+                          <Badge className="bg-[#241411] text-white border border-[#44251F] text-xs font-serif">
                             {duty.notes || 'Invigilator'}
                           </Badge>
-                          <Badge variant="outline" className="font-mono text-xs">
+                          <Badge variant="outline" className="font-mono text-xs border-neutral-300">
                             {duty.roomNumber}
                           </Badge>
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-600 font-serif">
                           <div className="flex items-center gap-1">
-                            <Calendar className="h-3.5 w-3.5 text-indigo-500" />
+                            <Calendar className="h-3.5 w-3.5 text-neutral-700" />
                             <span>Date: <strong>{duty.examDate}</strong></span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Clock className="h-3.5 w-3.5 text-amber-500" />
-                            <span>Reporting Time: <strong className="font-mono text-foreground">{duty.reportingTime}</strong></span>
+                            <Clock className="h-3.5 w-3.5 text-neutral-700" />
+                            <span>Reporting Time: <strong className="font-mono text-neutral-900">{duty.reportingTime}</strong></span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Building2 className="h-3.5 w-3.5 text-purple-500" />
+                            <Building2 className="h-3.5 w-3.5 text-neutral-700" />
                             <span>Exam Timing: {duty.examTime}</span>
                           </div>
                         </div>

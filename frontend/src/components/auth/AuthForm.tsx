@@ -89,7 +89,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
               <GraduationCap className="h-4 w-4 text-white" />
             </div>
-            <span className="text-lg font-bold text-white">CampusSync</span>
+            <span className="text-lg font-bold text-white">Nexora</span>
           </div>
         </div>
         

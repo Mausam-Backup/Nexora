@@ -306,7 +306,7 @@ export default function SeatingAllocationEngine() {
           <div className="p-4 rounded-xl border bg-card text-foreground font-sans space-y-4 text-xs">
             {/* Stationery Header */}
             <div className="text-center border-b pb-3 space-y-1">
-              <h2 className="text-sm font-bold uppercase tracking-wider">CampusSync University</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider">Nexora University</h2>
               <div className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
                 OFFICE OF THE CONTROLLER OF EXAMINATIONS
               </div>

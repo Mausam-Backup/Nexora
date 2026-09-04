@@ -37,7 +37,7 @@ export default function ParentComingSoon() {
             <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <GraduationCap className="h-4 w-4" />
             </div>
-            <span className="font-semibold">CampusSync</span>
+            <span className="font-semibold">Nexora</span>
           </div>
         </header>
 

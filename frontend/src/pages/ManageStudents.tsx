@@ -123,7 +123,7 @@ export default function ManageStudents() {
   const handlePrintRegistry = () => {
     generatePrintableReport({
       title: "Official Institutional Student Master Registry",
-      subtitle: "Office of the Dean of Academic Affairs & Admissions • CampusSync Central Database",
+      subtitle: "Office of the Dean of Academic Affairs & Admissions • Nexora Central Database",
       columns: ["Roll Number", "Student Name", "Department", "Sem", "CGPA", "Attendance %", "Fee Balance", "Status"],
       rows: students.map(s => {
         const attRecords = Object.values(s.attendance)
@@ -541,7 +541,7 @@ export default function ManageStudents() {
               <div className="p-4 rounded-lg bg-muted/40 border space-y-2 font-mono text-[11px] leading-relaxed">
                 <div className="text-center font-bold text-xs pb-2 border-b">
                   OFFICE OF THE DEAN OF ACADEMIC AFFAIRS & CONTROLLER OF EXAMINATIONS<br/>
-                  <span className="text-[10px] font-normal text-muted-foreground">CAMPUSSYNC AUTONOMOUS INSTITUTE OF TECHNOLOGY</span>
+                  <span className="text-[10px] font-normal text-muted-foreground">NEXORA AUTONOMOUS INSTITUTE OF TECHNOLOGY</span>
                 </div>
                 <p><strong>To:</strong> Guardian of {noticeStudent?.name} ({noticeStudent?.parentName || 'Parent'})<br/>
                 <strong>Address:</strong> {noticeStudent?.address || 'Registered Residential Address'}<br/>
@@ -564,7 +564,7 @@ export default function ManageStudents() {
               <div className="p-3.5 rounded-lg bg-muted/50 border space-y-1.5 text-xs font-mono">
                 <div className="text-[11px] text-muted-foreground">Recipient: {noticeStudent?.parentPhone || '+91 9876543211'} (Parent)</div>
                 <div className="p-3 bg-background rounded border text-foreground text-xs leading-relaxed">
-                  [CAMPUSSYNC ERP ALERT]: Dear Parent, your ward {noticeStudent?.name} ({noticeStudent?.rollNumber}) has attendance below 75% cutoff and is debarred from End-Sem Exams. Outstanding fee dues: ₹{noticeStudent?.fees?.outstanding?.toLocaleString('en-IN') || 0}. Please visit the Dean's office immediately.
+                  [NEXORA ERP ALERT]: Dear Parent, your ward {noticeStudent?.name} ({noticeStudent?.rollNumber}) has attendance below 75% cutoff and is debarred from End-Sem Exams. Outstanding fee dues: ₹{noticeStudent?.fees?.outstanding?.toLocaleString('en-IN') || 0}. Please visit the Dean's office immediately.
                 </div>
               </div>
             )}

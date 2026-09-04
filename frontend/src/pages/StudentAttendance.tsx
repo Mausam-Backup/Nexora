@@ -181,7 +181,7 @@ const StudentAttendance: React.FC = () => {
     return (
       <div className="min-h-screen bg-background">
         <SEO 
-          title="Student Attendance - CampusSync"
+          title="Student Attendance - Nexora"
           description="View your attendance records, track progress across subjects, and monitor your academic performance."
         />
         
@@ -204,7 +204,7 @@ const StudentAttendance: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO 
-        title={`Semester ${selectedSemester} Attendance - CampusSync`}
+        title={`Semester ${selectedSemester} Attendance - Nexora`}
         description={`View attendance records for Semester ${selectedSemester} in ${selectedBranch}`}
       />
       

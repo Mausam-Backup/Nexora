@@ -36,7 +36,7 @@ export const AuthMobileHero: React.FC<AuthMobileHeroProps> = ({ onGetStarted }) 
               <GraduationCap className="h-8 w-8 text-white" />
             </div>
             <div className="text-left">
-              <h1 className="text-2xl font-bold text-white font-serif tracking-tight">CampusSync</h1>
+              <h1 className="text-2xl font-bold text-white font-serif tracking-tight">Nexora</h1>
               <p className="text-xs text-blue-200 font-medium tracking-wide">Academic Excellence Platform</p>
             </div>
           </div>

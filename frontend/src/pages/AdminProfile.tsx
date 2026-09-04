@@ -28,7 +28,7 @@ export default function AdminProfile() {
   return (
     <div className="space-y-6">
       <SEO 
-        title="Admin Profile - CampusSync" 
+        title="Admin Profile - Nexora" 
         description="Comprehensive administrative profile management and system overview" 
       />
       

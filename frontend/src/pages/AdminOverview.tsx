@@ -150,11 +150,11 @@ export const AdminOverview: React.FC = () => {
     { month: 'Jul', earned: 506, due: 85, expense: 150 },
   ]
 
-  // Attendance donut breakdown (Shikhaor Image 4)
+  // Attendance donut breakdown using exact semantic pastel palette
   const attendanceBreakdown = [
-    { name: 'Present (94.6%)', value: 94.6, color: '#f97316' },
-    { name: 'Absent (4.6%)', value: 4.6, color: '#1e293b' },
-    { name: 'Late / Condoned (0.8%)', value: 0.8, color: '#cbd5e1' },
+    { name: 'Present (94.6%)', value: 94.6, color: '#4FA1D8' },       // Teal Accent
+    { name: 'Absent (4.6%)', value: 4.6, color: '#FFA5A8' },          // Soft Coral Red
+    { name: 'Late / Condoned (0.8%)', value: 0.8, color: '#A1E8DD' },  // Pastel Turquoise
   ]
 
   // Department course performance (Edukors Image 2)
@@ -167,10 +167,38 @@ export const AdminOverview: React.FC = () => {
 
   // Attention alerts (Shikhaor Image 4)
   const attentionAlerts = [
-    { id: 1, title: 'Unpaid Semester Fees', count: 24, subtitle: 'Students with overdue balance', link: '/admin/billing', badgeVariant: 'destructive' as const },
-    { id: 2, title: 'Low Attendance Debarment', count: stats.debarredCount || 2, subtitle: 'Students < 75% threshold', link: '/admin/manage-students', badgeVariant: 'destructive' as const },
-    { id: 3, title: 'Attendance Not Submitted', count: 3, subtitle: 'Faculty rosters pending today', link: '/teacher/attendance', badgeVariant: 'secondary' as const },
-    { id: 4, title: 'Exam Hall Ticket Approvals', count: 18, subtitle: 'Ready for cryptographical issue', link: '/examination-controller/hall-ticket-gatekeeper', badgeVariant: 'default' as const },
+    { 
+      id: 1, 
+      title: 'Unpaid Semester Fees', 
+      count: 24, 
+      subtitle: 'Students with overdue balance', 
+      link: '/admin/billing', 
+      badgeClass: 'bg-[#FFA5A8] text-[#7A151A] dark:bg-[#FFA5A8]/15 dark:text-[#FFA5A8] dark:border dark:border-[#FFA5A8]/30' 
+    },
+    { 
+      id: 2, 
+      title: 'Low Attendance Debarment', 
+      count: stats.debarredCount || 2, 
+      subtitle: 'Students < 75% threshold', 
+      link: '/admin/manage-students', 
+      badgeClass: 'bg-[#FFA5A8] text-[#7A151A] dark:bg-[#FFA5A8]/15 dark:text-[#FFA5A8] dark:border dark:border-[#FFA5A8]/30' 
+    },
+    { 
+      id: 3, 
+      title: 'Attendance Not Submitted', 
+      count: 3, 
+      subtitle: 'Faculty rosters pending today', 
+      link: '/teacher/attendance', 
+      badgeClass: 'bg-[#FFBC94] text-[#7A3E15] dark:bg-[#FFBC94]/15 dark:text-[#FFBC94] dark:border dark:border-[#FFBC94]/30' 
+    },
+    { 
+      id: 4, 
+      title: 'Exam Hall Ticket Approvals', 
+      count: 18, 
+      subtitle: 'Ready for cryptographical issue', 
+      link: '/examination-controller/hall-ticket-gatekeeper', 
+      badgeClass: 'bg-[#A5E5FF] text-[#0B3A60] dark:bg-[#A5E5FF]/20 dark:text-[#A5E5FF] dark:border dark:border-[#A5E5FF]/30' 
+    },
   ]
 
   return (
@@ -182,25 +210,27 @@ export const AdminOverview: React.FC = () => {
 
       <div className="space-y-6 pb-12">
         {/* ========================================================================= */}
-        {/* TOP ROW: Executive Welcome Banner + Quick Action Buttons (Shikhaor Image 4) */}
+        {/* TOP ROW: Executive Welcome Banner + Grouped CTA Actions (Section 5.A) */}
         {/* ========================================================================= */}
-        <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-card via-card to-primary/5 border border-border/80 shadow-card">
+        <div className="rounded-3xl p-6 sm:p-8 bg-white dark:bg-[#151D30] border border-[#E4E7EC] dark:border-[#222F4C] shadow-card transition-all">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
             <div className="space-y-1.5">
-              <div className="flex items-center gap-2.5">
-                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#101828] dark:text-[#F9FAFB]">
                   Welcome back, Dr. R. K. Sharma! 👋
                 </h1>
-                <Badge className="bg-primary/10 text-primary border-primary/20 text-xs font-bold">
+                {/* Dean Academics cleanly padded tag using #A5E5FF background with dark blue text */}
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#A5E5FF] text-[#0B3A60] dark:bg-[#A5E5FF]/20 dark:text-[#A5E5FF] dark:border dark:border-[#A5E5FF]/30 tracking-tight shadow-2xs">
                   Dean Academics
-                </Badge>
+                </span>
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+              <p className="text-xs sm:text-sm text-[#475467] dark:text-[#98A2B3] font-medium">
                 Here's what's happening across your institution today • Autonomous Relational State Synchronized
               </p>
-              <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold text-[11px]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+              <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-[#475467] dark:text-[#98A2B3]">
+                {/* Reconciled Pill indicator */}
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30 font-bold text-[11px]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#064E3B] dark:bg-[#C4EFDF] animate-ping" />
                   Anti-Mismatch Engine: 0 Discrepancies
                 </span>
                 <span>•</span>
@@ -208,29 +238,29 @@ export const AdminOverview: React.FC = () => {
               </div>
             </div>
 
-            {/* Quick Action Buttons (Shikhaor style) */}
-            <div className="flex flex-wrap items-center gap-2.5 self-start lg:self-auto w-full lg:w-auto">
+            {/* Unified Action Button Group utilizing #5EA6EB Primary Theme */}
+            <div className="inline-flex items-center p-1 rounded-2xl bg-[#F8F9FA] dark:bg-[#0B0F19] border border-[#E4E7EC] dark:border-[#222F4C] shadow-xs self-start lg:self-auto gap-1">
               <Button
                 onClick={handleReaudit}
                 disabled={isAuditing}
-                className="rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm font-semibold h-9 px-4 gap-1.5 shadow-sm"
+                className="rounded-xl bg-[#5EA6EB] hover:bg-[#4D95DA] text-white text-xs sm:text-sm font-semibold h-9 px-4 gap-1.5 shadow-sm transition-all cursor-pointer"
               >
                 <RefreshCw className={`h-4 w-4 ${isAuditing ? 'animate-spin' : ''}`} />
                 {isAuditing ? 'Re-Auditing...' : 'Re-Run Discrepancy Audit'}
               </Button>
               <Button
                 onClick={handleExportAuditReport}
-                variant="outline"
-                className="rounded-2xl border-border hover:bg-muted text-xs sm:text-sm font-semibold h-9 px-4 gap-1.5"
+                variant="ghost"
+                className="rounded-xl border border-transparent hover:border-[#E4E7EC] dark:hover:border-[#222F4C] text-[#475467] dark:text-[#98A2B3] hover:text-[#5EA6EB] dark:hover:text-[#5EA6EB] hover:bg-[#5EA6EB]/10 text-xs sm:text-sm font-semibold h-9 px-4 gap-1.5 transition-colors cursor-pointer"
               >
-                <Download className="h-4 w-4" /> Export Audit PDF
+                <Download className="h-4 w-4 text-[#5EA6EB]" /> Export Audit PDF
               </Button>
               <Button
                 onClick={handleResetDemoData}
                 variant="ghost"
                 size="icon"
                 title="Reset ERP demo state"
-                className="rounded-full h-9 w-9 text-muted-foreground hover:text-foreground"
+                className="rounded-xl h-9 w-9 text-[#475467] dark:text-[#98A2B3] hover:text-[#101828] dark:hover:text-white cursor-pointer"
               >
                 <RotateCcw className="h-4 w-4" />
               </Button>
@@ -239,94 +269,100 @@ export const AdminOverview: React.FC = () => {
         </div>
 
         {/* ========================================================================= */}
-        {/* 4 TOP KPI METRIC CARDS WITH SPARKLINES (Shikhaor Image 4 & Edukors Image 2) */}
+        {/* 4 TOP KPI METRIC CARDS (Standardized Sizes, Micro-Capsules, Theme Sparklines) */}
         {/* ========================================================================= */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {/* Card 1: Total Students */}
-          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
-            <CardContent className="p-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Students</span>
-                <div className="p-2.5 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                  <Users className="h-4 w-4" />
-                </div>
+          <div className="h-full flex flex-col justify-between p-6 rounded-3xl bg-white dark:bg-[#151D30] border border-[#E4E7EC] dark:border-[#222F4C] shadow-card hover:shadow-card-hover transition-all space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#475467] dark:text-[#98A2B3] uppercase tracking-wider">Total Students</span>
+              <div className="p-2.5 rounded-2xl bg-[#5EA6EB]/10 text-[#5EA6EB] dark:bg-[#5EA6EB]/20 dark:text-[#5EA6EB]">
+                <Users className="h-4 w-4" />
               </div>
-              <div className="space-y-1">
-                <div className="text-3xl font-black tracking-tight text-foreground">1,650</div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">From Last Year</span>
-                  <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
-                    <TrendingUp className="h-3 w-3" /> +12.05%
-                  </span>
-                </div>
+            </div>
+            <div className="space-y-1.5">
+              <div className="text-3xl font-black tracking-tight text-[#101828] dark:text-[#F9FAFB]">1,650</div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[#475467] dark:text-[#98A2B3]">From Last Year</span>
+                {/* Explicit Micro-Capsule Pill */}
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30 flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3" /> +12.05%
+                </span>
               </div>
-              <Progress value={85} className="h-1.5 bg-blue-500/20" />
-            </CardContent>
-          </Card>
+            </div>
+            <div className="w-full bg-[#E3E5E8] dark:bg-[#222F4C] rounded-full h-1.5 overflow-hidden">
+              <div className="bg-[#5EA6EB] h-1.5 rounded-full transition-all duration-500" style={{ width: '85%' }} />
+            </div>
+          </div>
 
-          {/* Card 2: Total Teachers */}
-          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
-            <CardContent className="p-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Faculty</span>
-                <div className="p-2.5 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-                  <GraduationCap className="h-4 w-4" />
-                </div>
+          {/* Card 2: Total Faculty */}
+          <div className="h-full flex flex-col justify-between p-6 rounded-3xl bg-white dark:bg-[#151D30] border border-[#E4E7EC] dark:border-[#222F4C] shadow-card hover:shadow-card-hover transition-all space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#475467] dark:text-[#98A2B3] uppercase tracking-wider">Total Faculty</span>
+              <div className="p-2.5 rounded-2xl bg-[#E2B1CE]/25 text-[#C387C2] dark:bg-[#C387C2]/20 dark:text-[#E2B1CE]">
+                <GraduationCap className="h-4 w-4" />
               </div>
-              <div className="space-y-1">
-                <div className="text-3xl font-black tracking-tight text-foreground">50 Professors</div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">All Departments</span>
-                  <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
-                    <TrendingUp className="h-3 w-3" /> +3.0%
-                  </span>
-                </div>
+            </div>
+            <div className="space-y-1.5">
+              <div className="text-3xl font-black tracking-tight text-[#101828] dark:text-[#F9FAFB]">50 Professors</div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[#475467] dark:text-[#98A2B3]">All Departments</span>
+                {/* Explicit Micro-Capsule Pill */}
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30 flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3" /> +3.0%
+                </span>
               </div>
-              <Progress value={90} className="h-1.5 bg-indigo-500/20" />
-            </CardContent>
-          </Card>
+            </div>
+            <div className="w-full bg-[#E3E5E8] dark:bg-[#222F4C] rounded-full h-1.5 overflow-hidden">
+              <div className="bg-[#C387C2] h-1.5 rounded-full transition-all duration-500" style={{ width: '90%' }} />
+            </div>
+          </div>
 
-          {/* Card 3: Today's Attendance */}
-          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
-            <CardContent className="p-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Today's Attendance</span>
-                <div className="p-2.5 rounded-2xl bg-orange-500/10 text-orange-600 dark:text-orange-400">
-                  <Activity className="h-4 w-4" />
-                </div>
+          {/* Card 3: Today's Attendance (Tracks with #4FA1D8 Teal) */}
+          <div className="h-full flex flex-col justify-between p-6 rounded-3xl bg-white dark:bg-[#151D30] border border-[#E4E7EC] dark:border-[#222F4C] shadow-card hover:shadow-card-hover transition-all space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#475467] dark:text-[#98A2B3] uppercase tracking-wider">Today's Attendance</span>
+              <div className="p-2.5 rounded-2xl bg-[#4FA1D8]/15 text-[#4FA1D8] dark:bg-[#4FA1D8]/20 dark:text-[#4FA1D8]">
+                <Activity className="h-4 w-4" />
               </div>
-              <div className="space-y-1">
-                <div className="text-3xl font-black tracking-tight text-foreground">94.6%</div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Institution Average</span>
-                  <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
-                    <TrendingUp className="h-3 w-3" /> +1.4%
-                  </span>
-                </div>
+            </div>
+            <div className="space-y-1.5">
+              <div className="text-3xl font-black tracking-tight text-[#101828] dark:text-[#F9FAFB]">94.6%</div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[#475467] dark:text-[#98A2B3]">Institution Average</span>
+                {/* Explicit Micro-Capsule Pill */}
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30 flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3" /> +1.4%
+                </span>
               </div>
-              <Progress value={94.6} className="h-1.5 bg-orange-500/20" />
-            </CardContent>
-          </Card>
+            </div>
+            <div className="w-full bg-[#E3E5E8] dark:bg-[#222F4C] rounded-full h-1.5 overflow-hidden">
+              <div className="bg-[#4FA1D8] h-1.5 rounded-full transition-all duration-500" style={{ width: '94.6%' }} />
+            </div>
+          </div>
 
-          {/* Card 4: Monthly Revenue */}
-          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
-            <CardContent className="p-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Fee Collections</span>
-                <div className="p-2.5 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                  <CreditCard className="h-4 w-4" />
-                </div>
+          {/* Card 4: Fee Collections (Tracks with #5EA6EB Soft Blue) */}
+          <div className="h-full flex flex-col justify-between p-6 rounded-3xl bg-white dark:bg-[#151D30] border border-[#E4E7EC] dark:border-[#222F4C] shadow-card hover:shadow-card-hover transition-all space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#475467] dark:text-[#98A2B3] uppercase tracking-wider">Fee Collections</span>
+              <div className="p-2.5 rounded-2xl bg-[#5EA6EB]/10 text-[#5EA6EB] dark:bg-[#5EA6EB]/20 dark:text-[#5EA6EB]">
+                <CreditCard className="h-4 w-4" />
               </div>
-              <div className="space-y-1">
-                <div className="text-3xl font-black tracking-tight text-foreground">₹5,06,500</div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">₹85,000 Pending</span>
-                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">92% Cleared</span>
-                </div>
+            </div>
+            <div className="space-y-1.5">
+              <div className="text-3xl font-black tracking-tight text-[#101828] dark:text-[#F9FAFB]">₹5,06,500</div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[#475467] dark:text-[#98A2B3]">₹85,000 Pending</span>
+                {/* Explicit Micro-Capsule Pill */}
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30">
+                  92% Cleared
+                </span>
               </div>
-              <Progress value={92} className="h-1.5 bg-emerald-500/20" />
-            </CardContent>
-          </Card>
+            </div>
+            <div className="w-full bg-[#E3E5E8] dark:bg-[#222F4C] rounded-full h-1.5 overflow-hidden">
+              <div className="bg-[#5EA6EB] h-1.5 rounded-full transition-all duration-500" style={{ width: '92%' }} />
+            </div>
+          </div>
         </div>
 
         {/* ========================================================================= */}
@@ -335,395 +371,453 @@ export const AdminOverview: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* LEFT COLUMN: 8 Columns */}
           <div className="lg:col-span-8 space-y-6">
-            {/* Student Growth & Enrollment Trend (Shikhaor Image 4) */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-              <CardHeader className="pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            {/* Student Growth & Enrollment Trend */}
+            <div className="rounded-3xl border border-[#E4E7EC] dark:border-[#222F4C] shadow-card bg-white dark:bg-[#151D30] p-6 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <CardTitle className="text-base sm:text-lg font-bold text-foreground">
+                  <h3 className="text-base sm:text-lg font-bold text-[#101828] dark:text-[#F9FAFB]">
                     Student Growth & Admissions
-                  </CardTitle>
-                  <CardDescription className="text-xs">
+                  </h3>
+                  <p className="text-xs text-[#475467] dark:text-[#98A2B3]">
                     Monthly enrollment progression vs retention and course completion
-                  </CardDescription>
+                  </p>
                 </div>
-                <Badge variant="outline" className="text-xs border-primary/30 text-primary self-start sm:self-auto">
+                <span className="px-3 py-1 rounded-full text-xs font-bold border border-[#5EA6EB]/30 text-[#5EA6EB] bg-[#5EA6EB]/5 self-start sm:self-auto">
                   Academic Year 2024-2025
-                </Badge>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="h-[270px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={studentGrowthData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4}/>
-                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0}/>
-                        </linearGradient>
-                        <linearGradient id="colorNew" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
-                          <stop offset="95%" stopColor="#10b981" stopOpacity={0.0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} />
-                      <XAxis dataKey="month" stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: 'hsl(var(--card))',
-                          borderColor: 'hsl(var(--border))',
-                          borderRadius: '16px',
-                          boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
-                          fontSize: '12px'
-                        }}
-                      />
-                      <Area type="monotone" dataKey="total" name="Total Students" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />
-                      <Area type="monotone" dataKey="newStudents" name="New Admissions" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorNew)" />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="mt-3 flex items-center justify-center gap-6 text-xs font-semibold">
-                  <div className="flex items-center gap-2">
-                    <span className="h-3 w-3 rounded-full bg-blue-500" />
-                    <span>Total Active Cohort</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="h-3 w-3 rounded-full bg-emerald-500" />
-                    <span>New Enrollments</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </span>
+              </div>
 
-            {/* Financial Overview (Shikhaor Image 4) */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-              <CardHeader className="pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="h-[270px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={studentGrowthData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#5EA6EB" stopOpacity={0.4}/>
+                        <stop offset="95%" stopColor="#5EA6EB" stopOpacity={0.0}/>
+                      </linearGradient>
+                      <linearGradient id="colorNew" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#A1E8DD" stopOpacity={0.45}/>
+                        <stop offset="95%" stopColor="#A1E8DD" stopOpacity={0.0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} stroke="#ACB2BB" />
+                    <XAxis dataKey="month" stroke="#ACB2BB" fontSize={11} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#ACB2BB" fontSize={11} tickLine={false} axisLine={false} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'var(--card-bg, #151D30)',
+                        borderColor: '#222F4C',
+                        borderRadius: '16px',
+                        boxShadow: '0 8px 30px rgba(0,0,0,0.2)',
+                        color: '#F9FAFB',
+                        fontSize: '12px'
+                      }}
+                    />
+                    <Area type="monotone" dataKey="total" name="Total Students" stroke="#5EA6EB" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />
+                    <Area type="monotone" dataKey="newStudents" name="New Admissions" stroke="#A1E8DD" strokeWidth={3} fillOpacity={1} fill="url(#colorNew)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="mt-2 flex items-center justify-center gap-6 text-xs font-semibold">
+                <div className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-full bg-[#5EA6EB]" />
+                  <span className="text-[#101828] dark:text-[#F9FAFB]">Total Active Cohort</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-full bg-[#A1E8DD]" />
+                  <span className="text-[#101828] dark:text-[#F9FAFB]">New Enrollments</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Financial Bar Chart ("Financial Overview & Fee Streams" with Dual-Gradient) */}
+            <div className="rounded-3xl border border-[#E4E7EC] dark:border-[#222F4C] shadow-card bg-white dark:bg-[#151D30] p-6 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <CardTitle className="text-base sm:text-lg font-bold text-foreground">
+                  <h3 className="text-base sm:text-lg font-bold text-[#101828] dark:text-[#F9FAFB]">
                     Financial Overview & Fee Streams
-                  </CardTitle>
-                  <CardDescription className="text-xs">
+                  </h3>
+                  <p className="text-xs text-[#475467] dark:text-[#98A2B3]">
                     Current collections: ₹5,06,500.00 • Zero unrecorded receipts
-                  </CardDescription>
+                  </p>
                 </div>
 
-                <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-muted/60 border border-border/60">
+                {/* Interactive Toggles using #5EA6EB Accent */}
+                <div className="flex items-center gap-1 p-1 rounded-2xl bg-[#F8F9FA] dark:bg-[#0B0F19] border border-[#E4E7EC] dark:border-[#222F4C]">
                   <button
                     onClick={() => setFinancialTab('earned')}
-                    className={`px-3 py-1 text-xs font-bold rounded-xl transition-all ${
-                      financialTab === 'earned' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
+                    className={`px-3 py-1 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                      financialTab === 'earned' 
+                        ? 'bg-[#5EA6EB] text-white shadow-xs' 
+                        : 'text-[#475467] dark:text-[#98A2B3] hover:text-[#101828] dark:hover:text-[#F9FAFB]'
                     }`}
                   >
                     Total Earn
                   </button>
                   <button
                     onClick={() => setFinancialTab('due')}
-                    className={`px-3 py-1 text-xs font-bold rounded-xl transition-all ${
-                      financialTab === 'due' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
+                    className={`px-3 py-1 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                      financialTab === 'due' 
+                        ? 'bg-[#5EA6EB] text-white shadow-xs' 
+                        : 'text-[#475467] dark:text-[#98A2B3] hover:text-[#101828] dark:hover:text-[#F9FAFB]'
                     }`}
                   >
                     Total Due
                   </button>
                   <button
                     onClick={() => setFinancialTab('expense')}
-                    className={`px-3 py-1 text-xs font-bold rounded-xl transition-all ${
-                      financialTab === 'expense' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
+                    className={`px-3 py-1 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                      financialTab === 'expense' 
+                        ? 'bg-[#5EA6EB] text-white shadow-xs' 
+                        : 'text-[#475467] dark:text-[#98A2B3] hover:text-[#101828] dark:hover:text-[#F9FAFB]'
                     }`}
                   >
                     Expenses
                   </button>
                 </div>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="h-[220px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={financialData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} />
-                      <XAxis dataKey="month" stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#888888" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}k`} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: 'hsl(var(--card))',
-                          borderColor: 'hsl(var(--border))',
-                          borderRadius: '16px',
-                          fontSize: '12px'
-                        }}
-                      />
-                      <Bar dataKey={financialTab} fill="#f97316" radius={[6, 6, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            {/* Anti-Mismatch Reconciliation & Discrepancy Ledger (The Core PS-6 Value) */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card overflow-hidden">
-              <CardHeader className="pb-3 border-b bg-muted/20">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <CardTitle className="text-base sm:text-lg font-bold text-foreground">
-                        Spreadsheet Reconciliation & Anti-Mismatch Audit Ledger
-                      </CardTitle>
-                      <Badge className="bg-emerald-600 text-white text-[10px] font-bold">
-                        100% RECONCILED ✅
-                      </Badge>
-                    </div>
-                    <CardDescription className="text-xs">
-                      Proves PS-6 compliance: replacing paper registers and isolated spreadsheets with single-ledger verification
-                    </CardDescription>
-                  </div>
-                  <Button
-                    onClick={handleReaudit}
-                    size="sm"
-                    className="rounded-xl bg-primary text-primary-foreground text-xs font-semibold gap-1.5 self-start sm:self-auto"
-                  >
-                    <RefreshCw className="h-3.5 w-3.5" /> Re-Run Audit
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs text-left">
-                    <thead className="bg-muted/40 border-b border-border/70 text-muted-foreground font-semibold">
-                      <tr>
-                        <th className="p-3.5 pl-5">Discrepancy Code</th>
-                        <th className="p-3.5">Institutional Domain</th>
-                        <th className="p-3.5">Legacy Spreadsheet Flaw (Problem)</th>
-                        <th className="p-3.5">Nexora Autonomous Resolution (Engine)</th>
-                        <th className="p-3.5 pr-5">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/60">
-                      <tr className="hover:bg-muted/20 transition-colors">
-                        <td className="p-3.5 pl-5 font-bold text-primary">DISC-2025-01</td>
-                        <td className="p-3.5 font-semibold text-foreground">Attendance vs Exam Debarment</td>
-                        <td className="p-3.5 text-muted-foreground">Rahul Gupta (20CS003) had 64.1% attendance; legacy portal issued hall ticket erroneously.</td>
-                        <td className="p-3.5 text-foreground font-medium">Dynamic 75% Gate applied: Hall ticket locked; statutory debarment notice issued automatically.</td>
-                        <td className="p-3.5 pr-5"><Badge className="bg-emerald-600 text-white text-[10px]">RECONCILED</Badge></td>
-                      </tr>
-                      <tr className="hover:bg-muted/20 transition-colors">
-                        <td className="p-3.5 pl-5 font-bold text-primary">DISC-2025-02</td>
-                        <td className="p-3.5 font-semibold text-foreground">Fee Accounts vs Hall Ticket Clearance</td>
-                        <td className="p-3.5 text-muted-foreground">Priya Singh (20CS004) pending tuition fee was omitted from offline finance spreadsheet.</td>
-                        <td className="p-3.5 text-foreground font-medium">Live Itemized Ledger linked: ₹37,000 outstanding tracked; registration hold placed automatically.</td>
-                        <td className="p-3.5 pr-5"><Badge className="bg-emerald-600 text-white text-[10px]">RECONCILED</Badge></td>
-                      </tr>
-                      <tr className="hover:bg-muted/20 transition-colors">
-                        <td className="p-3.5 pl-5 font-bold text-primary">DISC-2025-03</td>
-                        <td className="p-3.5 font-semibold text-foreground">Continuous Assessment vs SGPA</td>
-                        <td className="p-3.5 text-muted-foreground">Weighting mismatch between internal (30) and end-sem (70) across differing Excel versions.</td>
-                        <td className="p-3.5 text-foreground font-medium">Unified Grading Engine: Real-time calculation of credit grade points and SGPA across all courses.</td>
-                        <td className="p-3.5 pr-5"><Badge className="bg-emerald-600 text-white text-[10px]">RECONCILED</Badge></td>
-                      </tr>
-                      <tr className="hover:bg-muted/20 transition-colors">
-                        <td className="p-3.5 pl-5 font-bold text-primary">DISC-2025-04</td>
-                        <td className="p-3.5 font-semibold text-foreground">Admissions vs Faculty Allocation</td>
-                        <td className="p-3.5 text-muted-foreground">New semester enrollments not synchronized with teacher lecture capacity.</td>
-                        <td className="p-3.5 text-foreground font-medium">Single-source primary key mapped directly to course codes with zero orphaned records.</td>
-                        <td className="p-3.5 pr-5"><Badge className="bg-emerald-600 text-white text-[10px]">RECONCILED</Badge></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+              <div className="h-[220px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={financialData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      {/* Sophisticated dual-gradients for data bars */}
+                      <linearGradient id="gradientEarn" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#5EA6EB" stopOpacity={1}/>
+                        <stop offset="100%" stopColor="#5EA6EB" stopOpacity={0.15}/>
+                      </linearGradient>
+                      <linearGradient id="gradientDue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#FFBC94" stopOpacity={1}/>
+                        <stop offset="100%" stopColor="#FFBC94" stopOpacity={0.15}/>
+                      </linearGradient>
+                      <linearGradient id="gradientExpense" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#A1E8DD" stopOpacity={1}/>
+                        <stop offset="100%" stopColor="#A1E8DD" stopOpacity={0.15}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} stroke="#ACB2BB" />
+                    <XAxis dataKey="month" stroke="#ACB2BB" fontSize={11} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#ACB2BB" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}k`} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#151D30',
+                        borderColor: '#222F4C',
+                        borderRadius: '16px',
+                        color: '#F9FAFB',
+                        fontSize: '12px'
+                      }}
+                    />
+                    <Bar 
+                      dataKey={financialTab} 
+                      fill={
+                        financialTab === 'earned' 
+                          ? 'url(#gradientEarn)' 
+                          : financialTab === 'due' 
+                          ? 'url(#gradientDue)' 
+                          : 'url(#gradientExpense)'
+                      } 
+                      radius={[6, 6, 0, 0]} 
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
 
-            {/* Academic Department & Course Performance (Edukors Image 2) */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card overflow-hidden">
-              <CardHeader className="pb-3 border-b bg-muted/20 flex flex-row items-center justify-between">
+            {/* Anti-Mismatch Reconciliation & Discrepancy Ledger (Section 5.D - Zebra Striping & Status Pills) */}
+            <div className="rounded-3xl border border-[#E4E7EC] dark:border-[#222F4C] shadow-card bg-white dark:bg-[#151D30] overflow-hidden">
+              <div className="p-5 border-b border-[#E4E7EC] dark:border-[#222F4C] bg-[#F8F9FA]/60 dark:bg-[#0B0F19]/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <CardTitle className="text-base font-bold text-foreground">
-                    Academic Department Performance
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Enrollment quotas, faculty staffing, and fee collection efficiency
-                  </CardDescription>
+                  <div className="flex items-center gap-2.5">
+                    <h3 className="text-base sm:text-lg font-bold text-[#101828] dark:text-[#F9FAFB]">
+                      Spreadsheet Reconciliation & Anti-Mismatch Audit Ledger
+                    </h3>
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30">
+                      100% RECONCILED ✅
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#475467] dark:text-[#98A2B3] mt-0.5">
+                    Proves PS-6 compliance: replacing paper registers and isolated spreadsheets with single-ledger verification
+                  </p>
                 </div>
-                <Button variant="ghost" size="sm" asChild className="text-xs text-primary">
+                <Button
+                  onClick={handleReaudit}
+                  size="sm"
+                  className="rounded-xl bg-[#5EA6EB] hover:bg-[#4D95DA] text-white text-xs font-semibold gap-1.5 self-start sm:self-auto cursor-pointer"
+                >
+                  <RefreshCw className="h-3.5 w-3.5" /> Re-Run Audit
+                </Button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-[#F8F9FA] dark:bg-[#0B0F19] border-b border-[#E4E7EC] dark:border-[#222F4C] text-[#475467] dark:text-[#98A2B3] font-semibold">
+                    <tr>
+                      <th className="p-3.5 pl-5">Discrepancy Code</th>
+                      <th className="p-3.5">Institutional Domain</th>
+                      <th className="p-3.5">Legacy Spreadsheet Flaw (Problem)</th>
+                      <th className="p-3.5">Nexora Autonomous Resolution (Engine)</th>
+                      <th className="p-3.5 pr-5">Status</th>
+                    </tr>
+                  </thead>
+                  {/* Zebra-striping pattern: #F8F9FA light / #1C2538 dark on even rows */}
+                  <tbody className="divide-y divide-[#E4E7EC] dark:divide-[#222F4C]">
+                    <tr className="bg-white dark:bg-[#151D30] hover:bg-[#5EA6EB]/5 dark:hover:bg-[#5EA6EB]/10 transition-colors">
+                      <td className="p-3.5 pl-5 font-bold font-mono text-[#5EA6EB]">DISC-2025-01</td>
+                      <td className="p-3.5 font-semibold text-[#101828] dark:text-[#F9FAFB]">Attendance vs Exam Debarment</td>
+                      <td className="p-3.5 text-[#475467] dark:text-[#98A2B3]">Rahul Gupta (20CS003) had 64.1% attendance; legacy portal issued hall ticket erroneously.</td>
+                      <td className="p-3.5 text-[#101828] dark:text-[#F9FAFB] font-medium">Dynamic 75% Gate applied: Hall ticket locked; statutory debarment notice issued automatically.</td>
+                      <td className="p-3.5 pr-5">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30 whitespace-nowrap">
+                          RECONCILED
+                        </span>
+                      </td>
+                    </tr>
+                    <tr className="bg-[#F8F9FA] dark:bg-[#1C2538] hover:bg-[#5EA6EB]/5 dark:hover:bg-[#5EA6EB]/10 transition-colors">
+                      <td className="p-3.5 pl-5 font-bold font-mono text-[#5EA6EB]">DISC-2025-02</td>
+                      <td className="p-3.5 font-semibold text-[#101828] dark:text-[#F9FAFB]">Fee Accounts vs Hall Ticket Clearance</td>
+                      <td className="p-3.5 text-[#475467] dark:text-[#98A2B3]">Priya Singh (20CS004) pending tuition fee was omitted from offline finance spreadsheet.</td>
+                      <td className="p-3.5 text-[#101828] dark:text-[#F9FAFB] font-medium">Live Itemized Ledger linked: ₹37,000 outstanding tracked; registration hold placed automatically.</td>
+                      <td className="p-3.5 pr-5">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30 whitespace-nowrap">
+                          RECONCILED
+                        </span>
+                      </td>
+                    </tr>
+                    <tr className="bg-white dark:bg-[#151D30] hover:bg-[#5EA6EB]/5 dark:hover:bg-[#5EA6EB]/10 transition-colors">
+                      <td className="p-3.5 pl-5 font-bold font-mono text-[#5EA6EB]">DISC-2025-03</td>
+                      <td className="p-3.5 font-semibold text-[#101828] dark:text-[#F9FAFB]">Continuous Assessment vs SGPA</td>
+                      <td className="p-3.5 text-[#475467] dark:text-[#98A2B3]">Weighting mismatch between internal (30) and end-sem (70) across differing Excel versions.</td>
+                      <td className="p-3.5 text-[#101828] dark:text-[#F9FAFB] font-medium">Unified Grading Engine: Real-time calculation of credit grade points and SGPA across all courses.</td>
+                      <td className="p-3.5 pr-5">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30 whitespace-nowrap">
+                          RECONCILED
+                        </span>
+                      </td>
+                    </tr>
+                    <tr className="bg-[#F8F9FA] dark:bg-[#1C2538] hover:bg-[#5EA6EB]/5 dark:hover:bg-[#5EA6EB]/10 transition-colors">
+                      <td className="p-3.5 pl-5 font-bold font-mono text-[#5EA6EB]">DISC-2025-04</td>
+                      <td className="p-3.5 font-semibold text-[#101828] dark:text-[#F9FAFB]">Admissions vs Faculty Allocation</td>
+                      <td className="p-3.5 text-[#475467] dark:text-[#98A2B3]">New semester enrollments not synchronized with teacher lecture capacity.</td>
+                      <td className="p-3.5 text-[#101828] dark:text-[#F9FAFB] font-medium">Single-source primary key mapped directly to course codes with zero orphaned records.</td>
+                      <td className="p-3.5 pr-5">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30 whitespace-nowrap">
+                          RECONCILED
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Academic Department Performance Table */}
+            <div className="rounded-3xl border border-[#E4E7EC] dark:border-[#222F4C] shadow-card bg-white dark:bg-[#151D30] overflow-hidden">
+              <div className="p-5 border-b border-[#E4E7EC] dark:border-[#222F4C] bg-[#F8F9FA]/60 dark:bg-[#0B0F19]/40 flex flex-row items-center justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-[#101828] dark:text-[#F9FAFB]">
+                    Academic Department Performance
+                  </h3>
+                  <p className="text-xs text-[#475467] dark:text-[#98A2B3]">
+                    Enrollment quotas, faculty staffing, and fee collection efficiency
+                  </p>
+                </div>
+                {/* Structural Action Link strictly using #5EA6EB */}
+                <Button variant="ghost" size="sm" asChild className="text-xs text-[#5EA6EB] hover:text-[#4D95DA] font-bold">
                   <Link to="/admin/manage-students">View All Students <ArrowRight className="h-3.5 w-3.5 ml-1" /></Link>
                 </Button>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs text-left">
-                    <thead className="bg-muted/40 border-b border-border/70 text-muted-foreground font-semibold">
-                      <tr>
-                        <th className="p-3.5 pl-5">Department</th>
-                        <th className="p-3.5">HOD / Chair</th>
-                        <th className="p-3.5">Students</th>
-                        <th className="p-3.5">Avg Attendance</th>
-                        <th className="p-3.5">Fee Rate</th>
-                        <th className="p-3.5 pr-5">Action</th>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-[#F8F9FA] dark:bg-[#0B0F19] border-b border-[#E4E7EC] dark:border-[#222F4C] text-[#475467] dark:text-[#98A2B3] font-semibold">
+                    <tr>
+                      <th className="p-3.5 pl-5">Department</th>
+                      <th className="p-3.5">HOD / Chair</th>
+                      <th className="p-3.5">Students</th>
+                      <th className="p-3.5">Avg Attendance</th>
+                      <th className="p-3.5">Fee Rate</th>
+                      <th className="p-3.5 pr-5">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E4E7EC] dark:divide-[#222F4C]">
+                    {departmentPerformance.map((dept, index) => (
+                      <tr 
+                        key={dept.code} 
+                        className={`transition-colors hover:bg-[#5EA6EB]/5 dark:hover:bg-[#5EA6EB]/10 ${
+                          index % 2 === 1 ? 'bg-[#F8F9FA] dark:bg-[#1C2538]' : 'bg-white dark:bg-[#151D30]'
+                        }`}
+                      >
+                        <td className="p-3.5 pl-5">
+                          <span className="font-bold text-[#101828] dark:text-[#F9FAFB] block">{dept.name}</span>
+                          <span className="text-[10px] text-[#475467] dark:text-[#98A2B3]">{dept.code} • {dept.faculty} Faculty</span>
+                        </td>
+                        <td className="p-3.5 text-[#475467] dark:text-[#98A2B3]">{dept.head}</td>
+                        <td className="p-3.5 font-bold text-[#101828] dark:text-[#F9FAFB]">{dept.students}</td>
+                        <td className="p-3.5 font-semibold text-[#4FA1D8]">{dept.attendance}</td>
+                        <td className="p-3.5 font-bold text-[#101828] dark:text-[#F9FAFB]">{dept.collection}</td>
+                        <td className="p-3.5 pr-5">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            dept.status === 'Optimal' 
+                              ? 'bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30' 
+                              : dept.status === 'Good'
+                              ? 'bg-[#A5E5FF] text-[#0B3A60] dark:bg-[#A5E5FF]/20 dark:text-[#A5E5FF] dark:border dark:border-[#A5E5FF]/30'
+                              : 'bg-[#FFA5A8] text-[#7A151A] dark:bg-[#FFA5A8]/15 dark:text-[#FFA5A8] dark:border dark:border-[#FFA5A8]/30'
+                          }`}>
+                            {dept.status}
+                          </span>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/60">
-                      {departmentPerformance.map((dept) => (
-                        <tr key={dept.code} className="hover:bg-muted/20 transition-colors">
-                          <td className="p-3.5 pl-5">
-                            <span className="font-bold text-foreground block">{dept.name}</span>
-                            <span className="text-[10px] text-muted-foreground">{dept.code} • {dept.faculty} Faculty</span>
-                          </td>
-                          <td className="p-3.5 text-muted-foreground">{dept.head}</td>
-                          <td className="p-3.5 font-bold text-foreground">{dept.students}</td>
-                          <td className="p-3.5 font-semibold text-emerald-600 dark:text-emerald-400">{dept.attendance}</td>
-                          <td className="p-3.5 font-bold text-foreground">{dept.collection}</td>
-                          <td className="p-3.5 pr-5">
-                            <Button asChild variant="ghost" size="icon" className="h-7 w-7 rounded-lg">
-                              <Link to={`/admin/branch-students/${dept.code}`}>
-                                <Eye className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
-                              </Link>
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
 
           {/* RIGHT COLUMN: 4 Columns (Donut, Attention Alerts, Activities) */}
           <div className="lg:col-span-4 space-y-6">
-            {/* Attendance Overview Donut (Shikhaor Image 4) */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-              <CardHeader className="pb-1 flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-base font-bold text-foreground">
-                    Attendance Overview
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Institutional daily breakdown
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-2">
-                <div className="h-[200px] w-full flex items-center justify-center">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={attendanceBreakdown}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={55}
-                        outerRadius={75}
-                        paddingAngle={4}
-                        dataKey="value"
-                      >
-                        {attendanceBreakdown.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="text-center mt-[-90px] mb-8 space-y-0.5">
-                  <span className="text-2xl font-black text-foreground">94.6%</span>
-                  <span className="text-[10px] text-muted-foreground block font-semibold">Today's Present</span>
-                </div>
-                <div className="pt-4 border-t border-border/60 space-y-2 text-xs font-semibold">
-                  <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-2 text-foreground">
-                      <span className="h-2.5 w-2.5 rounded-full bg-orange-500" /> Present (1,560)
-                    </span>
-                    <span className="text-muted-foreground">94.6%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-2 text-foreground">
-                      <span className="h-2.5 w-2.5 rounded-full bg-slate-800 dark:bg-slate-300" /> Absent (75)
-                    </span>
-                    <span className="text-muted-foreground">4.6%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-2 text-foreground">
-                      <span className="h-2.5 w-2.5 rounded-full bg-slate-300 dark:bg-slate-600" /> Condoned / Late (15)
-                    </span>
-                    <span className="text-muted-foreground">0.8%</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Attendance Overview Donut (Shikhaor Image 4 with Exact Semantic Pastel Palette) */}
+            <div className="rounded-3xl border border-[#E4E7EC] dark:border-[#222F4C] shadow-card bg-white dark:bg-[#151D30] p-6 space-y-3">
+              <div>
+                <h3 className="text-base font-bold text-[#101828] dark:text-[#F9FAFB]">
+                  Attendance Overview
+                </h3>
+                <p className="text-xs text-[#475467] dark:text-[#98A2B3]">
+                  Institutional daily breakdown
+                </p>
+              </div>
 
-            {/* Attention Alert Sidebar (Shikhaor Image 4) */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-              <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-base font-bold text-foreground">
-                    Attention Alerts
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Institutional bottlenecks requiring action
-                  </CardDescription>
+              <div className="h-[200px] w-full flex items-center justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={attendanceBreakdown}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={55}
+                      outerRadius={75}
+                      paddingAngle={4}
+                      dataKey="value"
+                    >
+                      {attendanceBreakdown.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="text-center mt-[-90px] mb-8 space-y-0.5">
+                <span className="text-2xl font-black text-[#101828] dark:text-[#F9FAFB]">94.6%</span>
+                <span className="text-[10px] text-[#475467] dark:text-[#98A2B3] block font-semibold">Today's Present</span>
+              </div>
+
+              <div className="pt-4 border-t border-[#E4E7EC] dark:border-[#222F4C] space-y-2.5 text-xs font-semibold">
+                <div className="flex justify-between items-center">
+                  <span className="flex items-center gap-2 text-[#101828] dark:text-[#F9FAFB]">
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#4FA1D8]" /> Present (1,560)
+                  </span>
+                  <span className="text-[#475467] dark:text-[#98A2B3]">94.6%</span>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="flex items-center gap-2 text-[#101828] dark:text-[#F9FAFB]">
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#FFA5A8]" /> Absent (75)
+                  </span>
+                  <span className="text-[#475467] dark:text-[#98A2B3]">4.6%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="flex items-center gap-2 text-[#101828] dark:text-[#F9FAFB]">
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#A1E8DD]" /> Condoned / Late (15)
+                  </span>
+                  <span className="text-[#475467] dark:text-[#98A2B3]">0.8%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Attention Alert Sidebar with Structural Action Links ("Resolve >" in #5EA6EB) */}
+            <div className="rounded-3xl border border-[#E4E7EC] dark:border-[#222F4C] shadow-card bg-white dark:bg-[#151D30] p-6 space-y-3">
+              <div>
+                <h3 className="text-base font-bold text-[#101828] dark:text-[#F9FAFB]">
+                  Attention Alerts
+                </h3>
+                <p className="text-xs text-[#475467] dark:text-[#98A2B3]">
+                  Institutional bottlenecks requiring action
+                </p>
+              </div>
+
+              <div className="space-y-3">
                 {attentionAlerts.map((alert) => (
-                  <div key={alert.id} className="p-3.5 rounded-2xl border border-border/60 bg-muted/20 hover:bg-muted/40 transition-colors flex items-center justify-between gap-3">
+                  <div 
+                    key={alert.id} 
+                    className="p-3.5 rounded-2xl border border-[#E4E7EC] dark:border-[#222F4C] bg-[#F8F9FA]/70 dark:bg-[#0B0F19]/40 hover:border-[#5EA6EB]/40 transition-colors flex items-center justify-between gap-3"
+                  >
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-2">
-                        <h5 className="text-xs font-bold text-foreground">{alert.title}</h5>
-                        <Badge variant={alert.badgeVariant} className="text-[10px] px-1.5 py-0">
+                        <h5 className="text-xs font-bold text-[#101828] dark:text-[#F9FAFB]">{alert.title}</h5>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${alert.badgeClass}`}>
                           {alert.count}
-                        </Badge>
+                        </span>
                       </div>
-                      <p className="text-[11px] text-muted-foreground">{alert.subtitle}</p>
+                      <p className="text-[11px] text-[#475467] dark:text-[#98A2B3]">{alert.subtitle}</p>
                     </div>
-                    <Button asChild size="sm" variant="ghost" className="h-7 text-xs px-2 text-primary font-semibold">
-                      <Link to={alert.link}>
-                        Resolve <ChevronRight className="h-3 w-3 ml-0.5" />
-                      </Link>
-                    </Button>
+                    {/* Structural action link strictly matching #5EA6EB */}
+                    <Link 
+                      to={alert.link} 
+                      className="text-xs font-bold text-[#5EA6EB] hover:text-[#4D95DA] flex items-center gap-0.5 whitespace-nowrap"
+                    >
+                      Resolve <ChevronRight className="h-3.5 w-3.5" />
+                    </Link>
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Recent Institutional Activities Feed */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base font-bold text-foreground">
+            <div className="rounded-3xl border border-[#E4E7EC] dark:border-[#222F4C] shadow-card bg-white dark:bg-[#151D30] p-6 space-y-3">
+              <div>
+                <h3 className="text-base font-bold text-[#101828] dark:text-[#F9FAFB]">
                   Recent Activities
-                </CardTitle>
-                <CardDescription className="text-xs">
+                </h3>
+                <p className="text-xs text-[#475467] dark:text-[#98A2B3]">
                   Real-time audit log stream
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-xs">
-                <div className="flex items-start gap-3 p-2.5 rounded-xl bg-muted/20">
-                  <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 mt-0.5">
+                </p>
+              </div>
+
+              <div className="space-y-3 text-xs">
+                <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#F8F9FA]/70 dark:bg-[#0B0F19]/40 border border-[#E4E7EC]/80 dark:border-[#222F4C]/80">
+                  <div className="p-1.5 rounded-xl bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/20 dark:text-[#C4EFDF] mt-0.5 shrink-0">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                   </div>
-                  <div className="space-y-0.5">
-                    <p className="font-semibold text-foreground">Fee Payment Reconciled</p>
-                    <p className="text-[11px] text-muted-foreground">Aarav Sharma (20CS001) settled ₹82,000 • Receipt #RCP-912</p>
-                    <p className="text-[10px] text-muted-foreground/70">12 mins ago</p>
+                  <div className="space-y-0.5 min-w-0">
+                    <p className="font-bold text-[#101828] dark:text-[#F9FAFB]">Fee Payment Reconciled</p>
+                    <p className="text-[11px] text-[#475467] dark:text-[#98A2B3] truncate">Aarav Sharma (20CS001) settled ₹82,000 • Receipt #RCP-912</p>
+                    <p className="text-[10px] text-[#475467]/70 dark:text-[#98A2B3]/70">12 mins ago</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-2.5 rounded-xl bg-muted/20">
-                  <div className="p-1.5 rounded-lg bg-rose-500/10 text-rose-600 mt-0.5">
+                <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#F8F9FA]/70 dark:bg-[#0B0F19]/40 border border-[#E4E7EC]/80 dark:border-[#222F4C]/80">
+                  <div className="p-1.5 rounded-xl bg-[#FFA5A8] text-[#7A151A] dark:bg-[#FFA5A8]/20 dark:text-[#FFA5A8] mt-0.5 shrink-0">
                     <ShieldAlert className="h-3.5 w-3.5" />
                   </div>
-                  <div className="space-y-0.5">
-                    <p className="font-semibold text-foreground">Statutory Debarment Triggered</p>
-                    <p className="text-[11px] text-muted-foreground">Rahul Gupta (20CS003) attendance dropped to 64.1% • Admit Card locked</p>
-                    <p className="text-[10px] text-muted-foreground/70">1 hour ago</p>
+                  <div className="space-y-0.5 min-w-0">
+                    <p className="font-bold text-[#101828] dark:text-[#F9FAFB]">Statutory Debarment Triggered</p>
+                    <p className="text-[11px] text-[#475467] dark:text-[#98A2B3] truncate">Rahul Gupta (20CS003) attendance dropped to 64.1% • Admit Card locked</p>
+                    <p className="text-[10px] text-[#475467]/70 dark:text-[#98A2B3]/70">1 hour ago</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-2.5 rounded-xl bg-muted/20">
-                  <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-600 mt-0.5">
+                <div className="flex items-start gap-3 p-3 rounded-2xl bg-[#F8F9FA]/70 dark:bg-[#0B0F19]/40 border border-[#E4E7EC]/80 dark:border-[#222F4C]/80">
+                  <div className="p-1.5 rounded-xl bg-[#A5E5FF] text-[#0B3A60] dark:bg-[#A5E5FF]/20 dark:text-[#A5E5FF] mt-0.5 shrink-0">
                     <GraduationCap className="h-3.5 w-3.5" />
                   </div>
-                  <div className="space-y-0.5">
-                    <p className="font-semibold text-foreground">Marks Moderation Published</p>
-                    <p className="text-[11px] text-muted-foreground">CS301 Database Systems End-Sem marks approved by CoE</p>
-                    <p className="text-[10px] text-muted-foreground/70">3 hours ago</p>
+                  <div className="space-y-0.5 min-w-0">
+                    <p className="font-bold text-[#101828] dark:text-[#F9FAFB]">Marks Moderation Published</p>
+                    <p className="text-[11px] text-[#475467] dark:text-[#98A2B3] truncate">CS301 Database Systems End-Sem marks approved by CoE</p>
+                    <p className="text-[10px] text-[#475467]/70 dark:text-[#98A2B3]/70">3 hours ago</p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </div>

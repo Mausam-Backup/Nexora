@@ -28,7 +28,12 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
-export const DemoRoleSwitcher: React.FC = () => {
+interface DemoRoleSwitcherProps {
+  customTrigger?: React.ReactNode
+  hideBadges?: boolean
+}
+
+export const DemoRoleSwitcher: React.FC<DemoRoleSwitcherProps> = ({ customTrigger, hideBadges = false }) => {
   const { user, login } = useAuth()
   const navigate = useNavigate()
   const { students, resetToDefaultData, runIntegrityAudit, serverConnected } = useERPData()
@@ -126,59 +131,65 @@ export const DemoRoleSwitcher: React.FC = () => {
 
   return (
     <div className="flex items-center gap-2">
-      {/* Backend Express REST Health Indicator */}
-      <div 
-        className={`hidden xl:flex items-center gap-1.5 px-2 py-1 rounded-full text-[11px] font-medium border ${
-          serverConnected
-            ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
-            : 'bg-muted text-muted-foreground border-border'
-        }`}
-        title="Status of backend Express REST persistence service (http://localhost:5001/api/erp/health)"
-      >
-        <span className={`w-1.5 h-1.5 rounded-full ${serverConnected ? 'bg-blue-500 animate-ping' : 'bg-muted-foreground'}`} />
-        <span>{serverConnected ? 'REST: Synced' : 'REST: Offline Cache'}</span>
-      </div>
+      {!hideBadges && (
+        <>
+          {/* Backend Express REST Health Indicator */}
+          <div 
+            className={`hidden xl:flex items-center gap-1.5 px-2 py-1 rounded-full text-[11px] font-medium border ${
+              serverConnected
+                ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
+                : 'bg-muted text-muted-foreground border-border'
+            }`}
+            title="Status of backend Express REST persistence service (http://localhost:5001/api/erp/health)"
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${serverConnected ? 'bg-blue-500 animate-ping' : 'bg-muted-foreground'}`} />
+            <span>{serverConnected ? 'REST: Synced' : 'REST: Offline Cache'}</span>
+          </div>
 
-      {/* Live Anti-Mismatch Reconciliation Status Badge */}
-      <div 
-        onClick={handleRunAudit}
-        className={`hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border cursor-pointer transition-colors ${
-          isFullyReconciled 
-            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20' 
-            : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 hover:bg-amber-500/20'
-        }`}
-        title="Click to execute real-time cross-module audit"
-      >
-        <span className={`w-2 h-2 rounded-full ${isFullyReconciled ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-        <span>{isFullyReconciled ? 'Audit: 100% Reconciled' : `Audit: ${issues.length} Anomalies`}</span>
-      </div>
+          {/* Live Anti-Mismatch Reconciliation Status Badge */}
+          <div 
+            onClick={handleRunAudit}
+            className={`hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border cursor-pointer transition-colors ${
+              isFullyReconciled 
+                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20' 
+                : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 hover:bg-amber-500/20'
+            }`}
+            title="Click to execute real-time cross-module audit"
+          >
+            <span className={`w-2 h-2 rounded-full ${isFullyReconciled ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+            <span>{isFullyReconciled ? 'Audit: 100% Reconciled' : `Audit: ${issues.length} Anomalies`}</span>
+          </div>
 
-      {/* Quick Judge Split View Launcher */}
-      <Button 
-        variant="outline" 
-        size="sm" 
-        onClick={handleOpenSplitView}
-        className="hidden md:flex items-center gap-1.5 h-9 text-xs border-primary/30 hover:bg-primary/10"
-        title="Open dual browser windows to demonstrate real-time cross-module synchronization"
-      >
-        <Layers className="h-3.5 w-3.5 text-primary" />
-        <span>Judge Split View</span>
-      </Button>
+          {/* Quick Judge Split View Launcher */}
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleOpenSplitView}
+            className="hidden md:flex items-center gap-1.5 h-9 text-xs border-primary/30 hover:bg-primary/10"
+            title="Open dual browser windows to demonstrate real-time cross-module synchronization"
+          >
+            <Layers className="h-3.5 w-3.5 text-primary" />
+            <span>Judge Split View</span>
+          </Button>
+        </>
+      )}
 
       {/* Main Role Dropdown Switcher */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="h-9 px-2.5 gap-2 border-primary/40 bg-background/80 backdrop-blur-sm shadow-sm hover:border-primary">
-            <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
-            <span className="font-semibold text-xs hidden sm:inline">Role:</span>
-            <Badge variant={getRoleBadgeVariant()} className="text-[10px] px-1.5 py-0 uppercase">
-              {user?.role || 'student'}
-            </Badge>
-            <span className="text-xs font-medium max-w-[100px] truncate hidden md:inline">
-              {user?.name?.split(' ')[0]}
-            </span>
-            <ChevronDown className="h-3 w-3 text-muted-foreground" />
-          </Button>
+          {customTrigger || (
+            <Button variant="outline" size="sm" className="h-9 px-2.5 gap-2 border-primary/40 bg-background/80 backdrop-blur-sm shadow-sm hover:border-primary">
+              <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
+              <span className="font-semibold text-xs hidden sm:inline">Role:</span>
+              <Badge variant={getRoleBadgeVariant()} className="text-[10px] px-1.5 py-0 uppercase">
+                {user?.role || 'student'}
+              </Badge>
+              <span className="text-xs font-medium max-w-[100px] truncate hidden md:inline">
+                {user?.name?.split(' ')[0]}
+              </span>
+              <ChevronDown className="h-3 w-3 text-muted-foreground" />
+            </Button>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-80 p-2">
           <DropdownMenuLabel className="flex items-center justify-between text-xs text-muted-foreground font-normal">

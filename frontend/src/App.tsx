@@ -8,6 +8,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from "@/contexts/AuthContext";
 import ScrollToTop from "./components/ScrollToTop";
 import { AppRoutes } from "./routes";
+import { ExpanseBackground } from "./components/background/ExpanseBackground";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
+            <ExpanseBackground />
             <BrowserRouter>
               <ScrollToTop />
               <AppRoutes />

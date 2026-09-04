@@ -34,7 +34,7 @@ export default function LionFullscreenModal({
   const [activeFrame, setActiveFrame] = useState<number>(1);
   const [copied, setCopied] = useState<boolean>(false);
 
-  const CONTACT_EMAIL = "contact@tryresponse.com";
+  const CONTACT_EMAIL = "mausamkar5055@gmail.com";
 
   const handleCopyEmail = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -399,38 +399,38 @@ export default function LionFullscreenModal({
       >
         <div
           style={{
-            fontSize: "16px",
+            fontSize: "13px",
             fontStyle: "italic",
-            color: "rgba(255, 255, 255, 0.8)",
-            marginBottom: "12px",
+            color: "rgba(255, 255, 255, 0.75)",
+            marginBottom: "6px",
             letterSpacing: "0.5px",
           }}
         >
-          &copy; 2025 NEXORA STUDIO
+          &copy; 2026 Nexora • VIT Bhopal
         </div>
         <h1
           style={{
-            fontSize: "clamp(34px, 5vw, 60px)",
+            fontSize: "clamp(24px, 3.2vw, 38px)",
             fontWeight: 400,
-            lineHeight: 1.05,
-            letterSpacing: "-0.5px",
-            margin: "0 0 16px",
+            lineHeight: 1.15,
+            letterSpacing: "-0.3px",
+            margin: "0 0 8px",
             textTransform: "uppercase",
-            textShadow: "0 4px 20px rgba(0,0,0,0.8)",
+            textShadow: "0 2px 12px rgba(0,0,0,0.7)",
           }}
         >
-          Shaping Brands → Crafting Motion
+          Collegiate Core
         </h1>
         <p
           style={{
-            fontSize: "clamp(16px, 1.4vw, 20px)",
-            lineHeight: 1.6,
+            fontSize: "clamp(14px, 1.1vw, 16px)",
+            lineHeight: 1.4,
             color: "rgba(255, 255, 255, 0.85)",
-            margin: "0 0 20px",
-            textShadow: "0 2px 10px rgba(0,0,0,0.8)",
+            margin: 0,
+            textShadow: "0 1px 8px rgba(0,0,0,0.7)",
           }}
         >
-          Pushing the boundaries of digital architecture, high-performance web systems, and immersive visual storytelling.
+          Deterministic reconciliation with zero-latency sync.
         </p>
       </div>
 
@@ -440,7 +440,7 @@ export default function LionFullscreenModal({
           position: "absolute",
           bottom: "100px",
           right: "clamp(24px, 5vw, 60px)",
-          maxWidth: "580px",
+          maxWidth: "460px",
           textAlign: "right",
           color: "#ffffff",
           opacity: op2,
@@ -453,38 +453,38 @@ export default function LionFullscreenModal({
       >
         <div
           style={{
-            fontSize: "16px",
+            fontSize: "13px",
             fontStyle: "italic",
-            color: "rgba(255, 255, 255, 0.8)",
-            marginBottom: "12px",
+            color: "rgba(255, 255, 255, 0.75)",
+            marginBottom: "6px",
             letterSpacing: "0.5px",
           }}
         >
-          Capabilities & Creative Focus
+          Problem Statement PS-6
         </div>
         <h2
           style={{
-            fontSize: "clamp(32px, 4.5vw, 54px)",
+            fontSize: "clamp(24px, 3.2vw, 38px)",
             fontWeight: 400,
-            lineHeight: 1.08,
-            letterSpacing: "-0.5px",
-            margin: "0 0 16px",
+            lineHeight: 1.15,
+            letterSpacing: "-0.3px",
+            margin: "0 0 8px",
             textTransform: "uppercase",
-            textShadow: "0 4px 20px rgba(0,0,0,0.8)",
+            textShadow: "0 2px 12px rgba(0,0,0,0.7)",
           }}
         >
-          Transforming Visions Into Reality
+          Unified Relational State
         </h2>
         <p
           style={{
-            fontSize: "clamp(16px, 1.4vw, 20px)",
-            lineHeight: 1.6,
+            fontSize: "clamp(14px, 1.1vw, 16px)",
+            lineHeight: 1.4,
             color: "rgba(255, 255, 255, 0.85)",
             margin: 0,
-            textShadow: "0 2px 10px rgba(0,0,0,0.8)",
+            textShadow: "0 1px 8px rgba(0,0,0,0.7)",
           }}
         >
-          Building identity and inspiring action. Sculpting high-end digital experiences that captivate audiences and elevate brand presence.
+          Transactional integrity across Academics, CoE, and Accounts.
         </p>
       </div>
 
@@ -516,104 +516,76 @@ export default function LionFullscreenModal({
         <div>
           <div
             style={{
-              fontSize: "18px",
+              fontFamily: '"Times New Roman", Times, Georgia, serif',
+              fontSize: "14px",
               fontStyle: "italic",
-              color: "#555555",
-              marginBottom: "36px",
+              color: "#64748b",
+              marginBottom: "20px",
             }}
           >
-            &copy; 2025 Nexora Studio
+            Team AC-DC • VIT Bhopal
           </div>
 
           <h3
             style={{
-              fontSize: "clamp(28px, 3.5vw, 42px)",
+              fontSize: "clamp(26px, 3.2vw, 36px)",
               fontWeight: 400,
-              lineHeight: 1.15,
+              lineHeight: 1.2,
               letterSpacing: "-0.5px",
               margin: "0 0 16px",
-              color: "#000000",
+              color: "#0f172a",
             }}
           >
-            Sculpting Digital Realities
+            Contact &amp; Authorship
           </h3>
 
-          <p
+          <div
             style={{
-              fontSize: "17px",
-              lineHeight: 1.65,
-              color: "#333333",
-              margin: "0 0 28px",
-            }}
-          >
-            Transforming visions into digital realities. Weaving stories that captivate and innovate. Exploring new possibilities with a focus on narrative evolution. Crafting solutions that engage and elevate.
-          </p>
-
-          <a
-            href={`mailto:${CONTACT_EMAIL}?subject=Project%20Inquiry%20-%20Nexora`}
-            style={{
-              display: "inline-block",
-              padding: "10px 22px",
-              border: "1px solid #555555",
-              color: "#000000",
               fontSize: "15px",
-              textDecoration: "none",
-              fontFamily: '"Times New Roman", Times, Georgia, serif',
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#000000";
-              e.currentTarget.style.color = "#ffffff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.color = "#000000";
+              lineHeight: 1.6,
+              color: "#1e293b",
+              margin: "0 0 12px",
             }}
           >
-            Get In Touch →
-          </a>
-        </div>
+            <strong>Mausam Kar</strong> • Lead Architect &amp; Developer<br />
+            <span style={{ color: "#64748b", fontSize: "13.5px" }}>
+              CSE, VIT Bhopal University • Problem Statement PS-6
+            </span>
+          </div>
 
-        {/* Bottom Narrative Block */}
-        <div>
-          <h4
-            style={{
-              fontSize: "22px",
-              fontWeight: 400,
-              margin: "0 0 10px",
-              color: "#000000",
-            }}
-          >
-            Innovating Design
-          </h4>
           <p
             style={{
               fontSize: "15px",
               lineHeight: 1.6,
-              color: "#555555",
-              margin: "0 0 20px",
+              color: "#475569",
+              margin: "0 0 24px",
             }}
           >
-            Connecting ideas to foster creativity. Designing impactful experiences that resonate worldwide.
+            Engineered Nexora to eliminate collegiate administrative silos through deterministic relational reconciliation, sub-millisecond multi-tab state bus, and automated statutory gatekeepers.
           </p>
 
           <a
-            href={`mailto:${CONTACT_EMAIL}?subject=New%20Project%20Inquiry`}
+            href="mailto:mausamkar5055@gmail.com?subject=Contact%20Team%20AC-DC%20-%20Nexora"
             style={{
               display: "inline-block",
-              padding: "14px 32px",
-              backgroundColor: "#000000",
+              padding: "12px 28px",
+              backgroundColor: "#0f172a",
               color: "#ffffff",
-              fontSize: "15px",
+              fontSize: "14px",
               textDecoration: "none",
               fontFamily: '"Times New Roman", Times, Georgia, serif',
+              letterSpacing: "0.5px",
               transition: "opacity 0.2s ease",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
-            Start a Conversation →
+            Email Team AC-DC →
           </a>
+        </div>
+
+        {/* Bottom Block */}
+        <div>
 
           <div
             style={{
@@ -627,7 +599,7 @@ export default function LionFullscreenModal({
               color: "#777777",
             }}
           >
-            <span>&copy; 2025 Nexora</span>
+            <span>&copy; 2026 Team AC-DC • Nexora Systems</span>
             <div style={{ display: "flex", gap: "16px" }}>
               <a
                 href="https://github.com/Mausam5055/Nexora"

@@ -128,13 +128,13 @@ export function generatePrintableReport(options: PrintableReportOptions) {
         </style>
       </head>
       <body>
-        <div class="watermark">CAMPUSSYNC UNIVERSITY • OFFICIAL</div>
+        <div class="watermark">NEXORA UNIVERSITY • OFFICIAL</div>
         <div class="content-layer">
         <div class="header">
           <div class="institution">
-            <div class="logo">CS</div>
+            <div class="logo">NX</div>
             <div>
-              <h1 class="inst-name">CAMPUSSYNC UNIVERSITY</h1>
+              <h1 class="inst-name">NEXORA UNIVERSITY</h1>
               <p class="inst-sub">Autonomous Institute • Accredited Grade 'A+'</p>
               <p class="inst-sub">Office of Academic Administration & Records</p>
             </div>
@@ -142,7 +142,7 @@ export function generatePrintableReport(options: PrintableReportOptions) {
           <div style="text-align: right;">
             <p style="font-size: 12px; color: #64748b; margin: 0;">Date of Issue:</p>
             <p style="font-weight: 600; margin: 0;">${currentDate}</p>
-            <p style="font-size: 10px; color: #94a3b8; font-family: monospace; margin: 2px 0 0 0;">CS-AUTH-${Date.now().toString().slice(-6)}</p>
+            <p style="font-size: 10px; color: #94a3b8; font-family: monospace; margin: 2px 0 0 0;">NX-AUTH-${Date.now().toString().slice(-6)}</p>
             ${options.statusBadge ? `<div style="margin-top: 8px;"><span class="badge">${options.statusBadge.text}</span></div>` : ''}
           </div>
         </div>

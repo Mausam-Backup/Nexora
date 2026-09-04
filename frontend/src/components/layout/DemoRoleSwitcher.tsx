@@ -47,7 +47,7 @@ export const DemoRoleSwitcher: React.FC<DemoRoleSwitcherProps> = ({ customTrigge
       name: 'Hackathon Senior Judge (Master Auditor)',
       email: 'judge.evaluator@hackathon.org',
       role: 'admin',
-      collegeName: 'CampusSync Evaluation Council'
+      collegeName: 'Nexora Evaluation Council'
     })
     toast.success("Logged in as Hackathon Judge Persona (Full Unrestricted Access)")
     navigate('/admin/overview')

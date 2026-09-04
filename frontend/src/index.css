@@ -8,115 +8,95 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Light theme - Clean, sterile off-white with pastel accents */
+    /* Light theme - Clean, sterile off-white with AMOLED Black accents */
     --background: 210 17% 98%;        /* #F8F9FA Global Background */
-    --foreground: 221 43% 11%;        /* #101828 Deep Charcoal Headings */
+    --foreground: 0 0% 9%;            /* Deep Charcoal Headings #171717 */
 
     --card: 0 0% 100%;                /* #FFFFFF Clean white cards */
-    --card-foreground: 221 43% 11%;   /* #101828 */
+    --card-foreground: 0 0% 9%;       /* #171717 */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 221 43% 11%;
+    --popover-foreground: 0 0% 9%;
 
-    --primary: 209 79% 65%;           /* #5EA6EB Soft Royal Blue */
+    --primary: 10 36% 10%;            /* Dark Navbar Tone #241411 */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 20% 96%;
-    --secondary-foreground: 221 43% 11%;
+    --secondary-foreground: 0 0% 9%;
 
     --muted: 210 20% 96%;
     --muted-foreground: 215 18% 34%;  /* #475467 Medium Slate Body */
 
-    --accent: 209 79% 65%;
+    --accent: 10 36% 10%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 358 100% 82%;      /* #FFA5A8 Soft Coral Red */
-    --destructive-foreground: 355 71% 28%; /* #7A151A Deep Crimson */
+    --destructive: 358 100% 82%;      /* Soft Coral Red */
+    --destructive-foreground: 355 71% 28%; /* Deep Crimson */
 
-    --warning: 23 100% 79%;           /* #FFBC94 Muted Salmon */
+    --warning: 23 100% 79%;           /* Muted Salmon */
     --warning-foreground: 26 83% 14%;
 
-    --success: 159 58% 85%;           /* #C4EFDF Mint Green */
-    --success-foreground: 164 86% 16%; /* #064E3B Deep Pine */
+    --success: 159 58% 85%;           /* Mint Green */
+    --success-foreground: 164 86% 16%; /* Deep Pine */
 
     --border: 220 14% 91%;            /* #E4E7EC Crisp 1px border */
     --input: 220 14% 91%;
-    --ring: 209 79% 65%;              /* #5EA6EB */
+    --ring: 10 36% 10%;               /* Dark Navbar Tone */
 
     --radius: 0.75rem;
 
-    /* Enhanced chart colors aligned with pastel palette */
-    --chart-1: 209 79% 65%;  /* #5EA6EB Soft Blue */
-    --chart-2: 188 56% 58%;  /* #4FA1D8 Teal */
-    --chart-3: 159 58% 85%;  /* #C4EFDF Mint Green */
-    --chart-4: 358 100% 82%; /* #FFA5A8 Soft Coral */
-    --chart-5: 23 100% 79%;  /* #FFBC94 Muted Salmon */
-    --chart-6: 171 58% 77%;  /* #A1E8DD Pastel Turquoise */
+    /* Enhanced chart colors aligned with monochrome/pastel palette */
+    --chart-1: 10 36% 10%;   /* Dark Navbar Tone #241411 */
+    --chart-2: 188 56% 58%;  /* Teal */
+    --chart-3: 159 58% 85%;  /* Mint Green */
+    --chart-4: 358 100% 82%; /* Soft Coral */
+    --chart-5: 23 100% 79%;  /* Muted Salmon */
+    --chart-6: 171 58% 77%;  /* Pastel Turquoise */
 
-    /* Sidebar light theme - Clean white container with #5EA6EB active accents */
+    /* Sidebar light theme - Dark navbar active accents */
     --sidebar-background: 0 0% 100%;   /* #FFFFFF Clean white container */
-    --sidebar-foreground: 221 43% 11%; /* #101828 Deep charcoal */
-    --sidebar-primary: 209 79% 65%;    /* #5EA6EB Active module text & icon */
+    --sidebar-foreground: 0 0% 9%;     /* #171717 Deep charcoal */
+    --sidebar-primary: 10 36% 10%;     /* Dark Navbar Tone #241411 */
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 209 79% 95%;     /* Subtle active hover tint */
-    --sidebar-accent-foreground: 209 79% 45%;
+    --sidebar-accent: 12 30% 95%;      /* Soft warm hover */
+    --sidebar-accent-foreground: 10 36% 10%;
     --sidebar-border: 220 14% 91%;     /* #E4E7EC Crisp border */
-    --sidebar-ring: 209 79% 65%;
+    --sidebar-ring: 10 36% 10%;
   }
 
+  /* Dark mode completely removed - fallback identical to light theme */
   .dark {
-    /* Dark theme - Inverted Token System (Deep midnight charcoal #0B0F19, avoids pitch black) */
-    --background: 223 39% 7%;         /* #0B0F19 Deep midnight charcoal */
-    --foreground: 210 20% 98%;        /* #F9FAFB Crisp pure white headings */
-
-    --card: 223 39% 14%;              /* #151D30 Muted slate-black */
-    --card-foreground: 210 20% 98%;   /* #F9FAFB */
-
-    --popover: 223 39% 14%;
-    --popover-foreground: 210 20% 98%;
-
-    --primary: 209 79% 65%;           /* #5EA6EB Soft Royal Blue */
-    --primary-foreground: 223 39% 7%;
-
-    --secondary: 223 35% 18%;
-    --secondary-foreground: 210 20% 98%;
-
-    --muted: 222 36% 18%;
-    --muted-foreground: 217 14% 65%;  /* #98A2B3 Muted silver body text */
-
-    --accent: 209 79% 65%;
-    --accent-foreground: 210 20% 98%;
-
-    --destructive: 358 100% 82%;      /* #FFA5A8 */
-    --destructive-foreground: 358 100% 92%;
-
-    --warning: 23 100% 79%;           /* #FFBC94 */
-    --warning-foreground: 20 14% 4%;
-
-    --success: 159 58% 85%;           /* #C4EFDF */
-    --success-foreground: 159 58% 95%;
-
-    --border: 221 38% 22%;            /* #222F4C 1px subtle border line */
-    --input: 221 38% 22%;
-    --ring: 209 79% 65%;
-
-    /* Enhanced chart colors for dark theme */
-    --chart-1: 209 79% 65%;  /* #5EA6EB Soft Blue */
-    --chart-2: 188 56% 58%;  /* #4FA1D8 Teal */
-    --chart-3: 159 58% 85%;  /* #C4EFDF Mint */
-    --chart-4: 358 100% 82%; /* #FFA5A8 Coral */
-    --chart-5: 23 100% 79%;  /* #FFBC94 Salmon */
-    --chart-6: 171 58% 77%;  /* #A1E8DD Turquoise */
-
-    /* Sidebar dark solid container (#0F1626) */
-    --sidebar-background: 222 43% 10%; /* #0F1626 Dark solid container */
-    --sidebar-foreground: 210 20% 98%; /* #F9FAFB Crisp pure white */
-    --sidebar-primary: 209 79% 65%;    /* #5EA6EB Active module indicator */
+    --background: 210 17% 98%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 18% 34%;
+    --accent: 0 0% 9%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 358 100% 82%;
+    --destructive-foreground: 355 71% 28%;
+    --warning: 23 100% 79%;
+    --warning-foreground: 26 83% 14%;
+    --success: 159 58% 85%;
+    --success-foreground: 164 86% 16%;
+    --border: 220 14% 91%;
+    --input: 220 14% 91%;
+    --ring: 0 0% 9%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 9%;
+    --sidebar-primary: 0 0% 9%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 223 35% 18%;
-    --sidebar-accent-foreground: 209 79% 75%;
-    --sidebar-border: 221 38% 22%;     /* #222F4C 1px border */
-    --sidebar-ring: 209 79% 65%;
+    --sidebar-accent: 0 0% 94%;
+    --sidebar-accent-foreground: 0 0% 9%;
+    --sidebar-border: 220 14% 91%;
+    --sidebar-ring: 0 0% 9%;
   }
 }
 
@@ -188,12 +168,9 @@ All colors MUST be HSL.
     @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
   }
 
-  /* Award-Winning Design Utilities */
+  /* Design Utilities - Pure Light Theme with AMOLED Black elements */
   .shadow-card {
     box-shadow: 0 2px 12px -2px rgba(0, 0, 0, 0.04), 0 8px 24px -4px rgba(0, 0, 0, 0.04);
-  }
-  .dark .shadow-card {
-    box-shadow: 0 2px 12px -2px rgba(0, 0, 0, 0.3), 0 8px 24px -4px rgba(0, 0, 0, 0.4);
   }
 
   .shadow-card-hover {
@@ -203,36 +180,58 @@ All colors MUST be HSL.
     transform: translateY(-2px);
     box-shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
   }
-  .dark .shadow-card-hover:hover {
-    box-shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.6), 0 4px 12px -2px rgba(0, 0, 0, 0.4);
-  }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(226, 232, 240, 0.7);
-  }
-  .dark .glass-card {
-    background: rgba(15, 23, 42, 0.70);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(51, 65, 85, 0.35);
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
 
-  /* ─────────────────────────────────────────────────────────────
-   * SECTION BACKGROUND — Expanse Field CSS Echo
-   * Applied via the 'section-bg' class on any container / Card.
-   * Creates a subtle inner gradient matching the Three.js shader
-   * palette so cards visually participate in the global backdrop.
-   * ───────────────────────────────────────────────────────────── */
+  /* Bento Grid Pinkish Container System (Preserves Canvas White Background) */
+  .bento-pink {
+    background-color: #FDF2F5;
+    border: 1px solid #F5D5E2;
+    border-radius: 1.75rem;
+    box-shadow: 0 4px 20px -2px rgba(240, 180, 200, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bento-pink:hover {
+    box-shadow: 0 10px 28px -4px rgba(240, 180, 200, 0.2), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+  }
+
+  .bento-pink-accent {
+    background-color: #FCE4EC;
+    border: 1px solid #F5B8CE;
+    border-radius: 1.75rem;
+    box-shadow: 0 4px 20px -2px rgba(240, 160, 190, 0.16), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bento-pink-accent:hover {
+    box-shadow: 0 10px 28px -4px rgba(240, 160, 190, 0.24), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Bento Grid Puzzle Design Utilities - Pure Light Theme with AMOLED Black elements */
+  .bento-card {
+    background: #FDF2F5;
+    border-radius: 1.75rem;
+    border: 1px solid #F5D5E2;
+    box-shadow: 0 4px 20px -2px rgba(240, 180, 200, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bento-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px -6px rgba(240, 180, 200, 0.22), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+    border-color: #F5B8CE;
+  }
+
+  /* Section Background */
   .section-bg {
     position: relative;
     overflow: hidden;
     isolation: isolate;
   }
 
-  /* Bottom-left aurora sweep (blue → pink matching shader palette) */
   .section-bg::before {
     content: '';
     position: absolute;
@@ -242,237 +241,43 @@ All colors MUST be HSL.
     background:
       radial-gradient(
         ellipse 120% 80% at 10% 100%,
-        rgba(94, 166, 235, 0.22) 0%,
+        rgba(0, 0, 0, 0.015) 0%,
         transparent 70%
-      ),
-      radial-gradient(
-        ellipse 90% 60% at 90% 100%,
-        rgba(250, 133, 189, 0.18) 0%,
-        transparent 65%
       );
     transition: opacity 0.4s ease;
     border-radius: inherit;
   }
 
-  /* section-bg::after removed — caused visible 1px horizontal lines on every card */
-
-  /* Dark-mode variant: deeper aurora tones */
-  .dark .section-bg::before {
-    background:
-      radial-gradient(
-        ellipse 120% 80% at 10% 100%,
-        rgba(20, 56, 140, 0.35) 0%,
-        transparent 70%
-      ),
-      radial-gradient(
-        ellipse 90% 60% at 90% 100%,
-        rgba(133, 38, 97, 0.28) 0%,
-        transparent 65%
-      );
+  /* Dark Navbar Tone (#241411) Utilities */
+  .bg-navbar-dark {
+    background-color: #241411;
   }
-
-  /* .dark .section-bg::after removed — caused visible 1px horizontal lines on every card */
-
-  /* Hover lift for interactive section cards */
-  .section-bg-hover {
-    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  .bg-navbar-hover {
+    background-color: #341B16;
   }
-  .section-bg-hover:hover {
-    transform: translateY(-3px);
+  .border-navbar-dark {
+    border-color: #44251F;
   }
-  .section-bg-hover:hover::before {
-    opacity: 1.4;
+  .border-navbar-subtle {
+    border-color: #4E2A23;
   }
-
-  .glow-emerald {
-    box-shadow: 0 0 24px -4px rgba(16, 185, 129, 0.25);
+  .btn-navbar-dark {
+    background-color: #241411;
+    color: #ffffff;
+    border: 1px solid #44251F;
+    transition: all 0.2s ease;
   }
-  .glow-rose {
-    box-shadow: 0 0 24px -4px rgba(244, 63, 94, 0.25);
-  }
-  .glow-blue {
-    box-shadow: 0 0 24px -4px rgba(59, 130, 246, 0.25);
-  }
-  .glow-amber {
-    box-shadow: 0 0 24px -4px rgba(245, 158, 11, 0.25);
-  }
-
-  /* ══════════════════════════════════════════════════════════════════
-   * SHREDDER COLORING — Expanse Field Vertical Bar Pattern
-   *
-   * Mimics the 14-bar stepped gradient from the Three.js shader.
-   * Each "shred" is a thin vertical column tinted blue → pink,
-   * overlaid as a semi-transparent pseudo-element so text stays legible.
-   *
-   * Usage:  add class="shredder-bg" to any container.
-   * Global: applied automatically via card.tsx + sidebar wrapper.
-   * ══════════════════════════════════════════════════════════════════ */
-  .shredder-bg {
-    position: relative;
-    isolation: isolate;
-  }
-
-  /* The 14-bar shredder overlay — light mode */
-  .shredder-bg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    border-radius: inherit;
-    /* 14 vertical bars: each bar = 100%/14 ≈ 7.14% wide.
-       Colors swept from soft blue (#5EA6EB) → rose (#FA85BD)
-       with alternating lighter "step" for the staircase shimmer. */
-    background-image: repeating-linear-gradient(
-      90deg,
-      /* Bar  1 */ rgba(94,  166, 235, 0.10) 0%,       rgba(94,  166, 235, 0.10) 7.1%,
-      /* Bar  2 */ rgba(100, 162, 233, 0.08) 7.1%,      rgba(100, 162, 233, 0.08) 14.2%,
-      /* Bar  3 */ rgba(112, 158, 230, 0.07) 14.2%,     rgba(112, 158, 230, 0.07) 21.4%,
-      /* Bar  4 */ rgba(130, 155, 228, 0.07) 21.4%,     rgba(130, 155, 228, 0.07) 28.5%,
-      /* Bar  5 */ rgba(150, 150, 225, 0.07) 28.5%,     rgba(150, 150, 225, 0.07) 35.7%,
-      /* Bar  6 */ rgba(168, 146, 222, 0.07) 35.7%,     rgba(168, 146, 222, 0.07) 42.8%,
-      /* Bar  7 */ rgba(186, 142, 218, 0.08) 42.8%,     rgba(186, 142, 218, 0.08) 50.0%,
-      /* Bar  8 */ rgba(200, 138, 213, 0.08) 50.0%,     rgba(200, 138, 213, 0.08) 57.1%,
-      /* Bar  9 */ rgba(214, 133, 208, 0.08) 57.1%,     rgba(214, 133, 208, 0.08) 64.2%,
-      /* Bar 10 */ rgba(224, 128, 202, 0.09) 64.2%,     rgba(224, 128, 202, 0.09) 71.4%,
-      /* Bar 11 */ rgba(234, 124, 196, 0.09) 71.4%,     rgba(234, 124, 196, 0.09) 78.5%,
-      /* Bar 12 */ rgba(242, 120, 190, 0.09) 78.5%,     rgba(242, 120, 190, 0.09) 85.7%,
-      /* Bar 13 */ rgba(248, 118, 184, 0.10) 85.7%,     rgba(248, 118, 184, 0.10) 92.8%,
-      /* Bar 14 */ rgba(250, 133, 189, 0.10) 92.8%,     rgba(250, 133, 189, 0.10) 100%
-    );
-    /* Thin 1px hairlines between bars for the "stepped" effect */
-    background-size: 100% 100%;
-    mix-blend-mode: normal;
-  }
-
-  /* Hairline vertical dividers between bars */
-  /* shredder-bg::after removed — hairline dividers caused visual noise */
-
-  /* Dark mode: deeper, more saturated shreds */
-  .dark .shredder-bg::before {
-    background-image: repeating-linear-gradient(
-      90deg,
-      /* Bar  1 */ rgba(20,  60, 160, 0.22) 0%,        rgba(20,  60, 160, 0.22) 7.1%,
-      /* Bar  2 */ rgba(28,  58, 155, 0.19) 7.1%,       rgba(28,  58, 155, 0.19) 14.2%,
-      /* Bar  3 */ rgba(38,  55, 150, 0.17) 14.2%,      rgba(38,  55, 150, 0.17) 21.4%,
-      /* Bar  4 */ rgba(55,  52, 145, 0.16) 21.4%,      rgba(55,  52, 145, 0.16) 28.5%,
-      /* Bar  5 */ rgba(72,  48, 140, 0.16) 28.5%,      rgba(72,  48, 140, 0.16) 35.7%,
-      /* Bar  6 */ rgba(90,  44, 135, 0.16) 35.7%,      rgba(90,  44, 135, 0.16) 42.8%,
-      /* Bar  7 */ rgba(108, 40, 128, 0.17) 42.8%,      rgba(108, 40, 128, 0.17) 50.0%,
-      /* Bar  8 */ rgba(120, 36, 120, 0.18) 50.0%,      rgba(120, 36, 120, 0.18) 57.1%,
-      /* Bar  9 */ rgba(130, 33, 110, 0.18) 57.1%,      rgba(130, 33, 110, 0.18) 64.2%,
-      /* Bar 10 */ rgba(138, 30, 100, 0.19) 64.2%,      rgba(138, 30, 100, 0.19) 71.4%,
-      /* Bar 11 */ rgba(144, 28,  92, 0.19) 71.4%,      rgba(144, 28,  92, 0.19) 78.5%,
-      /* Bar 12 */ rgba(148, 26,  82, 0.20) 78.5%,      rgba(148, 26,  82, 0.20) 85.7%,
-      /* Bar 13 */ rgba(150, 24,  74, 0.21) 85.7%,      rgba(150, 24,  74, 0.21) 92.8%,
-      /* Bar 14 */ rgba(133, 38,  97, 0.22) 92.8%,      rgba(133, 38,  97, 0.22) 100%
-    );
-  }
-
-  /* .dark .shredder-bg::after removed — hairline dividers caused visual noise */
-
-  /* Ensure card content stays above the shredder pseudo-elements */
-  .shredder-bg > * {
-    position: relative;
-    z-index: 1;
+  .btn-navbar-dark:hover {
+    background-color: #341B16;
   }
 }
 
-/* ══════════════════════════════════════════════════════════════════
- * GLOBAL SHREDDER APPLICATION
- * Applied universally to all major structural containers so every
- * "box, div, left panel" gets the vertical bar shredder coloring.
- * ══════════════════════════════════════════════════════════════════ */
-
-/* Sidebar panel shredder */
-[data-sidebar="sidebar"],
-[data-sidebar="content"],
-aside {
-  position: relative;
-  isolation: isolate;
-}
-[data-sidebar="sidebar"]::before,
-aside::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(94,  166, 235, 0.06) 0%,       rgba(94,  166, 235, 0.06) 14.28%,
-    rgba(140, 150, 222, 0.05) 14.28%,    rgba(140, 150, 222, 0.05) 28.57%,
-    rgba(180, 140, 215, 0.05) 28.57%,    rgba(180, 140, 215, 0.05) 42.86%,
-    rgba(210, 135, 205, 0.05) 42.86%,    rgba(210, 135, 205, 0.05) 57.14%,
-    rgba(230, 128, 198, 0.05) 57.14%,    rgba(230, 128, 198, 0.05) 71.43%,
-    rgba(240, 122, 192, 0.05) 71.43%,    rgba(240, 122, 192, 0.05) 85.71%,
-    rgba(250, 133, 189, 0.06) 85.71%,    rgba(250, 133, 189, 0.06) 100%
-  );
-}
-.dark [data-sidebar="sidebar"]::before,
-.dark aside::before {
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(20, 60, 160, 0.14) 0%,        rgba(20, 60, 160, 0.14) 14.28%,
-    rgba(65, 50, 148, 0.12) 14.28%,     rgba(65, 50, 148, 0.12) 28.57%,
-    rgba(100, 40, 135, 0.11) 28.57%,    rgba(100, 40, 135, 0.11) 42.86%,
-    rgba(120, 34, 118, 0.11) 42.86%,    rgba(120, 34, 118, 0.11) 57.14%,
-    rgba(138, 28, 100, 0.12) 57.14%,    rgba(138, 28, 100, 0.12) 71.43%,
-    rgba(148, 24,  86, 0.12) 71.43%,    rgba(148, 24,  86, 0.12) 85.71%,
-    rgba(133, 38,  97, 0.14) 85.71%,    rgba(133, 38,  97, 0.14) 100%
-  );
-}
-
-/* Table row shredder — makes each row take on the column-band color */
+/* Clean Table Styling - Pure Light Monochrome Consistency */
 tbody tr {
   position: relative;
-}
-tbody tr:nth-child(odd) {
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(94,  166, 235, 0.055) 0%,      rgba(94,  166, 235, 0.055) 7.14%,
-    rgba(110, 160, 230, 0.045) 7.14%,   rgba(110, 160, 230, 0.045) 14.28%,
-    rgba(130, 154, 226, 0.042) 14.28%,  rgba(130, 154, 226, 0.042) 21.42%,
-    rgba(155, 148, 222, 0.042) 21.42%,  rgba(155, 148, 222, 0.042) 28.57%,
-    rgba(178, 143, 218, 0.042) 28.57%,  rgba(178, 143, 218, 0.042) 35.71%,
-    rgba(198, 138, 214, 0.045) 35.71%,  rgba(198, 138, 214, 0.045) 42.85%,
-    rgba(214, 133, 209, 0.045) 42.85%,  rgba(214, 133, 209, 0.045) 50.00%,
-    rgba(226, 129, 204, 0.048) 50.00%,  rgba(226, 129, 204, 0.048) 57.14%,
-    rgba(234, 125, 198, 0.048) 57.14%,  rgba(234, 125, 198, 0.048) 64.28%,
-    rgba(240, 121, 193, 0.050) 64.28%,  rgba(240, 121, 193, 0.050) 71.42%,
-    rgba(244, 118, 188, 0.050) 71.42%,  rgba(244, 118, 188, 0.050) 78.57%,
-    rgba(248, 117, 185, 0.052) 78.57%,  rgba(248, 117, 185, 0.052) 85.71%,
-    rgba(250, 126, 187, 0.055) 85.71%,  rgba(250, 126, 187, 0.055) 92.85%,
-    rgba(250, 133, 189, 0.055) 92.85%,  rgba(250, 133, 189, 0.055) 100%
-  );
-}
-tbody tr:nth-child(even) {
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(94,  166, 235, 0.028) 0%,      rgba(94,  166, 235, 0.028) 7.14%,
-    rgba(130, 154, 226, 0.022) 7.14%,   rgba(130, 154, 226, 0.022) 28.57%,
-    rgba(178, 143, 218, 0.020) 28.57%,  rgba(178, 143, 218, 0.020) 57.14%,
-    rgba(226, 129, 204, 0.022) 57.14%,  rgba(226, 129, 204, 0.022) 85.71%,
-    rgba(250, 133, 189, 0.028) 85.71%,  rgba(250, 133, 189, 0.028) 100%
-  );
-}
-.dark tbody tr:nth-child(odd) {
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(20, 60, 160, 0.14) 0%,         rgba(20, 60, 160, 0.14) 14.28%,
-    rgba(72, 48, 140, 0.11) 14.28%,      rgba(72, 48, 140, 0.11) 42.86%,
-    rgba(120, 36, 120, 0.10) 42.86%,     rgba(120, 36, 120, 0.10) 71.43%,
-    rgba(133, 38,  97, 0.12) 71.43%,     rgba(133, 38,  97, 0.12) 100%
-  );
-}
-.dark tbody tr:nth-child(even) {
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(20, 60, 160, 0.07) 0%,         rgba(20, 60, 160, 0.07) 14.28%,
-    rgba(72, 48, 140, 0.05) 14.28%,      rgba(72, 48, 140, 0.05) 57.14%,
-    rgba(133, 38,  97, 0.06) 57.14%,     rgba(133, 38,  97, 0.06) 100%
-  );
+  transition: background-color 0.15s ease;
 }
 
-
+tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}

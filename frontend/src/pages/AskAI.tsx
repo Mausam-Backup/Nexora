@@ -103,7 +103,7 @@ const AskAI = () => {
 
     // Creator query
     if (q.includes('mausam') || q.includes('creator') || q.includes('who made') || q.includes('who created')) {
-      return `About the Creator:\n\nMausam Kar is a Computer Science and Engineering student specializing in Artificial Intelligence and Full-Stack Systems. He engineered CampusSync / Nexora to solve ERP fragmentation in collegiate education.`
+      return `About the Creator:\n\nMausam Kar is a Computer Science and Engineering student specializing in Artificial Intelligence and Full-Stack Systems. He engineered Nexora to solve ERP fragmentation in collegiate education.`
     }
 
     // Exam Eligibility query
@@ -203,7 +203,7 @@ LIVE STUDENT ERP CONTEXT (REAL-TIME DATABASE):
 • Course Attendance: ${s.attendanceRecords.map(a => `${a.courseName}: ${a.percentage}%`).join(', ')}
 ` : ''
 
-    return `You are CampusSync ERP AI, an intelligent integrated assistant for student academic and administrative inquiries.
+    return `You are Nexora ERP AI, an intelligent integrated assistant for student academic and administrative inquiries.
 ${erpContext}
 
 Always utilize the student's live ERP data above to answer questions concerning grades, fee balances, exam hall ticket clearance, or attendance.
@@ -268,7 +268,7 @@ Question: ${message}`
       // If API key is not configured, give a helpful fallback response with student context
       if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
         setTimeout(() => {
-          const fallbackResponse = `I'm CampusSync ERP AI. For questions about your attendance, fees, marks, or exam hall tickets, ask me directly (e.g. "Am I eligible for exams?").\n\nFor general open-ended queries beyond your ERP records, connect a Gemini API key in .env.local (VITE_GEMINI_API_KEY).`
+          const fallbackResponse = `I'm Nexora ERP AI. For questions about your attendance, fees, marks, or exam hall tickets, ask me directly (e.g. "Am I eligible for exams?").\n\nFor general open-ended queries beyond your ERP records, connect a Gemini API key in .env.local (VITE_GEMINI_API_KEY).`
           const assistantMessage: Message = {
             id: (Date.now() + 1).toString(),
             content: fallbackResponse,
@@ -361,7 +361,7 @@ Question: ${message}`
                   How can I assist your academic journey today?
                 </p>
                 <p className="hidden sm:block text-sm text-muted-foreground max-w-md mx-auto">
-                  Integrated CampusSync ERP Copilot • Live Attendance &bull; Exam Eligibility Gate &bull; Fee Status &bull; Transcripts
+                  Integrated Nexora ERP Copilot • Live Attendance &bull; Exam Eligibility Gate &bull; Fee Status &bull; Transcripts
                 </p>
               </div>
             </div>

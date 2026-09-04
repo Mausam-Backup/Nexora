@@ -1,15 +1,17 @@
-import React, { useState, useMemo } from "react"
+import React, { useState } from "react"
 import { Navigate, Link } from "react-router-dom"
 import { usePageLoading } from "@/hooks/use-page-loading"
 import { IndexSkeleton } from "@/components/ui/page-skeleton"
 import { SEO } from "@/components/SEO"
 import { useAuth } from "@/contexts/AuthContext"
 import { useERPData } from "@/hooks/useERPData"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import lecturePreviewImg from "@/assets/bento/lecture-preview.jpg"
+import studentHeroImg from "@/assets/bento/student-hero.jpg"
+import { GoogleMeetClassroomCard } from "@/components/dashboard/GoogleMeetClassroomCard"
 import {
   GraduationCap,
   TrendingUp,
@@ -34,25 +36,43 @@ import {
   CreditCard,
   Target,
   Send,
-  BookMarked
+  Play,
+  Pause,
+  Volume2,
+  Maximize2,
+  Flame,
+  Check,
+  Search,
+  SlidersHorizontal,
+  Paperclip,
+  Image as ImageIcon,
+  Mic,
+  Plus,
+  MoreHorizontal,
+  RotateCcw,
+  RotateCw
 } from "lucide-react"
 import {
   LineChart,
   Line,
-  AreaChart,
-  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer
 } from "recharts"
+import { toast } from "sonner"
 
 const Index = () => {
   const isLoading = usePageLoading()
   const { user } = useAuth()
   const { students, getStudent } = useERPData()
   const [selectedQuarter, setSelectedQuarter] = useState<'Quarter 1' | 'Quarter 2' | 'Mid-Sem' | 'Quarter 3' | 'Final'>('Quarter 3')
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false)
+  const [playlistTab, setPlaylistTab] = useState<'files' | 'videos' | 'audio'>('videos')
+  const [activeLectureId, setActiveLectureId] = useState(2)
+  const [chatMessage, setChatMessage] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Resolve active student from unified ERP state
   const activeStudentId = user?.id || '20CS001'
@@ -68,7 +88,7 @@ const Index = () => {
   const isFeePending = student?.fees?.outstanding > 0
   const isCleared = !isDebarred && !isFeePending
 
-  // Performance timeline data matching Titans EDU (Image 1)
+  // Performance timeline data
   const performanceTrendData = [
     { period: 'Quarter 1', examScore: 68, attendance: 92 },
     { period: 'Quarter 2', examScore: 74, attendance: 89 },
@@ -80,7 +100,7 @@ const Index = () => {
   // Subjects breakdown
   const subjectsList = Object.values(student?.marks || {})
 
-  // Class faculties (matching Titans EDU Image 1)
+  // Class faculties
   const faculties = [
     { name: 'Dr. Sarah Johnson', role: 'Professor', subject: 'Database Management Systems', code: 'CS301', email: 's.johnson@college.edu', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' },
     { name: 'Prof. Michael Brown', role: 'Asst. Professor', subject: 'Software Engineering', code: 'CS302', email: 'm.brown@college.edu', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80' },
@@ -88,20 +108,22 @@ const Index = () => {
     { name: 'Prof. Robert Wilson', role: 'Head of Lab', subject: 'Operating Systems', code: 'CS304', email: 'r.wilson@college.edu', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80' }
   ]
 
-  // Worksheets & Assignments (matching Learnology Image 3)
+  // Playlist items matching Reference Image 3
+  const playlistLectures = [
+    { id: 1, title: 'Relational Models & Normalization', duration: '15:48', type: 'video' },
+    { id: 2, title: 'Perspective Basics: B-Tree & Indexing', duration: '23:28', type: 'video', active: true },
+    { id: 3, title: 'Query Execution & Buffer Pools', duration: '12:16', type: 'video' },
+    { id: 4, title: 'ACID Principles & Concurrency Control', duration: '18:45', type: 'video' },
+  ]
+
+  // Worksheets & Assignments
   const pendingWorksheets = [
     { id: 1, title: 'B-Tree & Indexing Relational Optimization', subject: 'CS301', points: 25, due: 'Tomorrow, 5:00 PM' },
     { id: 2, title: 'Agile Sprint Planning & Burndown Analysis', subject: 'CS302', points: 30, due: 'In 2 Days' },
     { id: 3, title: 'TCP Congestion Control Simulation', subject: 'CS303', points: 20, due: 'Friday' },
   ]
 
-  const recentSubmissions = [
-    { id: 101, title: 'Process Scheduling Algorithm Simulator', subject: 'CS304', points: 30, status: 'Checked (28/30)' },
-    { id: 102, title: 'SQL Joins & Transaction Isolation Levels', subject: 'CS301', points: 20, status: 'Checked (20/20)' },
-    { id: 103, title: 'Software Requirement Specification (SRS)', subject: 'CS302', points: 25, status: 'Pending Review' },
-  ]
-
-  // Today's schedule timeline (matching Titans EDU Image 1 & Tablet Image 5)
+  // Today's schedule timeline
   const todayTimeline = [
     { time: '09:30 AM', subject: 'Database Management Systems', code: 'CS301', room: 'LH-101', faculty: 'Dr. Sarah Johnson', status: 'attended' },
     { time: '11:15 AM', subject: 'Software Engineering', code: 'CS302', room: 'LH-104', faculty: 'Prof. Michael Brown', status: 'attended' },
@@ -109,6 +131,15 @@ const Index = () => {
     { time: '02:30 PM', subject: 'Computer Networks Lab', code: 'CS303', room: 'Systems Lab 3', faculty: 'Dr. Emily Davis', status: 'upcoming' },
     { time: '04:00 PM', subject: 'Operating Systems Tutorial', code: 'CS304', room: 'LH-102', faculty: 'Prof. Robert Wilson', status: 'upcoming' },
   ]
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!chatMessage.trim()) return
+    toast.success('Message sent to Course Discussion Channel', {
+      description: `"${chatMessage}" posted to CS301 cohort.`
+    })
+    setChatMessage('')
+  }
 
   if (isLoading) {
     return <IndexSkeleton />
@@ -127,625 +158,557 @@ const Index = () => {
     <>
       <SEO 
         title="Student Portal Dashboard | Nexora ERP"
-        description="Comprehensive student command center featuring live academic transcripts, statutory examination clearances, attendance tracking, and class schedules."
-        keywords="student dashboard, academic progress, hall ticket, attendance gate, nexora erp"
+        description="Bento-grid student custom syllabus command center featuring live academic transcripts, lecture streams, statutory examination clearances, attendance tracking, and class schedules."
+        keywords="student dashboard, bento grid, academic progress, hall ticket, custom syllabus, nexora erp"
       />
 
-      <div className="space-y-6 pb-12">
+      <div className="space-y-6 pb-12 max-w-[1440px] mx-auto select-none" style={{ fontFamily: '"Times New Roman", Times, Georgia, serif' }}>
+        
         {/* ========================================================================= */}
-        {/* TOP ROW: Welcome Persona Banner + Academic Standing Speedometer */}
+        {/* MASTER BENTO GRID: Matching Reference Image 3 Layout                       */}
+        {/* Left Column (4 cols): Custom Syllabus & Subject Navigator                  */}
+        {/* Right Area (8 cols): Featured Lecture Player + Course Chat + Playlist     */}
         {/* ========================================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
-          {/* Welcome Card (8 cols) - Matching Learnology & Tablet references */}
-          <div className="lg:col-span-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-card via-card to-primary/5 border border-border/80 shadow-card flex flex-col justify-between">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl ring-4 ring-primary/20 shadow-md">
-                  <AvatarImage src={student?.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(student?.name || 'Aarav')}`} />
-                  <AvatarFallback className="rounded-2xl text-lg font-bold bg-primary text-primary-foreground">
-                    {student?.name?.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-                      Welcome back, {student?.name?.split(' ')[0]}! 👋
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          {/* ======================================================================= */}
+          {/* LEFT BENTO PANEL (4 cols): Custom Syllabus & Subject Navigator          */}
+          {/* ======================================================================= */}
+          <div className="lg:col-span-4 space-y-4">
+            
+            {/* Header Persona Block matching Image 3 with authentic photo avatar */}
+            <div className="bg-[#FDF2F5] rounded-[28px] p-5 border border-[#F5D5E2] shadow-sm space-y-3.5">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-12 w-12 rounded-2xl ring-2 ring-[#F5B8CE] shadow-xs">
+                    <AvatarImage src={studentHeroImg} alt={student?.name || 'Anna'} className="object-cover" />
+                    <AvatarFallback className="rounded-2xl text-xs font-serif font-bold bg-[#241411] text-white border border-[#44251F]">AN</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <span className="text-xs text-neutral-500 font-serif">
+                      Hello, {student?.name?.split(' ')[0] || 'Anna'}
+                    </span>
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 font-serif">
+                      Your Custom Syllabus
                     </h1>
                   </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground font-medium">
-                    {student?.department} • Semester {student?.semester} (Sec {student?.section})
-                  </p>
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
-                    <Badge variant="outline" className="text-xs font-semibold px-2 py-0.5 border-primary/30 text-primary bg-primary/5">
-                      Roll No: {student?.rollNumber}
-                    </Badge>
-                    <Badge variant="secondary" className="text-xs font-semibold px-2 py-0.5">
-                      Batch {student?.admissionYear}-2025
-                    </Badge>
-                  </div>
                 </div>
+                <button className="w-8 h-8 rounded-full bg-white hover:bg-neutral-100 flex items-center justify-center text-neutral-600 transition-colors cursor-pointer border border-[#F5D5E2]">
+                  <MoreHorizontal className="h-4 w-4" />
+                </button>
               </div>
 
-              {/* Status Badge */}
-              <div className="flex sm:flex-col items-center sm:items-end gap-2">
-                <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                  Academic Status
+              {/* Search Bar matching Image 3 with round black search button */}
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search topics, lectures, or courses..."
+                  className="w-full bg-white text-neutral-900 text-xs rounded-full pl-4 pr-11 py-2.5 outline-none border border-[#F5D5E2] focus:border-neutral-400 transition-all font-serif"
+                />
+                <button className="absolute right-1.5 w-7 h-7 rounded-full bg-[#241411] text-white flex items-center justify-center hover:bg-[#341B16] border border-[#44251F] transition-all shadow-xs cursor-pointer">
+                  <Search className="h-3.5 w-3.5" />
+                </button>
+              </div>
+
+              {/* Filter Chips matching Image 3: [Filter] [Tag 1 ✕] [Tag 2 ✕] */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                <button className="w-7 h-7 rounded-full bg-white hover:bg-neutral-100 flex items-center justify-center text-neutral-600 shrink-0 cursor-pointer border border-[#F5D5E2]">
+                  <SlidersHorizontal className="h-3 w-3" />
+                </button>
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-serif bg-white text-neutral-900 border border-[#F5D5E2]">
+                  CS301 Relational <span className="text-[10px] text-neutral-500 cursor-pointer">✕</span>
                 </span>
-                {isCleared ? (
-                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-1 gap-1.5 shadow-sm">
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                    Good Standing
-                  </Badge>
-                ) : isDebarred ? (
-                  <Badge className="bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs px-3 py-1 gap-1.5 shadow-sm animate-pulse">
-                    <ShieldAlert className="h-3.5 w-3.5" />
-                    Debarred (&lt;75%)
-                  </Badge>
-                ) : (
-                  <Badge className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs px-3 py-1 gap-1.5 shadow-sm">
-                    <AlertTriangle className="h-3.5 w-3.5" />
-                    Fee Hold
-                  </Badge>
-                )}
-              </div>
-            </div>
-
-            {/* Quick Quote / Motivation Strip (Titans EDU style) */}
-            <div className="mt-6 pt-4 border-t border-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-muted-foreground">
-              <span className="italic">
-                "Continuous learning is the minimum requirement for success in engineering."
-              </span>
-              <span className="text-[11px] font-semibold text-primary flex items-center gap-1 shrink-0">
-                <Sparkles className="h-3.5 w-3.5" /> Autonomous State Reconciled
-              </span>
-            </div>
-          </div>
-
-          {/* Academic Standing & Speedometer Gauge (4 cols) - Learnology Image 3 */}
-          <div className="lg:col-span-4 rounded-3xl p-6 bg-gradient-to-br from-primary/10 via-card to-card border border-primary/20 shadow-card flex flex-col justify-between">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                Cumulative Standing
-              </span>
-              <Badge variant="outline" className="text-[10px] font-semibold border-primary/40 text-primary">
-                Rank #3 in Branch
-              </Badge>
-            </div>
-
-            <div className="my-4 text-center space-y-1">
-              <div className="inline-flex items-baseline gap-1">
-                <span className="text-4xl sm:text-5xl font-black text-foreground tracking-tight">
-                  {student?.cgpa.toFixed(2)}
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-serif bg-white text-neutral-900 border border-[#F5D5E2]">
+                  Sem {student?.semester} Core <span className="text-[10px] text-neutral-500 cursor-pointer">✕</span>
                 </span>
-                <span className="text-lg text-muted-foreground font-semibold">/ 10.0</span>
-              </div>
-              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1">
-                <TrendingUp className="h-3.5 w-3.5" /> +0.21 Grade Points vs Sem 5
-              </p>
-            </div>
-
-            <div className="space-y-2 pt-2 border-t border-border/60">
-              <div className="flex justify-between text-xs font-semibold">
-                <span className="text-muted-foreground">Credits Earned</span>
-                <span className="text-foreground">118 / 160 Total</span>
-              </div>
-              <Progress value={74} className="h-2 bg-primary/15" />
-            </div>
-          </div>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* STATUTORY GATE HERO: Cleared vs Debarred Showcase (The PS-6 Highlight) */}
-        {/* ========================================================================= */}
-        {isCleared ? (
-          <div className="rounded-3xl p-6 sm:p-7 bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-teal-500/10 border border-emerald-500/30 shadow-card glow-emerald">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-emerald-500 text-white shadow-md">
-                  <CheckCheck className="h-6 w-6" />
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg sm:text-xl font-bold text-foreground">
-                      Examination Clearance: 100% Cleared & Verified ✅
-                    </h3>
-                    <Badge className="bg-emerald-600 text-white text-[10px] uppercase font-bold">
-                      Admit Card Active
-                    </Badge>
-                  </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-2xl">
-                    All statutory conditions satisfied: Cumulative Attendance is <strong className="text-foreground">{overallAttendance}%</strong> (exceeds 75% cutoff) and financial balance is <strong className="text-foreground">₹0 (Cleared)</strong>.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0 w-full md:w-auto">
-                <Button asChild className="w-full md:w-auto rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white gap-2 font-semibold shadow-sm">
-                  <Link to="/schedule/exams">
-                    <QrCode className="h-4 w-4" />
-                    Download Official Hall Ticket
-                  </Link>
-                </Button>
               </div>
             </div>
-          </div>
-        ) : isDebarred ? (
-          <div className="rounded-3xl p-6 sm:p-7 bg-gradient-to-r from-rose-500/15 via-rose-500/5 to-amber-500/10 border-2 border-rose-500/40 shadow-card glow-rose">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-rose-500 text-white shadow-md animate-pulse">
-                  <ShieldAlert className="h-6 w-6" />
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg sm:text-xl font-bold text-rose-600 dark:text-rose-400">
-                      ⚠️ STATUTORY DEBARMENT NOTICE: Hall Ticket Locked
-                    </h3>
-                    <Badge variant="destructive" className="text-[10px] uppercase font-bold">
-                      Debarred (Reg. 14.B)
-                    </Badge>
-                  </div>
-                  <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed max-w-2xl">
-                    Attendance Shortage Detected: Cumulative Attendance is <strong className="text-rose-600 dark:text-rose-400">{overallAttendance}%</strong>, which is below the statutory <strong className="text-foreground">75.0% institutional minimum</strong>.
-                    {isFeePending && ` Furthermore, ₹${student?.fees?.outstanding.toLocaleString('en-IN')} in overdue semester fees remains uncollected.`}
-                  </p>
-                </div>
-              </div>
 
-              <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full md:w-auto">
-                <Button asChild variant="outline" className="w-full sm:w-auto rounded-2xl border-rose-500/40 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 gap-2 font-semibold">
-                  <Link to="/attendance/student">
-                    <CalendarIcon className="h-4 w-4" />
-                    Inspect Course Shortages
-                  </Link>
-                </Button>
-                <Button asChild className="w-full sm:w-auto rounded-2xl bg-rose-600 hover:bg-rose-700 text-white gap-2 font-semibold">
-                  <Link to="/schedule/exams">
-                    <Lock className="h-4 w-4" />
-                    Review Debarment Audit
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="rounded-3xl p-6 sm:p-7 bg-gradient-to-r from-amber-500/15 via-amber-500/5 to-orange-500/10 border-2 border-amber-500/40 shadow-card glow-amber">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-amber-500 text-white shadow-md">
-                  <AlertTriangle className="h-6 w-6" />
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg sm:text-xl font-bold text-amber-600 dark:text-amber-400">
-                      ⚠️ REGISTRATION & EXAM HOLD: Pending Financial Clearance
-                    </h3>
-                    <Badge className="bg-amber-600 text-white text-[10px] uppercase font-bold">
-                      Fee Hold
-                    </Badge>
-                  </div>
-                  <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed max-w-2xl">
-                    Attendance is cleared at <strong className="text-emerald-600 dark:text-emerald-400">{overallAttendance}%</strong>, but an outstanding balance of <strong className="text-amber-600 dark:text-amber-400">₹{student?.fees?.outstanding.toLocaleString('en-IN')}</strong> must be reconciled to release the admit card.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0 w-full md:w-auto">
-                <Button asChild className="w-full md:w-auto rounded-2xl bg-amber-600 hover:bg-amber-700 text-white gap-2 font-semibold">
-                  <Link to="/billing-payments">
-                    <CreditCard className="h-4 w-4" />
-                    Settle Dues & Unlock Admit Card
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ========================================================================= */}
-        {/* 4 TOP KPI CARDS (Matching Edukors & Shikhaor style) */}
-        {/* ========================================================================= */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {/* Card 1: CGPA */}
-          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
-            <CardContent className="p-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Current CGPA</span>
-                <div className="p-2.5 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                  <Award className="h-4 w-4" />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-3xl font-black tracking-tight text-foreground">{student?.cgpa.toFixed(2)}</div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Semester 6 SGPA</span>
-                  <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
-                    <TrendingUp className="h-3 w-3" /> +4.2%
-                  </span>
-                </div>
-              </div>
-              <Progress value={Math.min(100, (student?.cgpa / 10) * 100)} className="h-1.5 bg-amber-500/20" />
-            </CardContent>
-          </Card>
-
-          {/* Card 2: Cumulative Attendance */}
-          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
-            <CardContent className="p-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Attendance Rate</span>
-                <div className={`p-2.5 rounded-2xl ${isDebarred ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'}`}>
-                  <CalendarIcon className="h-4 w-4" />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-baseline justify-between">
-                  <span className="text-3xl font-black tracking-tight text-foreground">{overallAttendance}%</span>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${isDebarred ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'}`}>
-                    {isDebarred ? '< 75% Gate' : '≥ 75% Gate'}
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  {attendedClasses} attended of {totalClasses} classes
-                </p>
-              </div>
-              <Progress value={overallAttendance} className={`h-1.5 ${isDebarred ? 'bg-rose-500/20' : 'bg-emerald-500/20'}`} />
-            </CardContent>
-          </Card>
-
-          {/* Card 3: Enrolled Courses */}
-          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
-            <CardContent className="p-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Enrolled Courses</span>
-                <div className="p-2.5 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                  <BookOpen className="h-4 w-4" />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-3xl font-black tracking-tight text-foreground">
-                  {subjectsList.length} Subjects
-                </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Core Curriculum</span>
-                  <span className="font-semibold text-primary">16 Credits</span>
-                </div>
-              </div>
-              <Progress value={85} className="h-1.5 bg-blue-500/20" />
-            </CardContent>
-          </Card>
-
-          {/* Card 4: Financial Balance */}
-          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
-            <CardContent className="p-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Fee Clearance</span>
-                <div className="p-2.5 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400">
-                  <CreditCard className="h-4 w-4" />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-3xl font-black tracking-tight text-foreground">
-                  ₹{student?.fees?.outstanding.toLocaleString('en-IN')}
-                </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Outstanding Dues</span>
-                  <span className={`font-semibold ${isFeePending ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
-                    {isFeePending ? 'Overdue' : 'All Cleared'}
-                  </span>
-                </div>
-              </div>
-              <Progress value={isFeePending ? 35 : 100} className="h-1.5 bg-purple-500/20" />
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* MAIN SPLIT: Left (Scores & Overall Performance) | Right (Schedule & Faculty) */}
-        {/* ========================================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* LEFT COLUMN: 8 Columns */}
-          <div className="lg:col-span-8 space-y-6">
-            {/* Detail Scores & Subject Progress Rings (Titans EDU Image 1 & Learnology Image 3) */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-              <CardHeader className="pb-3 flex flex-row items-center justify-between">
+            {/* Subject Focus Bento Card (Accent Bento Pink) */}
+            <div className="bg-[#FCE4EC] rounded-[28px] p-5 border border-[#F5B8CE] text-neutral-900 shadow-sm space-y-4">
+              <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-base sm:text-lg font-bold text-foreground">
-                    Curriculum Detail Scores & Continuous Assessment
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Continuous evaluation (Internal 30 + External 70 = 100) across semester subjects
-                  </CardDescription>
+                  <h3 className="text-lg font-bold tracking-tight text-neutral-900 font-serif">
+                    Spatial Aptitude & Engineering
+                  </h3>
+                  <p className="text-xs text-neutral-600 font-serif leading-relaxed">
+                    Visualization, transformation, and analysis of database algorithms and systems architecture.
+                  </p>
                 </div>
-                <Button variant="ghost" size="sm" asChild className="text-xs text-primary">
-                  <Link to="/view-marks">View Transcript <ArrowRight className="h-3.5 w-3.5 ml-1" /></Link>
-                </Button>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {subjectsList.map((sub) => {
-                    const pct = sub.total
-                    const badgeVariant = pct >= 80 ? 'default' : pct >= 65 ? 'secondary' : 'destructive'
-                    return (
-                      <div key={sub.subjectCode} className="p-4 rounded-2xl border border-border/70 bg-muted/20 hover:bg-muted/40 transition-colors space-y-2.5">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <span className="text-xs font-bold text-primary">{sub.subjectCode}</span>
-                            <h4 className="text-xs font-semibold text-foreground truncate max-w-[170px]">{sub.subjectName}</h4>
-                          </div>
-                          <Badge variant={badgeVariant} className="text-xs font-black px-2 py-0.5">
-                            Grade: {sub.grade} ({sub.gp} GP)
-                          </Badge>
+                <button className="w-7 h-7 rounded-full bg-white hover:bg-neutral-100 flex items-center justify-center text-neutral-700 transition-colors cursor-pointer shrink-0 border border-[#F5B8CE]">
+                  <MoreHorizontal className="h-3.5 w-3.5" />
+                </button>
+              </div>
+
+              {/* Stats Counters matching Image 3 */}
+              <div className="grid grid-cols-3 gap-2 py-1 border-y border-[#F5B8CE]/60">
+                <div className="text-left">
+                  <span className="text-[11px] text-neutral-500 font-serif block">Credits</span>
+                  <span className="text-xl font-bold text-neutral-900 font-serif">16</span>
+                </div>
+                <div className="text-left">
+                  <span className="text-[11px] text-neutral-500 font-serif block">Subjects</span>
+                  <span className="text-xl font-bold text-neutral-900 font-serif">{subjectsList.length || 4}</span>
+                </div>
+                <div className="text-left">
+                  <span className="text-[11px] text-neutral-500 font-serif block">CGPA</span>
+                  <span className="text-xl font-bold text-neutral-900 font-serif">{student?.cgpa.toFixed(2)}</span>
+                </div>
+              </div>
+
+              {/* Subject Rows with clean monochrome icons */}
+              <div className="space-y-2">
+                {subjectsList.map((sub) => {
+                  return (
+                    <div
+                      key={sub.subjectCode}
+                      className="p-2.5 rounded-2xl bg-white hover:bg-neutral-50 transition-colors flex items-center justify-between gap-3 border border-[#F5B8CE] shadow-2xs"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-8 h-8 rounded-xl flex items-center justify-center text-xs shrink-0 bg-[#FDF2F5] border border-[#F5B8CE] text-neutral-800 font-serif font-bold">
+                          {sub.subjectCode.slice(0, 2)}
                         </div>
-                        <div className="flex items-baseline justify-between text-xs">
-                          <span className="text-muted-foreground">Internal: {sub.internal}/30 • External: {sub.external}/70</span>
-                          <span className="font-extrabold text-foreground">{sub.total}%</span>
+                        <div className="min-w-0">
+                          <h5 className="text-xs font-bold text-neutral-900 truncate font-serif leading-snug">
+                            {sub.subjectName}
+                          </h5>
+                          <p className="text-[10px] text-neutral-500 truncate font-serif">
+                            {sub.subjectCode} • Internal {sub.internal}/30 • External {sub.external}/70
+                          </p>
                         </div>
-                        <Progress value={sub.total} className="h-2" />
                       </div>
+                      <Badge variant="outline" className="text-[10px] font-bold font-serif shrink-0 border-[#F5B8CE] bg-white text-neutral-900">
+                        {sub.grade} ({sub.total}%)
+                      </Badge>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Examination Clearance Card */}
+            <div className={`rounded-[28px] p-5 border shadow-sm transition-all ${
+              isCleared 
+                ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
+                : isDebarred
+                ? 'bg-rose-50 border-rose-300 text-rose-950'
+                : 'bg-[#FDF2F5] border-[#F5D5E2] text-neutral-950'
+            }`}>
+              <div className="flex items-start justify-between gap-2">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold uppercase tracking-wider font-serif text-neutral-600">
+                      Examination Clearance
+                    </span>
+                    {isCleared && <span className="text-xs">✅</span>}
+                  </div>
+                  <h4 className="text-base font-bold font-serif leading-tight text-neutral-900">
+                    {isCleared ? '100% Cleared & Verified' : isDebarred ? 'Statutory Debarment Lock' : 'Pending Fee Hold'}
+                  </h4>
+                  <p className="text-xs text-neutral-600 font-serif">
+                    {isCleared 
+                      ? `Attendance is ${overallAttendance}% (cutoff 75%) and financial dues are ₹0.`
+                      : isDebarred
+                      ? `Attendance is ${overallAttendance}% (below statutory 75% gate cutoff).`
+                      : `Outstanding semester dues: ₹${student?.fees?.outstanding.toLocaleString('en-IN')}`}
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-3">
+                <Button asChild className="w-full rounded-full bg-[#241411] hover:bg-[#341B16] text-white border border-[#44251F] font-bold text-xs h-9 font-serif shadow-sm">
+                  <Link to={isCleared ? "/schedule/exams" : isDebarred ? "/attendance/student" : "/billing-payments"}>
+                    {isCleared ? (
+                      <span className="flex items-center gap-1.5"><QrCode className="h-3.5 w-3.5" /> Download Hall Ticket</span>
+                    ) : isDebarred ? (
+                      <span className="flex items-center gap-1.5"><CalendarIcon className="h-3.5 w-3.5" /> Inspect Shortages</span>
+                    ) : (
+                      <span className="flex items-center gap-1.5"><CreditCard className="h-3.5 w-3.5" /> Settle Dues</span>
+                    )}
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Cumulative Standing & Branch Rank */}
+            <div className="bg-[#FDF2F5] rounded-[28px] p-5 border border-[#F5D5E2] shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-neutral-500 font-serif">Cumulative Standing</span>
+                <Badge variant="outline" className="text-[10px] font-bold font-serif border-[#F5B8CE] bg-white text-neutral-900">Rank #3 in Branch</Badge>
+              </div>
+              <div className="flex items-baseline justify-between pt-1">
+                <div className="inline-flex items-baseline gap-1">
+                  <span className="text-3xl font-bold font-serif text-neutral-900">{student?.cgpa.toFixed(2)}</span>
+                  <span className="text-xs text-neutral-500 font-serif">/ 10.0</span>
+                </div>
+                <span className="text-xs font-bold text-emerald-700 flex items-center gap-1 font-serif">
+                  <TrendingUp className="h-3 w-3" /> +0.21 vs Sem 5
+                </span>
+              </div>
+              <div className="space-y-1 pt-1">
+                <div className="flex justify-between text-[11px] text-neutral-500 font-serif">
+                  <span>Credits Earned</span>
+                  <span className="text-neutral-900 font-bold">118 / 160 Total (74%)</span>
+                </div>
+                <Progress value={74} className="h-1.5 bg-rose-100" />
+              </div>
+            </div>
+          </div>
+
+          {/* ======================================================================= */}
+          {/* RIGHT BENTO AREA (8 cols): Video Player + Course Chat + Syllabus Playlist*/}
+          {/* ======================================================================= */}
+          <div className="lg:col-span-8 space-y-5">
+            
+            {/* TILE 1: ACTIVE GOOGLE MEET CLASSROOM CONSOLE (Requested by User) */}
+            <GoogleMeetClassroomCard userRole="student" courseCode="CS301" />
+
+            {/* ===================================================================== */}
+            {/* ROW 2: COURSE CHAT (Left) + PLAYLIST (Right) (Faithful to Image 3)   */}
+            {/* ===================================================================== */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
+              
+              {/* BOTTOM LEFT TILE: COURSE CHAT (Matching Image 3) */}
+              <div className="bg-[#FDF2F5] rounded-[28px] p-5 border border-[#F5D5E2] shadow-sm flex flex-col justify-between space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-bold text-neutral-900 font-serif">
+                      Course Chat
+                    </h3>
+                    <span className="text-xs text-neutral-500 font-serif">
+                      24 members, 2 online
+                    </span>
+                  </div>
+                  <button className="w-7 h-7 rounded-full bg-white hover:bg-neutral-100 flex items-center justify-center text-neutral-600 transition-colors cursor-pointer border border-[#F5D5E2]">
+                    <Maximize2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+
+                {/* Chat Stream Bubbles matching Image 3 */}
+                <div className="space-y-3 flex-1 overflow-y-auto max-h-[190px] pr-1">
+                  {/* Message 1 (Instructor) */}
+                  <div className="flex items-start gap-2.5">
+                    <Avatar className="h-7 w-7 rounded-full ring-1 ring-[#F5B8CE] shrink-0">
+                      <AvatarImage src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" />
+                      <AvatarFallback className="text-[10px]">SJ</AvatarFallback>
+                    </Avatar>
+                    <div className="bg-white p-3 rounded-2xl rounded-tl-xs text-xs font-serif text-neutral-900 space-y-1 max-w-[85%] border border-[#F5D5E2]">
+                      <p className="font-semibold text-[11px] text-neutral-900">Dr. Sarah Johnson</p>
+                      <p>I fixed the one-point: I placed the vanishing point in the center, but the walls still look flat.</p>
+                      <span className="text-[10px] text-neutral-500 block text-right">07:34 AM</span>
+                    </div>
+                  </div>
+
+                  {/* Message 2 (Student Reply) */}
+                  <div className="flex items-end justify-end gap-2">
+                    <div className="bg-[#241411] text-white border border-[#44251F] p-3 rounded-2xl rounded-tr-xs text-xs font-serif max-w-[85%] space-y-0.5 shadow-xs">
+                      <p>Check the horizontal scale on Slide 14, professor!</p>
+                      <span className="text-[9px] opacity-75 block text-right">07:36 AM • Sent</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Chat Input & Action Pills Container matching Image 3 */}
+                <form onSubmit={handleSendMessage} className="space-y-2 pt-2 border-t border-[#F5D5E2]">
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      value={chatMessage}
+                      onChange={(e) => setChatMessage(e.target.value)}
+                      placeholder="Type message..."
+                      className="w-full bg-white text-neutral-900 text-xs rounded-full pl-4 pr-11 py-2.5 outline-none border border-[#F5D5E2] focus:border-neutral-400 transition-all font-serif"
+                    />
+                    <button
+                      type="submit"
+                      className="absolute right-1.5 w-7 h-7 rounded-full bg-[#241411] text-white flex items-center justify-center hover:bg-[#341B16] transition-all shadow-xs cursor-pointer"
+                    >
+                      <Send className="h-3 w-3" />
+                    </button>
+                  </div>
+
+                  {/* Action Pills matching Image 3: [Files] [Images] [Audio] [+] */}
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => toast.info('File attachment dialog opened')}
+                      className="flex-1 py-1 px-2 rounded-full bg-white hover:bg-neutral-50 text-[11px] font-serif text-neutral-700 flex items-center justify-center gap-1 transition-colors cursor-pointer border border-[#F5D5E2]"
+                    >
+                      <Paperclip className="h-3 w-3" /> Files
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => toast.info('Image attachment dialog opened')}
+                      className="flex-1 py-1 px-2 rounded-full bg-white hover:bg-neutral-50 text-[11px] font-serif text-neutral-700 flex items-center justify-center gap-1 transition-colors cursor-pointer border border-[#F5D5E2]"
+                    >
+                      <ImageIcon className="h-3 w-3" /> Images
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => toast.info('Voice recording started')}
+                      className="flex-1 py-1 px-2 rounded-full bg-white hover:bg-neutral-50 text-[11px] font-serif text-neutral-700 flex items-center justify-center gap-1 transition-colors cursor-pointer border border-[#F5D5E2]"
+                    >
+                      <Mic className="h-3 w-3" /> Audio
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => toast.info('More options menu opened')}
+                      className="w-7 h-7 rounded-full bg-white hover:bg-neutral-50 text-neutral-700 flex items-center justify-center transition-colors cursor-pointer shrink-0 border border-[#F5D5E2]"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* BOTTOM RIGHT TILE: SYLLABUS PLAYLIST (Matching Image 3) */}
+              <div className="bg-[#FDF2F5] rounded-[28px] p-5 border border-[#F5D5E2] text-neutral-900 shadow-sm flex flex-col justify-between space-y-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-base font-bold text-neutral-900 font-serif">
+                      Spatial Aptitude & Indexing
+                    </h3>
+                    <span className="text-xs text-neutral-500 font-serif">
+                      Lecture 1 Curriculum
+                    </span>
+                  </div>
+                  <button className="w-7 h-7 rounded-full bg-white hover:bg-neutral-100 flex items-center justify-center text-neutral-700 transition-colors cursor-pointer border border-[#F5D5E2]">
+                    <MoreHorizontal className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+
+                {/* Pill Tabs: [Files] [Videos (active terracotta)] [Audio] */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setPlaylistTab('files')}
+                    className={`flex-1 py-1.5 rounded-full text-xs font-bold font-serif transition-all cursor-pointer ${
+                      playlistTab === 'files'
+                        ? 'bg-[#241411] text-white shadow-xs'
+                        : 'bg-white text-neutral-600 hover:text-neutral-900 border border-[#F5D5E2]'
+                    }`}
+                  >
+                    Files
+                  </button>
+                  <button
+                    onClick={() => setPlaylistTab('videos')}
+                    className={`flex-1 py-1.5 rounded-full text-xs font-bold font-serif transition-all cursor-pointer ${
+                      playlistTab === 'videos'
+                        ? 'bg-[#241411] text-white shadow-xs'
+                        : 'bg-white text-neutral-600 hover:text-neutral-900 border border-[#F5D5E2]'
+                    }`}
+                  >
+                    Videos
+                  </button>
+                  <button
+                    onClick={() => setPlaylistTab('audio')}
+                    className={`flex-1 py-1.5 rounded-full text-xs font-bold font-serif transition-all cursor-pointer ${
+                      playlistTab === 'audio'
+                        ? 'bg-[#241411] text-white shadow-xs'
+                        : 'bg-white text-neutral-600 hover:text-neutral-900 border border-[#F5D5E2]'
+                    }`}
+                  >
+                    Audio
+                  </button>
+                </div>
+
+                {/* Playlist Tracks matching Image 3 */}
+                <div className="space-y-2 flex-1">
+                  {playlistLectures.map((item) => {
+                    const isActive = activeLectureId === item.id
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => setActiveLectureId(item.id)}
+                        className={`w-full p-2.5 rounded-2xl transition-all text-left flex items-center justify-between gap-3 cursor-pointer ${
+                          isActive
+                            ? 'bg-white shadow-xs border border-[#F5B8CE]'
+                            : 'bg-white/70 hover:bg-white text-neutral-600 border border-[#F5D5E2]'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0 ${
+                            isActive ? 'bg-[#241411] text-white' : 'bg-rose-100 text-neutral-800'
+                          }`}>
+                            {isActive ? <Pause className="h-3 w-3 fill-current" /> : <Play className="h-3 w-3 fill-current ml-0.5" />}
+                          </div>
+                          <div className="min-w-0">
+                            <h5 className={`text-xs font-bold truncate font-serif leading-tight ${isActive ? 'text-neutral-900' : 'text-neutral-600'}`}>
+                              {item.title}
+                            </h5>
+                            <span className="text-[10px] text-neutral-500 font-serif">CS301 Module Track</span>
+                          </div>
+                        </div>
+                        <span className="text-xs font-bold font-serif text-neutral-500 shrink-0">
+                          {item.duration}
+                        </span>
+                      </button>
                     )
                   })}
                 </div>
-              </CardContent>
-            </Card>
 
-            {/* Overall Performance Multi-Quarter Curve (Titans EDU Image 1) */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-              <CardHeader className="pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <CardTitle className="text-base sm:text-lg font-bold text-foreground">
-                    Overall Performance Trend
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Academic performance vs lecture attendance across session milestones
-                  </CardDescription>
+                {/* Link to all courses */}
+                <div className="pt-2 border-t border-[#F5D5E2] text-center">
+                  <Link to="/courses/my-courses" className="text-xs font-bold font-serif text-neutral-900 hover:underline inline-flex items-center gap-1">
+                    Explore All Course Media <ChevronRight className="h-3 w-3" />
+                  </Link>
                 </div>
-                
-                {/* Period Pills - Matching Titans EDU Header */}
-                <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-muted/50 border border-border/60 self-start sm:self-auto">
-                  {(['Quarter 1', 'Quarter 2', 'Mid-Sem', 'Quarter 3', 'Final'] as const).map((q) => (
-                    <button
-                      key={q}
-                      onClick={() => setSelectedQuarter(q)}
-                      className={`px-2.5 py-1 text-[11px] font-semibold rounded-xl transition-all ${
-                        selectedQuarter === q
-                          ? 'bg-background text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      {q}
-                    </button>
-                  ))}
-                </div>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="h-[260px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={performanceTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} />
-                      <XAxis dataKey="period" stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#888888" fontSize={11} tickLine={false} axisLine={false} domain={[0, 100]} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: 'hsl(var(--card))',
-                          borderColor: 'hsl(var(--border))',
-                          borderRadius: '16px',
-                          boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
-                          fontSize: '12px'
-                        }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="attendance"
-                        name="Attendance Rate"
-                        stroke="#10b981"
-                        strokeWidth={3}
-                        dot={{ r: 4, strokeWidth: 2, fill: '#10b981' }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="examScore"
-                        name="Exam Average"
-                        stroke="#6366f1"
-                        strokeWidth={3}
-                        dot={{ r: 4, strokeWidth: 2, fill: '#6366f1' }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="mt-3 flex items-center justify-center gap-6 text-xs font-semibold">
-                  <div className="flex items-center gap-2">
-                    <span className="h-3 w-3 rounded-full bg-emerald-500" />
-                    <span>Attendance Standing (%)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* LOWER BENTO ROW: Schedule Timeline + Performance Trend + Worksheets      */}
+        {/* ========================================================================= */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          {/* Today's Schedule Timeline (4 cols) */}
+          <div className="lg:col-span-4 bg-[#FDF2F5] rounded-[28px] p-5 border border-[#F5D5E2] shadow-sm space-y-3.5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-neutral-900 font-serif">
+                  Today's Class Schedule
+                </h3>
+                <span className="text-xs text-neutral-500 font-serif">
+                  Verified lecture timeline & attendance
+                </span>
+              </div>
+              <Badge variant="outline" className="text-xs font-serif border-[#F5B8CE] bg-white text-neutral-900">Today</Badge>
+            </div>
+
+            <div className="space-y-2.5">
+              {todayTimeline.map((slot, i) => (
+                <div key={i} className="flex items-center justify-between p-2.5 rounded-2xl bg-white border border-[#F5D5E2]">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="text-center shrink-0 w-14">
+                      <span className="text-[11px] font-bold font-serif text-neutral-900 block">{slot.time}</span>
+                      <span className="text-[10px] text-neutral-500 font-serif">{slot.room}</span>
+                    </div>
+                    <div className="h-6 w-0.5 bg-[#F5D5E2] shrink-0" />
+                    <div className="min-w-0">
+                      <h5 className="text-xs font-bold text-neutral-900 truncate font-serif">{slot.subject}</h5>
+                      <p className="text-[10px] text-neutral-500 truncate font-serif">{slot.faculty}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="h-3 w-3 rounded-full bg-indigo-500" />
-                    <span>Exam Score Average (%)</span>
+                  <div className="shrink-0 ml-2">
+                    {slot.status === 'attended' ? (
+                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-serif border border-emerald-200">Attended</span>
+                    ) : slot.status === 'recess' ? (
+                      <span className="text-[10px] font-medium text-neutral-600 bg-neutral-200 px-2 py-0.5 rounded-full font-serif">Recess</span>
+                    ) : (
+                      <span className="text-[10px] font-bold text-neutral-900 bg-white px-2 py-0.5 rounded-full font-serif border border-[#F5D5E2]">Upcoming</span>
+                    )}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Worksheets & Submissions (Learnology Image 3) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Pending Worksheets */}
-              <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-                <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                  <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-primary" />
-                    Pending Worksheets
-                  </CardTitle>
-                  <Badge variant="secondary" className="text-[10px]">3 Pending</Badge>
-                </CardHeader>
-                <CardContent className="space-y-2.5">
-                  {pendingWorksheets.map((item) => (
-                    <div key={item.id} className="p-3 rounded-2xl border border-border/60 bg-muted/20 flex items-center justify-between gap-3">
-                      <div className="space-y-0.5">
-                        <p className="text-xs font-semibold text-foreground leading-snug line-clamp-1">{item.title}</p>
-                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                          <span className="font-bold text-primary">{item.subject}</span>
-                          <span>•</span>
-                          <span>{item.points} Points</span>
-                          <span>•</span>
-                          <span className="text-rose-600 dark:text-rose-400 font-medium">{item.due}</span>
-                        </div>
-                      </div>
-                      <Button size="sm" className="h-7 text-xs rounded-xl px-2.5 bg-primary text-primary-foreground font-semibold shrink-0">
-                        Start
-                      </Button>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* Recent Submissions */}
-              <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-                <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                  <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <CheckCheck className="h-4 w-4 text-emerald-500" />
-                    Recent Submissions
-                  </CardTitle>
-                  <Button variant="ghost" size="sm" asChild className="text-[11px] h-6 p-0 text-muted-foreground">
-                    <Link to="/courses/assignments">View All</Link>
-                  </Button>
-                </CardHeader>
-                <CardContent className="space-y-2.5">
-                  {recentSubmissions.map((item) => (
-                    <div key={item.id} className="p-3 rounded-2xl border border-border/60 bg-muted/20 flex items-center justify-between gap-3">
-                      <div className="space-y-0.5">
-                        <p className="text-xs font-semibold text-foreground leading-snug line-clamp-1">{item.title}</p>
-                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                          <span className="font-bold text-primary">{item.subject}</span>
-                          <span>•</span>
-                          <span>{item.points} Points</span>
-                        </div>
-                      </div>
-                      <Badge variant="outline" className="text-[10px] font-semibold border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 shrink-0">
-                        {item.status}
-                      </Badge>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+              ))}
             </div>
           </div>
 
-          {/* RIGHT COLUMN: 4 Columns (Schedule, Motivational Note, Faculty Contacts) */}
-          <div className="lg:col-span-4 space-y-6">
-            {/* Today's Schedule Timeline (Titans EDU & Tablet Image 5) */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-              <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-base font-bold text-foreground">
-                    Today's Class Schedule
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Verified live lecture timeline
-                  </CardDescription>
-                </div>
-                <Badge variant="outline" className="text-xs border-primary/30 text-primary">
-                  Today
-                </Badge>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {todayTimeline.map((slot, i) => (
-                  <div key={i} className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-muted/40 transition-colors">
-                    <div className="text-center shrink-0 w-16 pt-0.5">
-                      <span className="text-[11px] font-bold text-foreground block">{slot.time}</span>
-                      <span className="text-[10px] text-muted-foreground block">{slot.room}</span>
-                    </div>
-                    <div className="h-9 w-0.5 bg-border shrink-0 self-center" />
-                    <div className="space-y-0.5 flex-1 min-w-0">
-                      <h5 className="text-xs font-semibold text-foreground truncate">{slot.subject}</h5>
-                      <p className="text-[11px] text-muted-foreground truncate">{slot.faculty}</p>
-                    </div>
-                    <div>
-                      {slot.status === 'attended' ? (
-                        <span className="inline-flex p-1 rounded-full bg-emerald-500/10 text-emerald-600">
-                          <CheckCircle2 className="h-4 w-4" />
-                        </span>
-                      ) : slot.status === 'recess' ? (
-                        <span className="inline-flex p-1 rounded-full bg-muted text-muted-foreground">
-                          ☕
-                        </span>
-                      ) : (
-                        <span className="inline-flex p-1 rounded-full bg-blue-500/10 text-blue-600">
-                          <Clock className="h-4 w-4" />
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Motivational Card + Ask AI Copilot (Titans EDU & Tablet Image 5) */}
-            <div className="rounded-3xl p-5 bg-gradient-to-br from-indigo-600 to-primary text-white shadow-card space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full">
-                  Daily Motivation
+          {/* Performance Trend Line Chart (5 cols) */}
+          <div className="lg:col-span-5 bg-[#FDF2F5] rounded-[28px] p-5 border border-[#F5D5E2] shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-neutral-900 font-serif">
+                  Academic Performance Trend
+                </h3>
+                <span className="text-xs text-neutral-500 font-serif">
+                  Multi-Quarter continuous assessment vs attendance
                 </span>
-                <Sparkles className="h-4 w-4 text-amber-300" />
               </div>
-              <blockquote className="text-sm font-semibold leading-relaxed">
-                "Small daily improvements over time lead to stunning long-term results."
-              </blockquote>
-              <div className="flex items-center gap-2 text-[11px] font-medium text-white/80">
-                <span>#Disciplined</span>
-                <span>•</span>
-                <span>#EngineeredForExcellence</span>
-              </div>
-              <div className="pt-2 border-t border-white/20">
-                <Link
-                  to="/ask-ai"
-                  className="flex items-center justify-between text-xs font-bold text-white bg-white/15 hover:bg-white/25 px-3 py-2 rounded-2xl transition-colors"
-                >
-                  <span className="flex items-center gap-2">
-                    <Sparkles className="h-3.5 w-3.5 text-amber-300" /> Ask ERP AI Copilot
-                  </span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+              <div className="flex items-center gap-1">
+                {(['Quarter 1', 'Quarter 2', 'Mid-Sem', 'Quarter 3', 'Final'] as const).map((q) => (
+                  <button
+                    key={q}
+                    onClick={() => setSelectedQuarter(q)}
+                    className={`px-2 py-0.5 text-[10px] font-bold font-serif rounded-lg transition-all cursor-pointer ${
+                      selectedQuarter === q ? 'bg-[#241411] text-white' : 'text-neutral-600 hover:text-neutral-900'
+                    }`}
+                  >
+                    {q}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Class Faculties (Titans EDU Image 1) */}
-            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
-              <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="text-base font-bold text-foreground">
-                    Class Faculties
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Assigned subject tutors & office hours
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {faculties.map((f) => (
-                  <div key={f.code} className="flex items-center justify-between gap-3 p-2.5 rounded-2xl border border-border/50 bg-muted/20">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10 rounded-full ring-1 ring-border">
-                        <AvatarImage src={f.avatar} />
-                        <AvatarFallback className="text-xs font-bold">{f.name[0]}</AvatarFallback>
-                      </Avatar>
-                      <div className="space-y-0.5">
-                        <h5 className="text-xs font-bold text-foreground leading-tight">{f.name}</h5>
-                        <p className="text-[10px] text-muted-foreground truncate max-w-[140px]">{f.subject}</p>
-                      </div>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      asChild
-                      className="h-7 text-xs px-2.5 rounded-xl border-primary/30 text-primary hover:bg-primary/10"
-                    >
-                      <a href={`mailto:${f.email}`}>
-                        <Mail className="h-3 w-3 mr-1" /> Email
-                      </a>
-                    </Button>
+            <div className="h-[210px] w-full pt-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={performanceTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} />
+                  <XAxis dataKey="period" stroke="#888888" fontSize={10} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#888888" fontSize={10} tickLine={false} axisLine={false} domain={[0, 100]} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#ffffff',
+                      borderColor: '#F5D5E2',
+                      borderRadius: '12px',
+                      fontSize: '11px',
+                      fontFamily: '"Times New Roman", Times, Georgia, serif',
+                      color: '#000000'
+                    }}
+                  />
+                  <Line type="monotone" dataKey="attendance" name="Attendance (%)" stroke="#10b981" strokeWidth={2.5} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="examScore" name="Exam Average (%)" stroke="#241411" strokeWidth={2.5} dot={{ r: 3 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Pending Worksheets & Tasks (3 cols) */}
+          <div className="lg:col-span-3 bg-[#FDF2F5] rounded-[28px] p-5 border border-[#F5D5E2] shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-bold text-neutral-900 font-serif">
+                Pending Worksheets
+              </h3>
+              <Badge variant="secondary" className="text-[10px] font-serif bg-white border border-[#F5B8CE] text-neutral-800">3 Pending</Badge>
+            </div>
+
+            <div className="space-y-2">
+              {pendingWorksheets.map((item) => (
+                <div key={item.id} className="p-2.5 rounded-2xl bg-white border border-[#F5D5E2] space-y-1">
+                  <h5 className="text-xs font-bold text-neutral-900 truncate font-serif">{item.title}</h5>
+                  <div className="flex items-center justify-between text-[10px] text-neutral-500 font-serif">
+                    <span className="font-bold text-neutral-900">{item.subject} • {item.points} Pts</span>
+                    <span className="text-rose-600 font-medium">{item.due}</span>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-2">
+              <Button asChild className="w-full rounded-full bg-[#8F361E] hover:bg-[#772C17] text-white text-xs font-bold h-8 font-serif shadow-sm">
+                <Link to="/courses/assignments">Open Assignments Hub</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Class Faculties Contacts Strip */}
+        <div className="bg-[#FDF2F5] rounded-[28px] p-5 border border-[#F5D5E2] shadow-sm space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-neutral-900 font-serif">Assigned Subject Tutors & Office Hours</h3>
+            <span className="text-xs text-neutral-500 font-serif">Institutional Faculty Register</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {faculties.map((f) => (
+              <div key={f.code} className="p-3 rounded-2xl bg-white border border-[#F5D5E2] flex items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Avatar className="h-9 w-9 rounded-full ring-1 ring-[#F5B8CE] shrink-0">
+                    <AvatarImage src={f.avatar} />
+                    <AvatarFallback className="text-xs font-serif bg-neutral-200 text-neutral-900">{f.name[0]}</AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <h5 className="text-xs font-bold text-neutral-900 truncate font-serif">{f.name}</h5>
+                    <p className="text-[10px] text-neutral-500 truncate font-serif">{f.subject}</p>
+                    <span className="text-[10px] font-bold text-black font-serif">{f.code}</span>
+                  </div>
+                </div>
+                <Button size="sm" variant="outline" asChild className="h-7 text-xs px-2.5 rounded-full font-serif shrink-0 border-[#F5B8CE] text-neutral-900 hover:bg-neutral-100">
+                  <a href={`mailto:${f.email}`}><Mail className="h-3 w-3" /></a>
+                </Button>
+              </div>
+            ))}
           </div>
         </div>
       </div>

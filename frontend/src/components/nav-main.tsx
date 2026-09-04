@@ -63,14 +63,18 @@ export function NavMain({
                       tooltip={item.title}
                       className={
                         active
-                          ? "bg-[#5EA6EB]/10 text-[#5EA6EB] font-bold dark:bg-[#5EA6EB]/15 dark:text-[#5EA6EB]"
-                          : "text-[#475467] dark:text-[#98A2B3] hover:text-[#101828] dark:hover:text-[#F9FAFB]"
+                          ? "bg-[#241411] text-white font-bold shadow-xs hover:bg-[#341B16] hover:text-white border border-[#44251F] font-serif"
+                          : "text-neutral-700 hover:text-neutral-900 hover:bg-[#FDF2F5] font-serif"
                       }
                     >
-                      {item.icon && <item.icon className={`size-4 shrink-0 ${active ? 'text-[#5EA6EB]' : ''}`} />}
+                      {item.icon && <item.icon className={`size-4 shrink-0 ${active ? 'text-white' : ''}`} />}
                       <span className="font-medium truncate flex-1 text-left">{item.title}</span>
                       {item.badge && (
-                        <span className="shrink-0 whitespace-nowrap rounded bg-[#5EA6EB]/10 px-1.5 py-0.5 text-[10px] font-semibold text-[#5EA6EB]">
+                        <span className={`shrink-0 whitespace-nowrap rounded px-1.5 py-0.5 text-[10px] font-semibold font-serif ${
+                          active 
+                            ? "bg-white/15 text-white border border-white/20" 
+                            : "bg-[#FDF2F5] text-neutral-800 border border-[#F5D5E2]"
+                        }`}>
                           {item.badge}
                         </span>
                       )}
@@ -83,15 +87,19 @@ export function NavMain({
                     tooltip={item.title}
                     className={
                       location.pathname === item.url
-                        ? "bg-[#5EA6EB]/10 text-[#5EA6EB] font-bold dark:bg-[#5EA6EB]/15 dark:text-[#5EA6EB]"
-                        : "text-[#475467] dark:text-[#98A2B3] hover:text-[#101828] dark:hover:text-[#F9FAFB]"
+                        ? "bg-[#241411] text-white font-bold shadow-xs hover:bg-[#341B16] hover:text-white border border-[#44251F] font-serif"
+                        : "text-neutral-700 hover:text-neutral-900 hover:bg-[#FDF2F5] font-serif"
                     }
                   >
                     <NavLink to={item.url} className="flex items-center gap-2 w-full min-w-0">
-                      {item.icon && <item.icon className={`size-4 shrink-0 ${location.pathname === item.url ? 'text-[#5EA6EB]' : ''}`} />}
+                      {item.icon && <item.icon className={`size-4 shrink-0 ${location.pathname === item.url ? 'text-white' : ''}`} />}
                       <span className="font-medium truncate flex-1 text-left">{item.title}</span>
                       {item.badge && (
-                        <span className="shrink-0 whitespace-nowrap rounded bg-[#5EA6EB]/10 px-1.5 py-0.5 text-[10px] font-semibold text-[#5EA6EB]">
+                        <span className={`shrink-0 whitespace-nowrap rounded px-1.5 py-0.5 text-[10px] font-semibold font-serif ${
+                          location.pathname === item.url
+                            ? "bg-white/15 text-white border border-white/20"
+                            : "bg-[#FDF2F5] text-neutral-800 border border-[#F5D5E2]"
+                        }`}>
                           {item.badge}
                         </span>
                       )}
@@ -109,14 +117,14 @@ export function NavMain({
                               asChild
                               className={
                                 isSubActive
-                                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                                  : ""
+                                  ? "bg-[#241411] text-white font-bold border border-[#44251F]"
+                                  : "hover:text-neutral-900 hover:bg-[#FDF2F5]"
                               }
                             >
                               <NavLink to={subItem.url}>
                                 <span>{subItem.title}</span>
                                 {subItem.badge && (
-                                  <span className="ml-auto rounded bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold text-primary">
+                                  <span className="ml-auto rounded bg-[#FDF2F5] text-neutral-800 border border-[#F5D5E2] px-1.5 py-0.5 text-[9px] font-semibold">
                                     {subItem.badge}
                                   </span>
                                 )}

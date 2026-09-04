@@ -207,7 +207,7 @@ export function StudentExamView({
       {/* Header with Admit Card & CSV Export */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
+          <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 text-foreground border border-neutral-200 dark:border-neutral-800">
             <BookOpen className="h-6 w-6" />
           </div>
           <div>
@@ -226,7 +226,7 @@ export function StudentExamView({
           <Button 
             size="sm" 
             onClick={handleDownloadAdmitCard}
-            className={`flex-1 sm:flex-initial ${!student.clearances.admitCardIssued ? 'border border-destructive text-destructive bg-destructive/10 hover:bg-destructive/20' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
+            className={`flex-1 sm:flex-initial font-bold ${!student.clearances.admitCardIssued ? 'border border-destructive text-destructive bg-destructive/10 hover:bg-destructive/20' : 'bg-[#241411] hover:bg-[#341B16] text-white border border-[#44251F] shadow-xs'}`}
           >
             {!student.clearances.admitCardIssued ? (
               <>
@@ -329,19 +329,19 @@ export function StudentExamView({
             </Card>
           ) : (
             /* Digital Hall Ticket Pass */
-            <Card className="rounded-3xl border-2 border-primary/40 shadow-2xl overflow-hidden max-w-3xl mx-auto bg-card">
-              <div className="bg-gradient-to-r from-primary via-indigo-700 to-purple-800 p-6 text-white flex items-center justify-between">
+            <Card className="rounded-3xl border-2 border-neutral-300 shadow-2xl overflow-hidden max-w-3xl mx-auto bg-white font-serif">
+              <div className="bg-[#241411] p-6 text-white flex items-center justify-between border-b border-[#44251F]">
                 <div className="space-y-1">
-                  <div className="text-[11px] font-mono tracking-widest text-white/80 uppercase font-semibold">
+                  <div className="text-[11px] font-mono tracking-widest text-neutral-400 uppercase font-semibold">
                     Nexora Autonomous Collegiate ERP
                   </div>
-                  <h2 className="text-xl font-black tracking-tight">OFFICIAL ADMIT CARD & HALL TICKET</h2>
-                  <div className="text-xs text-white/80 font-medium">
+                  <h2 className="text-xl font-bold tracking-tight">OFFICIAL ADMIT CARD & HALL TICKET</h2>
+                  <div className="text-xs text-neutral-300 font-medium">
                     {activeCycle?.name || 'Autumn End-Semester Examination 2024-25'}
                   </div>
                 </div>
                 <div className="text-right space-y-1">
-                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-mono text-xs font-bold px-2.5 py-1 shadow-sm">
+                  <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-xs font-bold px-2.5 py-1 shadow-sm">
                     VERIFIED PASS ✅
                   </Badge>
                 </div>
@@ -349,21 +349,21 @@ export function StudentExamView({
 
               <CardContent className="p-6 space-y-6">
                 {/* Student Info & QR */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-neutral-200">
                   <div className="flex items-center gap-4">
-                    <div className="w-20 h-20 rounded-xl bg-indigo-100 dark:bg-indigo-950 flex items-center justify-center font-bold text-2xl text-indigo-600 border shrink-0">
+                    <div className="w-20 h-20 rounded-xl bg-neutral-100 flex items-center justify-center font-bold text-2xl text-black border border-neutral-300 shrink-0">
                       {student.name ? student.name.charAt(0) : 'S'}
                     </div>
                     <div className="space-y-1">
-                      <h3 className="text-lg font-bold">{student.name}</h3>
-                      <div className="text-xs text-muted-foreground flex flex-wrap gap-2">
-                        <span>Roll: <strong className="text-foreground font-mono">{student.rollNumber}</strong></span>
+                      <h3 className="text-lg font-bold text-neutral-900">{student.name}</h3>
+                      <div className="text-xs text-neutral-600 flex flex-wrap gap-2">
+                        <span>Roll: <strong className="text-neutral-900 font-mono">{student.rollNumber}</strong></span>
                         <span>•</span>
-                        <span>Branch: <strong className="text-foreground">{student.department}</strong></span>
+                        <span>Branch: <strong className="text-neutral-900">{student.department}</strong></span>
                         <span>•</span>
-                        <span>Sem: <strong className="text-foreground">{student.semester}</strong></span>
+                        <span>Sem: <strong className="text-neutral-900">{student.semester}</strong></span>
                       </div>
-                      <div className="text-xs text-emerald-600 font-semibold flex items-center gap-1">
+                      <div className="text-xs text-emerald-700 font-semibold flex items-center gap-1">
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         Attendance Cleared ({liveAttendancePct}%) • Dues Cleared
                       </div>
@@ -371,11 +371,11 @@ export function StudentExamView({
                   </div>
 
                   {/* QR Code Pass */}
-                  <div className="text-center p-3 rounded-xl bg-muted/40 border space-y-1 shrink-0">
-                    <div className="w-24 h-24 bg-white p-2 rounded-lg mx-auto flex items-center justify-center shadow-xs border">
-                      <QrCode className="w-full h-full text-indigo-950" />
+                  <div className="text-center p-3 rounded-xl bg-neutral-50 border border-neutral-200 space-y-1 shrink-0">
+                    <div className="w-24 h-24 bg-white p-2 rounded-lg mx-auto flex items-center justify-center shadow-xs border border-neutral-200">
+                      <QrCode className="w-full h-full text-black" />
                     </div>
-                    <div className="font-mono text-[10px] text-muted-foreground tracking-widest">
+                    <div className="font-mono text-[10px] text-neutral-500 tracking-widest">
                       {hallTicket?.qrToken || `HT-2024-${student.rollNumber}`}
                     </div>
                   </div>
@@ -383,24 +383,24 @@ export function StudentExamView({
 
                 {/* Assigned Seat & Room Highlight */}
                 {seatingList.length > 0 && (
-                  <div className="p-4 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="p-4 rounded-xl bg-neutral-100 border border-neutral-200 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="space-y-0.5 text-center sm:text-left">
-                      <div className="text-xs font-semibold text-indigo-900 dark:text-indigo-300">
+                      <div className="text-xs font-semibold uppercase tracking-wider text-neutral-600">
                         DESIGNATED EXAMINATION HALL & DESK
                       </div>
-                      <div className="text-sm font-bold text-foreground">
+                      <div className="text-sm font-bold text-neutral-900">
                         {seatingList[0].roomNumber || 'LH-101'} (Aryabhatta Lecture Hall Complex)
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <div className="px-3 py-1.5 rounded-lg bg-card border text-center font-mono">
-                        <div className="text-[10px] text-muted-foreground">DESK CODE</div>
-                        <div className="font-bold text-base text-indigo-600">{seatingList[0].seatCode}</div>
+                      <div className="px-3 py-1.5 rounded-lg bg-white border border-neutral-200 text-center font-mono">
+                        <div className="text-[10px] text-neutral-500">DESK CODE</div>
+                        <div className="font-bold text-base text-neutral-900">{seatingList[0].seatCode}</div>
                       </div>
-                      <div className="px-3 py-1.5 rounded-lg bg-card border text-center font-mono">
-                        <div className="text-[10px] text-muted-foreground">BENCH NO.</div>
-                        <div className="font-bold text-base text-indigo-600">{seatingList[0].benchNumber}</div>
+                      <div className="px-3 py-1.5 rounded-lg bg-white border border-neutral-200 text-center font-mono">
+                        <div className="text-[10px] text-neutral-500">BENCH NO.</div>
+                        <div className="font-bold text-base text-neutral-900">{seatingList[0].benchNumber}</div>
                       </div>
                     </div>
                   </div>
@@ -408,28 +408,28 @@ export function StudentExamView({
 
                 {/* Scheduled Papers Table */}
                 <div className="space-y-2">
-                  <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <div className="text-xs font-bold uppercase tracking-wider text-neutral-600">
                     Registered Subjects & Examination Timetable
                   </div>
-                  <div className="rounded-lg border overflow-hidden">
+                  <div className="rounded-lg border border-neutral-200 overflow-hidden">
                     <Table>
-                      <TableHeader className="bg-muted/40">
+                      <TableHeader className="bg-neutral-50">
                         <TableRow>
-                          <TableHead className="font-semibold text-xs">Paper Code</TableHead>
-                          <TableHead className="font-semibold text-xs">Subject Title</TableHead>
-                          <TableHead className="font-semibold text-xs">Date</TableHead>
-                          <TableHead className="font-semibold text-xs">Timing</TableHead>
-                          <TableHead className="font-semibold text-xs">Hall</TableHead>
+                          <TableHead className="font-semibold text-xs text-neutral-900">Paper Code</TableHead>
+                          <TableHead className="font-semibold text-xs text-neutral-900">Subject Title</TableHead>
+                          <TableHead className="font-semibold text-xs text-neutral-900">Date</TableHead>
+                          <TableHead className="font-semibold text-xs text-neutral-900">Time</TableHead>
+                          <TableHead className="font-semibold text-xs text-neutral-900">Hall</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {exams.map((ex) => (
-                          <TableRow key={ex.id}>
-                            <TableCell className="font-mono font-bold text-xs">{ex.courseCode}</TableCell>
-                            <TableCell className="text-xs font-medium">{ex.course}</TableCell>
-                            <TableCell className="text-xs">{format(new Date(ex.date), 'MMM dd, yyyy')}</TableCell>
-                            <TableCell className="text-xs font-mono">{ex.time}</TableCell>
-                            <TableCell className="text-xs">{ex.location}</TableCell>
+                        {exams.map((paper) => (
+                          <TableRow key={paper.id} className="hover:bg-neutral-50">
+                            <TableCell className="font-mono font-bold text-xs text-neutral-900">{paper.courseCode}</TableCell>
+                            <TableCell className="font-semibold text-xs text-neutral-900">{paper.course}</TableCell>
+                            <TableCell className="text-xs text-neutral-700">{format(new Date(paper.date), 'dd MMM yyyy')}</TableCell>
+                            <TableCell className="text-xs font-mono text-neutral-700">{paper.time}</TableCell>
+                            <TableCell className="text-xs text-neutral-700">{paper.location}</TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -438,17 +438,17 @@ export function StudentExamView({
                 </div>
 
                 {/* Candidate Instructions & Stamp */}
-                <div className="pt-4 border-t flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-muted-foreground">
+                <div className="pt-4 border-t border-neutral-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-neutral-600">
                   <div className="space-y-0.5">
                     <p>• Candidates must arrive 15 minutes before reporting time.</p>
                     <p>• Digital smartwatches, phones & unauthorized study chits strictly prohibited.</p>
                   </div>
 
                   <div className="text-center sm:text-right space-y-1">
-                    <div className="font-serif italic font-bold text-indigo-900 dark:text-indigo-300">
+                    <div className="font-serif italic font-bold text-neutral-900">
                       Dr. K. R. Ramanathan
                     </div>
-                    <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest border-t border-muted pt-0.5">
+                    <div className="text-[10px] font-semibold text-neutral-500 uppercase tracking-widest border-t border-neutral-200 pt-0.5">
                       Controller of Examinations
                     </div>
                   </div>
@@ -563,54 +563,54 @@ export function StudentExamView({
 
               <CardContent className="p-6 space-y-6">
                 {/* GPA Summary Badges */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-muted/30 border">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-neutral-50 border border-neutral-200">
                   <div className="text-center space-y-0.5">
-                    <div className="text-[11px] text-muted-foreground font-semibold">SEMESTER SGPA</div>
-                    <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">9.32</div>
+                    <div className="text-[11px] text-neutral-500 font-semibold">SEMESTER SGPA</div>
+                    <div className="text-2xl font-bold text-neutral-900">9.32</div>
                   </div>
                   <div className="text-center space-y-0.5">
-                    <div className="text-[11px] text-muted-foreground font-semibold">CUMULATIVE CGPA</div>
-                    <div className="text-2xl font-bold text-emerald-600">8.65</div>
+                    <div className="text-[11px] text-neutral-500 font-semibold">CUMULATIVE CGPA</div>
+                    <div className="text-2xl font-bold text-emerald-700">8.65</div>
                   </div>
                   <div className="text-center space-y-0.5">
-                    <div className="text-[11px] text-muted-foreground font-semibold">CREDITS EARNED</div>
-                    <div className="text-2xl font-bold text-foreground">19 / 19</div>
+                    <div className="text-[11px] text-neutral-500 font-semibold">CREDITS EARNED</div>
+                    <div className="text-2xl font-bold text-neutral-900">19 / 19</div>
                   </div>
                   <div className="text-center space-y-0.5">
-                    <div className="text-[11px] text-muted-foreground font-semibold">ACADEMIC STANDING</div>
-                    <div className="text-sm font-bold text-foreground pt-1">First Class with Distinction</div>
+                    <div className="text-[11px] text-neutral-500 font-semibold">ACADEMIC STANDING</div>
+                    <div className="text-sm font-bold text-neutral-900 pt-1">First Class with Distinction</div>
                   </div>
                 </div>
 
                 {/* Detailed Subject Marks Table */}
-                <div className="rounded-lg border overflow-hidden">
+                <div className="rounded-lg border border-neutral-200 overflow-hidden">
                   <Table>
-                    <TableHeader className="bg-muted/40">
+                    <TableHeader className="bg-neutral-50">
                       <TableRow>
-                        <TableHead className="font-semibold text-xs">Code</TableHead>
-                        <TableHead className="font-semibold text-xs">Course Name</TableHead>
-                        <TableHead className="font-semibold text-xs">Credits</TableHead>
-                        <TableHead className="font-semibold text-xs">Internal (/30)</TableHead>
-                        <TableHead className="font-semibold text-xs">External (/70)</TableHead>
-                        <TableHead className="font-semibold text-xs">Total (/100)</TableHead>
-                        <TableHead className="font-semibold text-xs">Grade</TableHead>
-                        <TableHead className="font-semibold text-xs">Grade Point</TableHead>
-                        <TableHead className="text-right font-semibold text-xs">Re-evaluation</TableHead>
+                        <TableHead className="font-semibold text-xs text-neutral-900">Code</TableHead>
+                        <TableHead className="font-semibold text-xs text-neutral-900">Course Name</TableHead>
+                        <TableHead className="font-semibold text-xs text-neutral-900">Credits</TableHead>
+                        <TableHead className="font-semibold text-xs text-neutral-900">Internal (/30)</TableHead>
+                        <TableHead className="font-semibold text-xs text-neutral-900">External (/70)</TableHead>
+                        <TableHead className="font-semibold text-xs text-neutral-900">Total (/100)</TableHead>
+                        <TableHead className="font-semibold text-xs text-neutral-900">Grade</TableHead>
+                        <TableHead className="font-semibold text-xs text-neutral-900">Grade Point</TableHead>
+                        <TableHead className="text-right font-semibold text-xs text-neutral-900">Re-evaluation</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {semesterMarks.map((sub) => (
-                        <TableRow key={sub.code}>
-                          <TableCell className="font-mono font-bold text-xs">{sub.code}</TableCell>
-                          <TableCell className="text-xs font-medium">{sub.name}</TableCell>
-                          <TableCell className="font-mono text-xs">{sub.credits}</TableCell>
-                          <TableCell className="font-mono text-xs">{sub.internal}</TableCell>
-                          <TableCell className="font-mono text-xs">{sub.external}</TableCell>
-                          <TableCell className="font-mono font-bold text-xs">{sub.total}</TableCell>
+                        <TableRow key={sub.code} className="hover:bg-neutral-50">
+                          <TableCell className="font-mono font-bold text-xs text-neutral-900">{sub.code}</TableCell>
+                          <TableCell className="text-xs font-medium text-neutral-900">{sub.name}</TableCell>
+                          <TableCell className="font-mono text-xs text-neutral-700">{sub.credits}</TableCell>
+                          <TableCell className="font-mono text-xs text-neutral-700">{sub.internal}</TableCell>
+                          <TableCell className="font-mono text-xs text-neutral-700">{sub.external}</TableCell>
+                          <TableCell className="font-mono font-bold text-xs text-neutral-900">{sub.total}</TableCell>
                           <TableCell>
-                            <Badge className="bg-emerald-600 text-xs font-mono">{sub.grade}</Badge>
+                            <Badge className="bg-emerald-700 text-white text-xs font-mono">{sub.grade}</Badge>
                           </TableCell>
-                          <TableCell className="font-mono font-bold text-xs">{sub.gp}</TableCell>
+                          <TableCell className="font-mono font-bold text-xs text-neutral-900">{sub.gp}</TableCell>
                           <TableCell className="text-right">
                             <Button
                               size="sm"
@@ -620,7 +620,7 @@ export function StudentExamView({
                                 setRevalReason('');
                                 setIsRevalModalOpen(true);
                               }}
-                              className="text-xs h-7 px-2 text-indigo-600 hover:text-indigo-700"
+                              className="text-xs h-7 px-2 text-neutral-900 hover:text-neutral-700 cursor-pointer"
                             >
                               <RotateCcw className="mr-1 h-3 w-3" />
                               Apply
@@ -633,15 +633,15 @@ export function StudentExamView({
                 </div>
 
                 {/* Digital Stamp & Notice */}
-                <div className="pt-4 border-t flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+                <div className="pt-4 border-t border-neutral-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-600">
                   <div className="flex items-center gap-2">
-                    <ShieldCheck className="h-5 w-5 text-emerald-600 shrink-0" />
+                    <ShieldCheck className="h-5 w-5 text-emerald-700 shrink-0" />
                     <span>
                       Digitally signed and certified by the Office of the Controller of Examinations. Re-evaluation portal closes in <strong>7 days</strong>.
                     </span>
                   </div>
 
-                  <div className="text-center sm:text-right font-serif italic text-foreground font-bold">
+                  <div className="text-center sm:text-right font-serif italic text-neutral-900 font-bold">
                     [ CoE Digital Signature Stamp Verified ]
                   </div>
                 </div>
@@ -653,42 +653,42 @@ export function StudentExamView({
 
       {/* Revaluation Application Modal */}
       <Dialog open={isRevalModalOpen} onOpenChange={setIsRevalModalOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md font-serif">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <RotateCcw className="h-5 w-5 text-indigo-600" />
+            <DialogTitle className="flex items-center gap-2 text-neutral-900">
+              <RotateCcw className="h-5 w-5 text-neutral-900" />
               Apply for Paper Re-evaluation
             </DialogTitle>
-            <DialogDescription className="text-xs">
+            <DialogDescription className="text-xs text-neutral-600">
               Course: <strong>{selectedSubjectForReval?.name} ({selectedSubjectForReval?.code})</strong>
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleApplyRevaluation} className="space-y-4">
-            <div className="p-3 rounded-lg bg-muted/40 text-xs space-y-1">
+            <div className="p-3 rounded-lg bg-neutral-100 text-xs space-y-1 border border-neutral-200 text-neutral-800">
               <div>Current External Marks: <strong>{selectedSubjectForReval?.external} / 70</strong></div>
-              <div>Current Grade: <Badge variant="outline" className="text-xs">{selectedSubjectForReval?.grade}</Badge></div>
-              <div className="text-[11px] text-muted-foreground pt-1">
+              <div>Current Grade: <Badge variant="outline" className="text-xs border-neutral-300">{selectedSubjectForReval?.grade}</Badge></div>
+              <div className="text-[11px] text-neutral-500 pt-1">
                 Re-evaluation fee: <strong>₹500 / subject</strong> (Refundable if mark increase &gt; 5%).
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs">Grounds / Justification for Re-evaluation *</Label>
+              <Label className="text-xs text-neutral-700">Grounds / Justification for Re-evaluation *</Label>
               <Textarea
                 value={revalReason}
                 onChange={(e) => setRevalReason(e.target.value)}
                 placeholder="Specify questions or discrepancies suspected in external evaluation..."
-                className="text-xs min-h-[80px]"
+                className="text-xs min-h-[80px] bg-white border-neutral-200"
                 required
               />
             </div>
 
             <DialogFooter className="gap-2">
-              <Button type="button" variant="outline" onClick={() => setIsRevalModalOpen(false)}>
+              <Button type="button" variant="outline" onClick={() => setIsRevalModalOpen(false)} className="border-neutral-300">
                 Cancel
               </Button>
-              <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white">
+              <Button type="submit" className="bg-[#241411] hover:bg-[#341B16] text-white border border-[#44251F] font-serif cursor-pointer shadow-xs">
                 Submit Formal Application
               </Button>
             </DialogFooter>

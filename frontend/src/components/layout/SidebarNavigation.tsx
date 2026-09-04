@@ -39,12 +39,17 @@ export const SidebarNavigation: React.FC = () => {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <NavLink to={homeLink}>
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-                  <HeaderIcon className="size-4" />
+                <div className="flex aspect-square size-8 items-center justify-center rounded-xl bg-[#241411] text-white border border-[#44251F] shadow-xs">
+                  <svg className="size-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="8" cy="8" r="3.2" />
+                    <circle cx="16" cy="8" r="3.2" />
+                    <circle cx="8" cy="16" r="3.2" />
+                    <circle cx="16" cy="16" r="3.2" />
+                  </svg>
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold tracking-tight">CampusSync</span>
-                  <span className="truncate text-xs text-muted-foreground">{portalTitle}</span>
+                  <span className="truncate font-bold tracking-tight font-serif text-neutral-900">Nexora</span>
+                  <span className="truncate text-xs text-neutral-500 font-serif">{portalTitle}</span>
                 </div>
               </NavLink>
             </SidebarMenuButton>
@@ -62,21 +67,21 @@ export const SidebarNavigation: React.FC = () => {
         )}
 
         {/* Titans EDU Reference: Library Space Card */}
-        <div className="px-3 py-2">
-          <div className="rounded-2xl border border-border/80 bg-gradient-to-br from-card to-muted/40 p-3.5 shadow-sm space-y-2.5">
+        <div className="px-3 py-2 font-serif">
+          <div className="rounded-2xl border border-[#F5D5E2] bg-[#FDF2F5] p-3.5 shadow-sm space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Library Space</span>
-              <span className="inline-flex h-4 items-center rounded-full bg-emerald-500/10 px-1.5 text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 font-serif">Library Space</span>
+              <span className="inline-flex h-4 items-center rounded-full bg-emerald-500/10 px-1.5 text-[9px] font-semibold text-emerald-700">
                 Hall 1
               </span>
             </div>
             <div>
-              <p className="text-xs font-semibold leading-tight text-foreground">Newly Arrived</p>
-              <p className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5 font-medium">Atomic Habits & Clean Code</p>
+              <p className="text-xs font-semibold leading-tight text-neutral-900 font-serif">Newly Arrived</p>
+              <p className="text-[11px] text-neutral-600 line-clamp-1 mt-0.5 font-medium font-serif">Atomic Habits & Clean Code</p>
             </div>
             <NavLink 
               to="/courses/catalog"
-              className="inline-flex w-full items-center justify-center rounded-xl bg-primary/10 hover:bg-primary/20 text-primary px-2.5 py-1.5 text-[11px] font-semibold transition-colors"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-[#241411] hover:bg-[#341B16] text-white border border-[#44251F] px-2.5 py-1.5 text-[11px] font-bold transition-colors shadow-xs font-serif"
             >
               Browse Library
             </NavLink>

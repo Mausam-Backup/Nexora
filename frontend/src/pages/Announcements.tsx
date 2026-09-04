@@ -24,7 +24,7 @@ const Announcements: React.FC = () => {
   return (
     <>
       <SEO 
-        title="Announcements - CampusSync"
+        title="Announcements - Nexora"
         description="Stay updated with the latest announcements, notices, and important updates from your institution."
         keywords="announcements, notices, updates, school announcements, campus news"
       />

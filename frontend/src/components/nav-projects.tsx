@@ -48,13 +48,13 @@ export function NavProjects({
               asChild
               className={
                 location.pathname === item.url
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                  : ""
+                  ? "bg-[#241411] text-white font-bold shadow-xs hover:bg-[#341B16] hover:text-white border border-[#44251F] font-serif"
+                  : "text-neutral-700 hover:text-neutral-900 hover:bg-[#FDF2F5] font-serif"
               }
             >
-              <NavLink to={item.url}>
-                <item.icon />
-                <span>{item.name}</span>
+              <NavLink to={item.url} className="flex items-center gap-2">
+                <item.icon className="size-4 shrink-0" />
+                <span className="font-serif">{item.name}</span>
               </NavLink>
             </SidebarMenuButton>
           </SidebarMenuItem>

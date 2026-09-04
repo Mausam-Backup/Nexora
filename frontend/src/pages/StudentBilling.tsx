@@ -190,7 +190,7 @@ export default function StudentBilling() {
   const handleDownloadReceipt = (bill: BillData) => {
     generatePrintableReport({
       title: "Official Institutional Fee Receipt",
-      subtitle: "Office of the Comptroller of Accounts • CampusSync Unified Ledger",
+      subtitle: "Office of the Comptroller of Accounts • Nexora Unified Ledger",
       studentInfo: {
         name: student.name,
         rollNumber: student.rollNumber,

@@ -13,12 +13,12 @@ interface SEOProps {
 }
 
 const defaultSEO = {
-  title: 'CampusSync - Complete Student Management Platform',
+  title: 'Nexora - Complete Student Management Platform',
   description: 'Revolutionizing Academic Excellence. Empowering students worldwide with cutting-edge technology that transforms academic management into an intuitive, efficient, and enjoyable experience.',
   image: '/preview.png',
   type: 'website',
   keywords: 'student management, academic excellence, student platform, grade tracker, assignment management, university tools, academic success, student productivity, campus life, education technology',
-  author: 'CampusSync Team',
+  author: 'Nexora Team',
   url: typeof window !== 'undefined' ? window.location.origin : 'https://campussync.lovable.app'
 };
 
@@ -33,14 +33,14 @@ export function SEO({
   publishedTime,
   modifiedTime
 }: SEOProps) {
-  const seoTitle = title ? `${title} | CampusSync` : defaultSEO.title;
+  const seoTitle = title ? `${title} | Nexora` : defaultSEO.title;
   const seoUrl = url || (typeof window !== 'undefined' ? window.location.href : defaultSEO.url);
   const seoImage = typeof image === 'string' && image.startsWith('http') ? image : `${typeof window !== 'undefined' ? window.location.origin : defaultSEO.url}${image}`;
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "CampusSync",
+    "name": "Nexora",
     "description": description,
     "url": defaultSEO.url,
     "applicationCategory": "EducationalApplication",
@@ -52,7 +52,7 @@ export function SEO({
     },
     "author": {
       "@type": "Organization",
-      "name": "CampusSync Team"
+      "name": "Nexora Team"
     },
     "image": seoImage,
     "screenshot": seoImage
@@ -83,7 +83,7 @@ export function SEO({
       <meta property="og:image:type" content="image/png" />
       <meta property="og:image:alt" content={seoTitle} />
       <meta property="og:url" content={seoUrl} />
-      <meta property="og:site_name" content="CampusSync" />
+      <meta property="og:site_name" content="Nexora" />
       <meta property="og:locale" content="en_US" />
 
       {/* WhatsApp specific optimizations */}
@@ -96,8 +96,8 @@ export function SEO({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={seoImage} />
       <meta name="twitter:image:alt" content={seoTitle} />
-      <meta name="twitter:creator" content="@CampusSync" />
-      <meta name="twitter:site" content="@CampusSync" />
+      <meta name="twitter:creator" content="@Nexora" />
+      <meta name="twitter:site" content="@Nexora" />
 
       {/* Additional meta tags for better social sharing */}
       <meta name="image" content={seoImage} />

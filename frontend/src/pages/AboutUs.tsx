@@ -94,7 +94,7 @@ const AboutUs = () => {
       name: "Emily Chen",
       role: "Computer Science Student",
       university: "Stanford University",
-      content: "CampusSync completely transformed how I manage my academic life. The integrated tools make everything so much easier!",
+      content: "Nexora completely transformed how I manage my academic life. The integrated tools make everything so much easier!",
       rating: 5,
       image: "https://images.unsplash.com/photo-1494790108755-2616b612b734?w=100&h=100&fit=crop&crop=face"
     },
@@ -118,7 +118,7 @@ const AboutUs = () => {
       name: "David Kim",
       role: "Pre-Med Student",
       university: "Johns Hopkins",
-      content: "CampusSync's study tools and progress tracking have been game-changers for my medical school preparation.",
+      content: "Nexora's study tools and progress tracking have been game-changers for my medical school preparation.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
     },
@@ -142,11 +142,11 @@ const AboutUs = () => {
 
   const faqs = [
     {
-      question: "What is CampusSync?",
-      answer: "CampusSync is a comprehensive student management platform designed to streamline academic life through integrated tools for scheduling, task management, grade tracking, and collaboration."
+      question: "What is Nexora?",
+      answer: "Nexora is a comprehensive student management platform designed to streamline academic life through integrated tools for scheduling, task management, grade tracking, and collaboration."
     },
     {
-      question: "Is CampusSync free to use?",
+      question: "Is Nexora free to use?",
       answer: "We offer a free tier with essential features for all students. Premium plans are available with advanced features for enhanced productivity and collaboration."
     },
     {
@@ -155,7 +155,7 @@ const AboutUs = () => {
     },
     {
       question: "Can I sync data across devices?",
-      answer: "Yes! CampusSync automatically syncs your data across all your devices in real-time, ensuring you always have access to your latest information."
+      answer: "Yes! Nexora automatically syncs your data across all your devices in real-time, ensuring you always have access to your latest information."
     },
     {
       question: "Do you offer customer support?",
@@ -176,7 +176,7 @@ const AboutUs = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden -mt-4 md:-mt-8">
-      <SEO title="About Us" description="Learn about CampusSync’s mission, features, team, and student testimonials." />
+      <SEO title="About Us" description="Learn about Nexora’s mission, features, team, and student testimonials." />
       <HeroSection stats={stats} />
       <FeaturesSection features={features} />
       <TeamSection teamMembers={teamMembers} />

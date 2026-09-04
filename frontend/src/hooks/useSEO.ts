@@ -18,7 +18,7 @@ export const useSEO = ({
   useEffect(() => {
     // Update document title
     if (title) {
-      document.title = `${title} | CampusSync`;
+      document.title = `${title} | Nexora`;
     }
 
     // Update meta description
@@ -48,7 +48,7 @@ export const useSEO = ({
         ogTitle.setAttribute('property', 'og:title');
         document.head.appendChild(ogTitle);
       }
-      ogTitle.setAttribute('content', `${title} | CampusSync`);
+      ogTitle.setAttribute('content', `${title} | Nexora`);
     }
 
     if (description) {
@@ -89,7 +89,7 @@ export const useSEO = ({
         twitterTitle.setAttribute('name', 'twitter:title');
         document.head.appendChild(twitterTitle);
       }
-      twitterTitle.setAttribute('content', `${title} | CampusSync`);
+      twitterTitle.setAttribute('content', `${title} | Nexora`);
     }
 
     if (description) {

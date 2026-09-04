@@ -67,7 +67,7 @@ export default function Auth() {
         id: isCoE ? 'coe_001' : role === 'teacher' ? 'T001' : role === 'admin' ? 'admin_001' : '1',
         name: isSignUp ? name : isCoE ? 'Dr. K. R. Ramanathan' : role === 'teacher' ? 'Dr. Sarah Johnson' : role === 'admin' ? 'Campus Administrator' : 'Demo User',
         email: email || (isCoE ? 'coe@campussync.edu' : role === 'teacher' ? 'sarah.johnson@college.edu' : role === 'admin' ? 'admin@campussync.edu' : 'demo@university.edu'),
-        collegeName: isSignUp ? collegeName : 'CampusSync University',
+        collegeName: isSignUp ? collegeName : 'Nexora University',
         role,
       }
       
@@ -228,7 +228,7 @@ export default function Auth() {
       return (
         <>
           <SEO 
-            title="Welcome to CampusSync"
+            title="Welcome to Nexora"
             description="Transform your academic journey with our comprehensive student management platform."
             keywords="student login, campus sync, academic platform, student management, university app"
           />
@@ -243,7 +243,7 @@ export default function Auth() {
       return (
         <>
           <SEO 
-            title="Choose Your Role - CampusSync"
+            title="Choose Your Role - Nexora"
             description="Select your role to access the appropriate features for students, teachers, administrators, or parents."
             keywords="user roles, student login, teacher portal, admin access, parent dashboard"
           />
@@ -261,7 +261,7 @@ export default function Auth() {
       <>
         <SEO 
           title={isSignUp ? "Create Account" : "Sign In"}
-          description={isSignUp ? "Join CampusSync and transform your academic journey with our comprehensive student management platform." : "Welcome back to CampusSync. Continue your academic journey."}
+          description={isSignUp ? "Join Nexora and transform your academic journey with our comprehensive student management platform." : "Welcome back to Nexora. Continue your academic journey."}
           keywords="student login, campus sync, academic platform, student management, university app"
         />
         
@@ -305,7 +305,7 @@ export default function Auth() {
     <>
       <SEO 
         title={isSignUp ? "Create Account" : "Sign In"}
-        description={isSignUp ? "Join CampusSync and transform your academic journey with our comprehensive student management platform." : "Welcome back to CampusSync. Continue your academic journey."}
+        description={isSignUp ? "Join Nexora and transform your academic journey with our comprehensive student management platform." : "Welcome back to Nexora. Continue your academic journey."}
         keywords="student login, campus sync, academic platform, student management, university app"
       />
       

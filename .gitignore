@@ -6,6 +6,9 @@ dist-ssr
 out/
 build/
 *.local
+*.mp4
+VIT Video/
+GSAP-Video-Graphics-main/
 .env*
 !.env.example
 

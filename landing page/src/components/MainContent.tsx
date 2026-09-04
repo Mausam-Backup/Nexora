@@ -1,5 +1,8 @@
+import VideoSection from "./VideoSection";
+
 export default function MainContent() {
   return (
+    <>
   <div className="main-wrapper">
     <div id="intro" className="intro">
       <div className="scroll-animations">
@@ -518,191 +521,7 @@ export default function MainContent() {
                   </div>
                 </section>
                 <div data-w-id="70527781-5b61-d591-b822-f39991ce0dac" className="_7s-8s__wrapper">
-                  <div data-w-id="75dedc3f-aeae-4d63-b6ee-34fcb847da21" className="wrapper-s2">
-                    <div className="_7s">
-                      <div className="_7s-header">
-                        <h2 className="h1 align-left">Our</h2>
-                        <h2 className="h1 align-left italic mob-margin-left">Investors</h2>
-                      </div>
-                      <div className="_7s-ovals">
-                        <div className="_7s-oval">
-                          <img src="/images/Component-3.png" loading="lazy" sizes="(max-width: 479px) 100vw, 12vw" srcSet="/images/Component-3-p-500.png 500w, /images/Component-3.png 602w" alt="" className="_7s-logo" />
-                        </div>
-                        <div className="_7s-oval">
-                          <img src="/images/Component-7.png" loading="lazy" id="w-node-dd3de6e2-145e-fd1f-26f4-8dd7f0ac2557-51c2b876" sizes="(max-width: 479px) 100vw, 12vw" srcSet="/images/Component-7-p-500.png 500w, /images/Component-7.png 602w" alt="" className="_7s-logo" />
-                        </div>
-                        <div className="_7s-oval">
-                          <img src="/images/Component-4.png" loading="lazy" id="w-node-dd3de6e2-145e-fd1f-26f4-8dd7f0ac2559-51c2b876" sizes="(max-width: 479px) 100vw, 12vw" srcSet="/images/Component-4-p-500.png 500w, /images/Component-4.png 602w" alt="" className="_7s-logo" />
-                        </div>
-                        <div className="_7s-oval">
-                          <img src="/images/Component-6.png" loading="lazy" id="w-node-dd3de6e2-145e-fd1f-26f4-8dd7f0ac255b-51c2b876" sizes="(max-width: 479px) 100vw, 12vw" srcSet="/images/Component-6-p-500.png 500w, /images/Component-6.png 602w" alt="" className="_7s-logo" />
-                        </div>
-                        <div className="_7s-oval">
-                          <img src="/images/Component-5.png" loading="lazy" sizes="(max-width: 479px) 100vw, 12vw" srcSet="/images/Component-5-p-500.png 500w, /images/Component-5.png 602w" alt="" className="_7s-logo" />
-                        </div>
-                        <div className="_7s-oval">
-                          <img src="/images/Component-8.png" loading="lazy" id="w-node-dd3de6e2-145e-fd1f-26f4-8dd7f0ac255f-51c2b876" sizes="(max-width: 479px) 100vw, 12vw" srcSet="/images/Component-8-p-500.png 500w, /images/Component-8.png 603w" alt="" className="_7s-logo" />
-                        </div>
-                        <div className="_7s-oval">
-                          <img src="/images/Component-9.png" loading="lazy" id="w-node-dd3de6e2-145e-fd1f-26f4-8dd7f0ac2561-51c2b876" alt="" className="_7s-logo" />
-                        </div>
-                        <div className="_7s-oval">
-                          <img src="/images/Component-10.png" loading="lazy" id="w-node-dd3de6e2-145e-fd1f-26f4-8dd7f0ac2563-51c2b876" sizes="(max-width: 479px) 100vw, 12vw" srcSet="/images/Component-10-p-500.png 500w, /images/Component-10.png 602w" alt="" className="_7s-logo" />
-                        </div>
-                        <div className="_7s-oval">
-                          <img src="/images/Component-11.png" loading="lazy" id="w-node-dd3de6e2-145e-fd1f-26f4-8dd7f0ac2565-51c2b876" sizes="(max-width: 479px) 100vw, 12vw" srcSet="/images/Component-11-p-500.png 500w, /images/Component-11.png 602w" alt="" className="_7s-logo" />
-                        </div>
-                        <div className="_7s-oval">
-                          <img src="/images/Component-12.png" loading="lazy" id="w-node-dd3de6e2-145e-fd1f-26f4-8dd7f0ac2567-51c2b876" alt="" className="_7s-logo" />
-                        </div>
-                      </div>
-                      <div data-w-id="dd3de6e2-145e-fd1f-26f4-8dd7f0ac256c" className="_7s-investors-people">
-                        <div className="_7s-hor-animate-1">
-                          <div className="_7s-investor-container">
-                            <img src="/images/1.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Vinny Lungham</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/2.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Rich Rosenblum</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/3.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Justin Kan</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/4.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Juan Benet</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/5.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Tikhon Bernstam</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/6.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">James DeNaut</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/7.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Tom Trowbridge</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/8.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Richard Ma</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/9.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Scott Keto</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/10.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Koki Uchlyama</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="_7s-hor-animate-2">
-                          <div className="_7s-investor-container">
-                            <img src="/images/1.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Vinny Lungham</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/2.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Rich rosenblum</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/3.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Justin Kan</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/4.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Juan Benet</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/5.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Tikhon Bernstam</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/6.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">James DeNaut</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/7.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Tom Trowbridge</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/8.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Richard Ma</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/9.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Scott Keto</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                          <div className="_7s-investor-container">
-                            <img src="/images/10.png" loading="lazy" alt="" className="_7s-investor-img" />
-                            <div className="_7s-investor-text-container">
-                              <div className="h3">Koki Uchlyama</div>
-                              <div className="h5 gray">Ceo</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                  <VideoSection />
                     <div data-w-id="0cb22d47-44cb-b74d-466b-40ceab2caf2e" className="wrapper-s3">
                       <div className="_8s-wrapper">
                         <div className="anchor-news"></div>
@@ -862,7 +681,7 @@ export default function MainContent() {
                       <div id="news" className="_8s-anchor"></div>
                     </div>
                   </div>
-                  <div id="investors" className="_7s-anchor"></div>
+                  <div className="_7s-anchor"></div>
                 </div>
               </div>
               <div id="about" className="_6s-anchor"></div>
@@ -1001,6 +820,6 @@ export default function MainContent() {
       <div data-w-id="a0a19611-fad6-0650-6e84-d5b36d992f45" className="trigger-video-bt"></div>
       <div data-w-id="ccd16ebb-786d-7a66-d8ec-a240a7a20ba4" className="trigger-video"></div>
     </div>
-  </div>
+    </>
   );
 }

@@ -10,6 +10,8 @@ export default function ResponseFooter() {
       id="footer"
       style={{
         position: "relative",
+        zIndex: 40,
+        marginTop: "100vh",
         width: "100%",
         backgroundColor: "#f6f5fa",
         paddingTop: "90px",

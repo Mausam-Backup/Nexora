@@ -4361,6 +4361,32 @@ a {
   bottom: 0%;
   left: 0%;
   right: 0%;
+  overflow: hidden;
+}
+
+.hero-slide__bg-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-slide__bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: brightness(0.9) contrast(1.05);
+}
+
+.hero-slide__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 14, 30, 0.42) 0%, rgba(8, 14, 30, 0.2) 40%, rgba(8, 14, 30, 0.6) 100%);
+  pointer-events: none;
 }
 
 .hero-quote {
@@ -4652,7 +4678,7 @@ a {
 .hero-slide__fill-side-1 {
   width: 100vw;
   height: 190.764vw;
-  background-color: #5162ff;
+  background-color: transparent;
   position: absolute;
   top: -154vw;
   bottom: auto;
@@ -4663,7 +4689,7 @@ a {
 .hero-slide__fill-side-2 {
   width: 100vw;
   height: 190.764vw;
-  background-color: #5162ff;
+  background-color: transparent;
   position: absolute;
   top: -154vw;
   bottom: auto;

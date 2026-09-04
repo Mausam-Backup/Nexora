@@ -92,26 +92,14 @@ function startAnimation() {
 
   //as a is written, it's a flag that make sures both animation happen same time rather, one after another like regular .to
   tl
-  .to(frames, updateFrame(frameAt(84)), "first")
+  .to(frames, updateFrame(frameAt(120)), "first")
   .to(".animate1",{opacity: 0, ease: "linear"},"first")
 
-  .to(frames, updateFrame(frameAt(168)), "second")
+  .to(frames, updateFrame(frameAt(280)), "second")
   .to(".animate2",{opacity: 1, ease: "linear"},"second")
 
-  .to(frames, updateFrame(frameAt(252)), "third")
-  .to(".animate2",{opacity: 1, ease: "linear"},"third")
-
-  .to(frames, updateFrame(frameAt(336)), "fourth")
-  .to(".animate2",{opacity: 0, ease: "linear"},"fourth")
-
-  .to(frames, updateFrame(frameAt(420)), "fifth")
-  .to(".animate3",{opacity: 1, ease: "linear"},"fifth")
-
-  .to(frames, updateFrame(frameAt(504)), "sixth")
-  .to(".animate3",{opacity: 1, ease: "linear"},"sixth")
-
-  .to(frames, updateFrame(frameAt(588), "seventh"))
-  .to(".animate3",{opacity: 0, ease: "linear"},"seventh")
+  .to(frames, updateFrame(frameAt(480)), "third")
+  .to(".animate2",{opacity: 0, ease: "linear"},"third")
 
   .to(frames, updateFrame(frameAt(672)), "eighth")
   .to(".panel",{x: "0%", ease: "expo"},"eighth")

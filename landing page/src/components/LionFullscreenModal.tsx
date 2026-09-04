@@ -391,41 +391,20 @@ export default function LionFullscreenModal({
         }
       `}</style>
 
-      {/* Top Floating Bar: Brand & Close */}
+      {/* Top Floating Close Button */}
       <div
         style={{
           position: "absolute",
           top: "24px",
-          left: "32px",
           right: "32px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
           zIndex: 100,
-          pointerEvents: "none",
         }}
       >
-        <div style={{ pointerEvents: "auto", display: "flex", alignItems: "center", gap: "12px" }}>
-          <div className="modal-glass-pill">
-            <span
-              style={{
-                width: "7px",
-                height: "7px",
-                borderRadius: "50%",
-                background: "#10b981",
-                boxShadow: "0 0 10px #10b981",
-              }}
-            />
-            Nexora • Contact & Vision
-          </div>
-        </div>
-
         <button
           onClick={onClose}
           className="close-btn-minimal"
           aria-label="Close modal"
           style={{
-            pointerEvents: "auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -577,87 +556,7 @@ export default function LionFullscreenModal({
         </p>
       </div>
 
-      {/* SLIDE 3: Main Contact Spotlight (Frames 150-240) */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: `translate(-50%, -50%) scale(${0.96 + op3 * 0.04})`,
-          width: "min(720px, 92%)",
-          textAlign: "center",
-          color: "#ffffff",
-          opacity: op3,
-          transition: "opacity 0.15s ease-out, transform 0.15s ease-out",
-          pointerEvents: op3 > 0.1 ? "auto" : "none",
-          zIndex: 10,
-        }}
-      >
-        <div className="modal-glass-pill" style={{ marginBottom: "18px" }}>
-          Start a Project
-        </div>
-        <h2
-          style={{
-            fontSize: "clamp(34px, 5.5vw, 68px)",
-            fontWeight: 900,
-            lineHeight: 1.02,
-            letterSpacing: "-2px",
-            margin: "0 0 16px",
-            textTransform: "uppercase",
-            textShadow: "0 4px 24px rgba(0,0,0,0.9)",
-          }}
-        >
-          Let's Build Together
-        </h2>
-        <p
-          style={{
-            fontSize: "clamp(15px, 1.6vw, 20px)",
-            lineHeight: 1.6,
-            color: "rgba(255, 255, 255, 0.9)",
-            margin: "0 auto 28px",
-            maxWidth: "580px",
-            textShadow: "0 2px 12px rgba(0,0,0,0.9)",
-          }}
-        >
-          Have an ambitious project, partnership, or bold creative vision in mind? Connect with us directly and let's craft something remarkable.
-        </p>
 
-        {/* Action Buttons Group */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "14px",
-            flexWrap: "wrap",
-          }}
-        >
-          <a
-            href={`mailto:${CONTACT_EMAIL}?subject=Project%20Inquiry%20-%20Nexora`}
-            className="modal-cta-primary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span>✉</span>
-            <span>Send Email Now</span>
-          </a>
-
-          <button onClick={handleCopyEmail} className="modal-cta-secondary" type="button">
-            <span>{copied ? "✓" : "📋"}</span>
-            <span>{copied ? "Email Copied!" : "Copy Email"}</span>
-          </button>
-        </div>
-
-        <div
-          style={{
-            marginTop: "16px",
-            fontSize: "13px",
-            color: "rgba(255, 255, 255, 0.6)",
-          }}
-        >
-          Direct: <span style={{ color: "#ffffff", fontWeight: 600 }}>{CONTACT_EMAIL}</span>
-        </div>
-      </div>
 
       {/* SLIDE 4: Slide-in Contact & Inquiry Panel (Frames 240-302) */}
       <div
@@ -838,20 +737,16 @@ export default function LionFullscreenModal({
         >
           {/* Stage breadcrumb indicator */}
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ color: scrollProgress < 0.22 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress < 0.22 ? 700 : 400 }}>
+            <span style={{ color: scrollProgress < 0.35 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress < 0.35 ? 700 : 400 }}>
               01 Intro
             </span>
             <span style={{ opacity: 0.3 }}>•</span>
-            <span style={{ color: scrollProgress >= 0.22 && scrollProgress < 0.48 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress >= 0.22 && scrollProgress < 0.48 ? 700 : 400 }}>
+            <span style={{ color: scrollProgress >= 0.35 && scrollProgress < 0.72 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress >= 0.35 && scrollProgress < 0.72 ? 700 : 400 }}>
               02 Vision
             </span>
             <span style={{ opacity: 0.3 }}>•</span>
-            <span style={{ color: scrollProgress >= 0.48 && scrollProgress < 0.76 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress >= 0.48 && scrollProgress < 0.76 ? 700 : 400 }}>
+            <span style={{ color: scrollProgress >= 0.72 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress >= 0.72 ? 700 : 400 }}>
               03 Contact
-            </span>
-            <span style={{ opacity: 0.3 }}>•</span>
-            <span style={{ color: scrollProgress >= 0.76 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress >= 0.76 ? 700 : 400 }}>
-              04 Connect
             </span>
           </div>
 

@@ -164,16 +164,16 @@ export default function LandingPageEffects() {
 
         $(".nav-4").off("click").on("click", function (e: any) {
           e.preventDefault();
-          const anchor = document.querySelector("#investors");
+          const anchor = document.querySelector("#explore-university");
           if (anchor) {
             if (lenisInstance) {
-              lenisInstance.scrollTo(anchor, { immediate: true });
+              lenisInstance.scrollTo(anchor, { immediate: false });
             } else {
               anchor.scrollIntoView({ behavior: "smooth" });
             }
           }
           setTimeout(() => {
-            $(".container-menu__light").addClass("blue");
+            $(".container-menu__light").removeClass("blue");
           }, 10);
         });
 

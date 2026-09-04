@@ -1,5 +1,6 @@
 import VideoSection from "./VideoSection";
 import ResponseFooter from "./ResponseFooter";
+import ExploreUniversitySection from "./ExploreUniversitySection";
 
 export default function MainContent() {
   return (
@@ -692,6 +693,7 @@ export default function MainContent() {
         </div>
         <div id="platform" className="_5s-anchor"></div>
       </div>
+      <ExploreUniversitySection />
       <ResponseFooter />
     </div>
     <div className="trigger-wrapper">

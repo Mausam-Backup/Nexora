@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Calendar, User, Download, Eye, Edit, MoreHorizontal, Hash } from "lucide-react"
+import { Calendar, User, Download, Eye, Edit, MoreHorizontal, Hash, CreditCard } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +32,7 @@ interface BillingTableProps {
   onViewDetails?: (bill: BillData) => void
   onEdit?: (bill: BillData) => void
   onDownloadReceipt?: (bill: BillData) => void
+  onPay?: (bill: BillData) => void
   showActions?: boolean
   userType?: 'admin' | 'teacher' | 'student'
   isLoading?: boolean
@@ -42,6 +43,7 @@ export function BillingTable({
   onViewDetails, 
   onEdit, 
   onDownloadReceipt, 
+  onPay,
   showActions = true,
   userType = 'admin',
   isLoading = false
@@ -150,10 +152,16 @@ export function BillingTable({
                             Edit
                           </DropdownMenuItem>
                         )}
-                        {onDownloadReceipt && bill.status === 'paid' && bill.receiptNo && (
+                        {onPay && (bill.status === 'pending' || bill.status === 'overdue') && (
+                          <DropdownMenuItem onClick={() => onPay(bill)} className="text-emerald-600 font-semibold cursor-pointer">
+                            <CreditCard className="mr-2 h-4 w-4" />
+                            Pay Bill (₹{bill.amount.toLocaleString('en-IN')})
+                          </DropdownMenuItem>
+                        )}
+                        {onDownloadReceipt && bill.status === 'paid' && (
                           <>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => onDownloadReceipt(bill)}>
+                            <DropdownMenuItem onClick={() => onDownloadReceipt(bill)} className="cursor-pointer">
                               <Download className="mr-2 h-4 w-4" />
                               Download Receipt
                             </DropdownMenuItem>
@@ -225,7 +233,13 @@ export function BillingTable({
                       Edit
                     </Button>
                   )}
-                  {onDownloadReceipt && bill.status === 'paid' && bill.receiptNo && (
+                  {onPay && (bill.status === 'pending' || bill.status === 'overdue') && (
+                    <Button size="sm" onClick={() => onPay(bill)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                      <CreditCard className="mr-2 h-4 w-4" />
+                      Pay Now
+                    </Button>
+                  )}
+                  {onDownloadReceipt && bill.status === 'paid' && (
                     <Button variant="outline" size="sm" onClick={() => onDownloadReceipt(bill)}>
                       <Download className="mr-2 h-4 w-4" />
                       Receipt

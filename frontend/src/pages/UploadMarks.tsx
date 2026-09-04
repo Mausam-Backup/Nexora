@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
-import { Upload, Save, BookOpen, Clock, ArrowLeft, Hash, Users, Edit3, Mail, BarChart3, FileUp, Download, Settings } from "lucide-react"
+import { Upload, Save, BookOpen, Clock, ArrowLeft, Hash, Users, Edit3, Mail, BarChart3, FileUp, Download, Settings, Printer } from "lucide-react"
 import { GenericPageSkeleton } from "@/components/ui/page-skeleton"
 import { usePageLoading } from "@/hooks/use-page-loading"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -15,6 +15,8 @@ import { SEO } from "@/components/SEO"
 import { DetailedMarksDialog } from "@/components/marks/DetailedMarksDialog"
 import { ClassStatistics } from "@/components/marks/ClassStatistics"
 import { BulkUploadDialog } from "@/components/marks/BulkUploadDialog"
+import { useERPData } from "@/hooks/useERPData"
+import { exportToCSV, generatePrintableReport } from "@/utils/exportUtils"
 
 interface MarkEntry {
   id: string
@@ -62,6 +64,8 @@ export default function UploadMarks() {
   const [bulkUploadOpen, setBulkUploadOpen] = useState(false)
   const [form, setForm] = useState({ internal: '', external: '' })
 
+  const { students: erpStudents, updateStudentMarks } = useERPData()
+
   useEffect(() => {
     // Sample slots data
     const sampleSlots: SlotData[] = [
@@ -74,7 +78,7 @@ export default function UploadMarks() {
         room: 'Lab-A',
         semester: '6th Semester',
         credits: 4,
-        studentCount: 25 
+        studentCount: erpStudents.length 
       },
       { 
         id: 'CS302-TUE-2', 
@@ -85,7 +89,7 @@ export default function UploadMarks() {
         room: 'Room-101',
         semester: '6th Semester',
         credits: 4,
-        studentCount: 18 
+        studentCount: erpStudents.length 
       },
       { 
         id: 'CS303-WED-11', 
@@ -96,7 +100,7 @@ export default function UploadMarks() {
         room: 'Room-205',
         semester: '6th Semester',
         credits: 4,
-        studentCount: 22 
+        studentCount: erpStudents.length 
       },
       { 
         id: 'CS304-THU-3', 
@@ -107,67 +111,46 @@ export default function UploadMarks() {
         room: 'Lab-B',
         semester: '6th Semester',
         credits: 4,
-        studentCount: 20 
+        studentCount: erpStudents.length 
       }
     ]
     
-    // Sample students data organized by slots
-    const sampleStudentsData = {
-      'CS301-MON-10': [
-        { id: '20CS001', name: 'Aarav Sharma', email: 'aarav@college.edu', semester: '6', section: 'A' },
-        { id: '20CS014', name: 'Neha Patel', email: 'neha@college.edu', semester: '6', section: 'A' },
-        { id: '20CS023', name: 'Rahul Gupta', email: 'rahul@college.edu', semester: '6', section: 'B' },
-        { id: '20CS031', name: 'Priya Singh', email: 'priya@college.edu', semester: '6', section: 'A' },
-        { id: '20CS042', name: 'Vikram Yadav', email: 'vikram@college.edu', semester: '6', section: 'B' },
-      ],
-      'CS302-TUE-2': [
-        { id: '20CS035', name: 'Isha Singh', email: 'isha@college.edu', semester: '6', section: 'B' },
-        { id: '20CS047', name: 'Vikram Yadav', email: 'vikram@college.edu', semester: '6', section: 'A' },
-        { id: '20CS058', name: 'Kavya Patel', email: 'kavya@college.edu', semester: '6', section: 'C' },
-      ],
-      'CS303-WED-11': [
-        { id: '20CS052', name: 'Priya Sharma', email: 'priya@college.edu', semester: '6', section: 'C' },
-        { id: '20CS063', name: 'Arjun Patel', email: 'arjun@college.edu', semester: '6', section: 'C' },
-        { id: '20CS074', name: 'Kavya Singh', email: 'kavya@college.edu', semester: '6', section: 'B' },
-      ],
-      'CS304-THU-3': [
-        { id: '20CS085', name: 'Dev Kumar', email: 'dev@college.edu', semester: '6', section: 'A' },
-        { id: '20CS096', name: 'Shreya Gupta', email: 'shreya@college.edu', semester: '6', section: 'C' },
-      ]
-    }
+    // Connect unified ERP students to slots
+    const unifiedRoster = erpStudents.map(s => ({
+      id: s.id,
+      name: s.name,
+      email: s.email,
+      semester: String(s.semester),
+      section: s.section
+    }))
 
-    // Sample existing marks data
-    const sampleMarksData = {
-      'CS301-MON-10': [
-        { 
-          id: '1', 
-          studentId: '20CS001', 
-          studentName: 'Aarav Sharma',
-          internal: 28, 
-          external: 75, 
-          total: 103,
-          grade: 'A+',
-          gp: 10,
-          createdAt: new Date().toISOString() 
-        },
-        { 
-          id: '2', 
-          studentId: '20CS014', 
-          studentName: 'Neha Patel',
-          internal: 25, 
-          external: 70, 
-          total: 95,
-          grade: 'A',
-          gp: 9,
-          createdAt: new Date().toISOString() 
-        }
-      ]
-    }
+    const slotStudentsMap: Record<string, Student[]> = {}
+    const slotMarksMap: Record<string, MarkEntry[]> = {}
+
+    sampleSlots.forEach(slot => {
+      slotStudentsMap[slot.id] = unifiedRoster
+      slotMarksMap[slot.id] = erpStudents
+        .filter(s => s.marks && s.marks[slot.code])
+        .map(s => {
+          const m = s.marks[slot.code]
+          return {
+            id: s.id,
+            studentId: s.id,
+            studentName: s.name,
+            internal: m.internal,
+            external: m.external,
+            total: m.total,
+            grade: m.grade,
+            gp: m.gp,
+            createdAt: new Date().toISOString()
+          }
+        })
+    })
     
     setSlots(sampleSlots)
-    setStudentsData(sampleStudentsData)
-    setMarksData(sampleMarksData)
-  }, [])
+    setStudentsData(slotStudentsMap)
+    setMarksData(slotMarksMap)
+  }, [erpStudents])
 
   const calculateGrade = (total: number): { grade: string, gp: number } => {
     if (total >= 90) return { grade: 'A+', gp: 10 }
@@ -224,11 +207,15 @@ export default function UploadMarks() {
       [selectedSlot]: [newEntry, ...filteredMarks]
     }
     
+    // Persist to unified ERP Data
+    const slotCode = currentSlot?.code || selectedSlot.split('-')[0]
+    updateStudentMarks(selectedStudent.id, slotCode, internal, external)
+    
     setMarksData(updatedMarksData)
     setForm({ internal: '', external: '' })
     setDialogOpen(false)
     setSelectedStudent(null)
-    toast({ title: 'Marks saved', description: `${selectedStudent.name} - ${grade}` })
+    toast({ title: 'Marks saved to Unified ERP', description: `${selectedStudent.name} - ${grade} in ${slotCode}` })
   }
 
   const handleDetailedMarksClick = (student: Student) => {
@@ -264,9 +251,13 @@ export default function UploadMarks() {
       [selectedSlot]: [newEntry, ...filteredMarks]
     }
     
+    // Persist to unified ERP Data
+    const slotCode = currentSlot?.code || selectedSlot.split('-')[0]
+    updateStudentMarks(selectedStudent.id, slotCode, internal, external)
+
     setMarksData(updatedMarksData)
     setSelectedStudent(null)
-    toast({ title: 'Detailed marks saved', description: `${selectedStudent.name} - ${grade}` })
+    toast({ title: 'Detailed marks saved to Unified ERP', description: `${selectedStudent.name} - ${grade}` })
   }
 
   const handleBulkUpload = (bulkMarks: any[]) => {
@@ -294,9 +285,15 @@ export default function UploadMarks() {
       [selectedSlot]: [...newEntries, ...filteredMarks]
     }
     
+    // Persist to unified ERP Data
+    const slotCode = currentSlot?.code || selectedSlot.split('-')[0]
+    bulkMarks.forEach(m => {
+      updateStudentMarks(m.studentId, slotCode, Number(m.internal), Number(m.external))
+    })
+
     setMarksData(updatedMarksData)
     toast({ 
-      title: 'Bulk upload successful', 
+      title: 'Bulk upload synced to Unified ERP', 
       description: `Uploaded marks for ${bulkMarks.length} students` 
     })
   }
@@ -305,31 +302,51 @@ export default function UploadMarks() {
     if (!selectedSlot || !currentSlot) return
 
     const headers = ['StudentID', 'Name', 'Internal', 'External', 'Total', 'Grade', 'GP']
-    const csvContent = [
-      headers.join(','),
-      ...currentMarks.map(mark => [
-        mark.studentId,
-        `"${mark.studentName}"`,
-        mark.internal,
-        mark.external,
-        mark.total,
-        mark.grade,
-        mark.gp
-      ].join(','))
-    ].join('\n')
+    const rows = currentMarks.map(mark => [
+      mark.studentId,
+      mark.studentName,
+      mark.internal,
+      mark.external,
+      mark.total,
+      mark.grade,
+      mark.gp
+    ])
 
-    const blob = new Blob([csvContent], { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.style.display = 'none'
-    a.href = url
-    a.download = `${currentSlot.code}_marks_${new Date().toISOString().split('T')[0]}.csv`
-    document.body.appendChild(a)
-    a.click()
-    window.URL.revokeObjectURL(url)
-    document.body.removeChild(a)
-    
+    exportToCSV(`${currentSlot.code}_Grade_Ledger`, headers, rows)
     toast({ title: 'Export successful', description: 'Marks data downloaded as CSV' })
+  }
+
+  const printMarksLedger = () => {
+    if (!selectedSlot || !currentSlot) return
+    generatePrintableReport({
+      title: `Official Grade Ledger: ${currentSlot.subject} (${currentSlot.code})`,
+      subtitle: `Academic Session 2024-25 • Department of Computer Science • Semester 6`,
+      metaDetails: {
+        'Subject Name': currentSlot.subject,
+        'Subject Code': currentSlot.code,
+        'Total Enrolled': currentStudents.length,
+        'Graded Count': currentMarks.length,
+        'Department': 'Computer Science Engineering'
+      },
+      columns: ['Roll Number', 'Student Name', 'Internal (30)', 'External (70)', 'Total (100)', 'Grade', 'GP'],
+      rows: currentStudents.map(s => {
+        const mark = getStudentMark(s.id)
+        return [
+          s.id,
+          s.name,
+          mark ? mark.internal : '-',
+          mark ? mark.external : '-',
+          mark ? mark.total : '-',
+          mark ? mark.grade : 'Pending',
+          mark ? mark.gp : '-'
+        ]
+      }),
+      summaryStats: [
+        { label: 'Total Students', value: currentStudents.length },
+        { label: 'Evaluated', value: currentMarks.length },
+        { label: 'Pass Rate', value: `${currentMarks.length > 0 ? ((currentMarks.filter(m => m.grade !== 'F').length / currentMarks.length) * 100).toFixed(0) : 0}%` }
+      ]
+    })
   }
 
   const currentMarks = selectedSlot ? marksData[selectedSlot] || [] : []
@@ -456,6 +473,15 @@ export default function UploadMarks() {
             >
               <Download className="h-4 w-4" />
               Export CSV
+            </Button>
+            <Button
+              onClick={printMarksLedger}
+              variant="outline"
+              disabled={currentMarks.length === 0}
+              className="flex items-center gap-2"
+            >
+              <Printer className="h-4 w-4" />
+              Print / Save PDF
             </Button>
           </div>
 

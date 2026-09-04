@@ -1,3 +1,4 @@
+import { Navigate } from "react-router-dom"
 import { usePageLoading } from "@/hooks/use-page-loading"
 import { IndexSkeleton } from "@/components/ui/page-skeleton"
 import { SEO } from "@/components/SEO"
@@ -17,6 +18,15 @@ const Index = () => {
 
   if (isLoading) {
     return <IndexSkeleton />
+  }
+
+  // Proper role-based redirection from root dashboard
+  if (user?.role === 'admin') {
+    return <Navigate to="/admin/overview" replace />
+  }
+
+  if (user?.role === 'teacher') {
+    return <Navigate to="/teacher/attendance" replace />
   }
 
   return (

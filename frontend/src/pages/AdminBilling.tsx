@@ -17,7 +17,8 @@ import {
   FileText,
   Settings,
   Download,
-  BarChart3
+  BarChart3,
+  Printer
 } from "lucide-react"
 
 // Import billing components
@@ -29,11 +30,14 @@ import { CreateBillDialog } from "@/components/billing/CreateBillDialog"
 import { BulkActionsDialog } from "@/components/billing/BulkActionsDialog"
 import { CreateTeacherPaymentDialog } from "@/components/billing/CreateTeacherPaymentDialog"
 import { ProcessPayrollDialog } from "@/components/billing/ProcessPayrollDialog"
+import { useERPData } from "@/hooks/useERPData"
+import { exportToCSV, generatePrintableReport } from "@/utils/exportUtils"
 
 export default function AdminBilling() {
   const isLoading = usePageLoading()
   const isMobile = useIsMobile()
   const { toast } = useToast()
+  const { students, stats } = useERPData()
   const [activeTab, setActiveTab] = useState('overview')
   
   // Dialog states
@@ -46,9 +50,47 @@ export default function AdminBilling() {
 
   // Event handlers
   const handleExportReport = () => {
+    generatePrintableReport({
+      title: "Institutional Financial Audit & Billing Ledger",
+      subtitle: "Office of Financial Operations & Student Accounts • Fiscal Report",
+      columns: ["Roll Number", "Student Name", "Total Invoiced", "Total Collected", "Outstanding Dues", "Clearance Status"],
+      rows: students.map(s => [
+        s.rollNumber,
+        s.name,
+        `₹${s.fees.totalDue.toLocaleString('en-IN')}`,
+        `₹${s.fees.totalPaid.toLocaleString('en-IN')}`,
+        `₹${s.fees.outstanding.toLocaleString('en-IN')}`,
+        s.clearances.feeClearance ? "CLEARED" : "FINANCIAL HOLD"
+      ]),
+      summaryStats: [
+        { label: "Total Students", value: students.length },
+        { label: "Total Revenue Collected", value: `₹${stats.totalRevenue.toLocaleString('en-IN')}` },
+        { label: "Total Outstanding Balance", value: `₹${stats.totalOutstanding.toLocaleString('en-IN')}` },
+        { label: "Collection Efficiency", value: `${stats.collectionRate}%` }
+      ]
+    })
     toast({
-      title: "Export Started",
-      description: "Downloading comprehensive billing report as PDF"
+      title: "Report Opened",
+      description: "Generated institutional financial ledger"
+    })
+  }
+
+  const handleExportCSV = () => {
+    const headers = ["Roll Number", "Student Name", "Department", "Semester", "Total Invoiced (INR)", "Total Paid (INR)", "Outstanding (INR)", "Clearance Status"]
+    const rows = students.map(s => [
+      s.rollNumber,
+      s.name,
+      s.department,
+      `Sem ${s.semester}`,
+      s.fees.totalDue,
+      s.fees.totalPaid,
+      s.fees.outstanding,
+      s.clearances.feeClearance ? "CLEARED" : "HOLD"
+    ])
+    exportToCSV("Institutional_Financial_Summary", headers, rows)
+    toast({
+      title: "CSV Exported",
+      description: "Downloaded institutional financial summary as CSV"
     })
   }
 
@@ -95,14 +137,18 @@ export default function AdminBilling() {
             Comprehensive billing management for students and teachers
           </p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          <Button variant="outline" size="sm" onClick={handleExportReport} className="w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" size="sm" onClick={handleExportCSV} className="flex-1 sm:flex-initial">
             <Download className="mr-2 h-4 w-4" />
-            {!isMobile && "Export Report"}
+            <span>Export CSV</span>
           </Button>
-          <Button variant="outline" size="sm" onClick={handleOpenSettings} className="w-full sm:w-auto">
+          <Button variant="outline" size="sm" onClick={handleExportReport} className="flex-1 sm:flex-initial">
+            <Printer className="mr-2 h-4 w-4" />
+            <span>Print Financial Ledger</span>
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleOpenSettings} className="flex-1 sm:flex-initial">
             <Settings className="mr-2 h-4 w-4" />
-            {!isMobile && "Settings"}
+            <span>Settings</span>
           </Button>
         </div>
       </div>

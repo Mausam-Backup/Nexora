@@ -11,222 +11,97 @@ import {
   Clock, 
   Users, 
   BookOpen, 
-  CheckCircle,
-  AlertCircle,
   TrendingUp,
-  History
+  History,
+  Download,
+  Printer
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { TeacherSubject } from '@/types/attendance';
 import { toast } from 'sonner';
+import { useERPData } from '@/hooks/useERPData';
+import { exportToCSV, generatePrintableReport } from '@/utils/exportUtils';
 
 const TeacherAttendance: React.FC = () => {
   const { user } = useAuth();
+  const { students, subjects: erpSubjects, recordClassAttendance, stats } = useERPData();
   const [subjects, setSubjects] = useState<TeacherSubject[]>([]);
   const [loading, setLoading] = useState(true);
   const [todayClasses, setTodayClasses] = useState<any[]>([]);
   const [attendanceHistory, setAttendanceHistory] = useState<Record<string, any[]>>({});
 
-  // Mock data - replace with actual API calls
   useEffect(() => {
-    const fetchSubjects = async () => {
-      setLoading(true);
-      
-      // Mock API call
-      setTimeout(() => {
-        const mockSubjects: TeacherSubject[] = [
-          {
-            id: 'sub1',
-            name: 'Data Structures and Algorithms',
-            code: 'CS301',
-            semester: 3,
-            branch: 'Computer Science Engineering',
-            slots: [
-              {
-                id: 'slot1',
-                day: 'Monday',
-                startTime: '09:00',
-                endTime: '10:00',
-                type: 'lecture'
-              },
-              {
-                id: 'slot2',
-                day: 'Wednesday',
-                startTime: '11:00',
-                endTime: '12:00',
-                type: 'lecture'
-              },
-              {
-                id: 'slot3',
-                day: 'Friday',
-                startTime: '14:00',
-                endTime: '17:00',
-                type: 'lab'
-              }
-            ],
-            enrolledStudents: [
-              {
-                id: 'std1',
-                name: 'Alice Johnson',
-                email: 'alice@university.edu',
-                semester: 3,
-                branch: 'Computer Science Engineering',
-                rollNumber: 'CS21001'
-              },
-              {
-                id: 'std2',
-                name: 'Bob Smith',
-                email: 'bob@university.edu',
-                semester: 3,
-                branch: 'Computer Science Engineering',
-                rollNumber: 'CS21002'
-              },
-              {
-                id: 'std3',
-                name: 'Carol Davis',
-                email: 'carol@university.edu',
-                semester: 3,
-                branch: 'Computer Science Engineering',
-                rollNumber: 'CS21003'
-              },
-              {
-                id: 'std4',
-                name: 'David Wilson',
-                email: 'david@university.edu',
-                semester: 3,
-                branch: 'Computer Science Engineering',
-                rollNumber: 'CS21004'
-              },
-              {
-                id: 'std5',
-                name: 'Eva Brown',
-                email: 'eva@university.edu',
-                semester: 3,
-                branch: 'Computer Science Engineering',
-                rollNumber: 'CS21005'
-              }
-            ]
-          },
-          {
-            id: 'sub2',
-            name: 'Database Management Systems',
-            code: 'CS302',
-            semester: 3,
-            branch: 'Computer Science Engineering',
-            slots: [
-              {
-                id: 'slot4',
-                day: 'Tuesday',
-                startTime: '10:00',
-                endTime: '11:00',
-                type: 'lecture'
-              },
-              {
-                id: 'slot5',
-                day: 'Thursday',
-                startTime: '15:00',
-                endTime: '16:00',
-                type: 'lecture'
-              }
-            ],
-            enrolledStudents: [
-              {
-                id: 'std1',
-                name: 'Alice Johnson',
-                email: 'alice@university.edu',
-                semester: 3,
-                branch: 'Computer Science Engineering',
-                rollNumber: 'CS21001'
-              },
-              {
-                id: 'std2',
-                name: 'Bob Smith',
-                email: 'bob@university.edu',
-                semester: 3,
-                branch: 'Computer Science Engineering',
-                rollNumber: 'CS21002'
-              },
-              {
-                id: 'std6',
-                name: 'Frank Miller',
-                email: 'frank@university.edu',
-                semester: 3,
-                branch: 'Computer Science Engineering',
-                rollNumber: 'CS21006'
-              }
-            ]
-          },
-          {
-            id: 'sub3',
-            name: 'Web Development',
-            code: 'CS304',
-            semester: 4,
-            branch: 'Computer Science Engineering',
-            slots: [
-              {
-                id: 'slot6',
-                day: 'Monday',
-                startTime: '14:00',
-                endTime: '15:00',
-                type: 'lecture'
-              },
-              {
-                id: 'slot7',
-                day: 'Wednesday',
-                startTime: '16:00',
-                endTime: '19:00',
-                type: 'lab'
-              }
-            ],
-            enrolledStudents: [
-              {
-                id: 'std7',
-                name: 'Grace Lee',
-                email: 'grace@university.edu',
-                semester: 4,
-                branch: 'Computer Science Engineering',
-                rollNumber: 'CS20001'
-              },
-              {
-                id: 'std8',
-                name: 'Henry Taylor',
-                email: 'henry@university.edu',
-                semester: 4,
-                branch: 'Computer Science Engineering',
-                rollNumber: 'CS20002'
-              }
-            ]
-          }
-        ];
+    // Map unified ERP students to teacher's enrolled student roster
+    const enrolledStudents = students.map(s => ({
+      id: s.id,
+      name: s.name,
+      email: s.email,
+      semester: s.semester,
+      branch: s.department,
+      rollNumber: s.rollNumber
+    }));
 
-        setSubjects(mockSubjects);
-        
-        // Calculate today's classes
-        const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-        const todaySlots = mockSubjects.flatMap(subject => 
-          subject.slots
-            .filter(slot => slot.day === today)
-            .map(slot => ({
-              subject: subject.name,
-              code: subject.code,
-              time: `${slot.startTime} - ${slot.endTime}`,
-              type: slot.type,
-              students: subject.enrolledStudents.length
-            }))
-        );
-        setTodayClasses(todaySlots);
-        setLoading(false);
-      }, 1000);
-    };
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const currentDayName = new Date().toLocaleDateString('en-US', { weekday: 'long' });
 
-    fetchSubjects();
-  }, []);
+    const unifiedSubjects: TeacherSubject[] = erpSubjects.map((sub, idx) => ({
+      id: `sub-${sub.code}`,
+      name: sub.name,
+      code: sub.code,
+      semester: sub.semester,
+      branch: sub.department,
+      slots: [
+        {
+          id: `slot-${sub.code}-1`,
+          day: days[idx % days.length],
+          startTime: '09:00',
+          endTime: '10:00',
+          type: 'lecture'
+        },
+        {
+          id: `slot-${sub.code}-2`,
+          day: days[(idx + 2) % days.length],
+          startTime: '11:00',
+          endTime: '12:00',
+          type: 'lecture'
+        },
+        {
+          id: `slot-${sub.code}-3`,
+          day: currentDayName, // Ensure at least one class shows in today's schedule for live demo!
+          startTime: '14:00',
+          endTime: '16:00',
+          type: 'lab'
+        }
+      ],
+      enrolledStudents
+    }));
+
+    setSubjects(unifiedSubjects);
+
+    // Calculate today's classes
+    const todaySlots = unifiedSubjects.flatMap(subject => 
+      subject.slots
+        .filter(slot => slot.day.toLowerCase() === currentDayName.toLowerCase())
+        .map(slot => ({
+          subject: subject.name,
+          code: subject.code,
+          time: `${slot.startTime} - ${slot.endTime}`,
+          type: slot.type,
+          students: subject.enrolledStudents.length
+        }))
+    );
+    setTodayClasses(todaySlots);
+    setLoading(false);
+  }, [students, erpSubjects]);
 
   const handleAttendanceTaken = (subjectId: string, attendanceData: any[]) => {
-    // Handle attendance submission
-    console.log('Attendance taken for subject:', subjectId, attendanceData);
-    
-    // Update attendance history
+    const subjectObj = subjects.find(s => s.id === subjectId);
+    const subjectCode = subjectObj?.code || 'CS301';
+
+    // Synchronize directly into unified institutional database!
+    recordClassAttendance(subjectCode, attendanceData);
+
+    // Record local session history
     const newRecord = {
       id: `record-${Date.now()}`,
       date: new Date().toISOString().split('T')[0],
@@ -240,7 +115,55 @@ const TeacherAttendance: React.FC = () => {
       [subjectId]: [...(prev[subjectId] || []), newRecord]
     }));
     
-    toast.success('Attendance recorded successfully!');
+    toast.success(`Attendance synchronized for ${attendanceData.length} students into ERP database!`);
+  };
+
+  const handleExportCSV = () => {
+    const headers = ["Roll Number", "Student Name", "Department", "Semester", "Overall Attendance %", "Academic Clearance", "Debarred Hold"];
+    const rows = students.map(s => {
+      const records = Object.values(s.attendance);
+      const totalAtt = records.reduce((acc, r) => acc + r.attended, 0);
+      const totalSess = records.reduce((acc, r) => acc + r.total, 0);
+      const pct = totalSess > 0 ? ((totalAtt / totalSess) * 100).toFixed(1) : '100';
+      return [
+        s.rollNumber,
+        s.name,
+        s.department,
+        `Sem ${s.semester}`,
+        `${pct}%`,
+        s.clearances.attendanceClearance ? 'CLEARED' : 'DEBARRED (<75%)',
+        s.clearances.admitCardIssued ? 'ALLOWED' : 'BLOCKED'
+      ];
+    });
+    exportToCSV('ERP_Institutional_Attendance_Ledger', headers, rows);
+    toast.success('Attendance ledger exported to CSV');
+  };
+
+  const handlePrintReport = () => {
+    generatePrintableReport({
+      title: "Official Institutional Attendance Ledger & Debarment Audit",
+      subtitle: "Office of the Dean of Academic Affairs • Minimum 75% Attendance Compliance",
+      columns: ["Roll No", "Student Name", "Semester", "Attended / Total", "Percentage", "Clearance Status"],
+      rows: students.map(s => {
+        const records = Object.values(s.attendance);
+        const totalAtt = records.reduce((acc, r) => acc + r.attended, 0);
+        const totalSess = records.reduce((acc, r) => acc + r.total, 0);
+        const pct = totalSess > 0 ? ((totalAtt / totalSess) * 100).toFixed(1) : '100';
+        return [
+          s.rollNumber,
+          s.name,
+          `Sem ${s.semester}`,
+          `${totalAtt} / ${totalSess}`,
+          `${pct}%`,
+          s.clearances.attendanceClearance ? "ACADEMICALLY CLEARED" : "DEBARRED (<75%)"
+        ];
+      }),
+      summaryStats: [
+        { label: "Total Students Audited", value: students.length },
+        { label: "Debarred Under Shortage", value: stats.debarredCount },
+        { label: "Compliance Rate", value: `${(((students.length - stats.debarredCount) / students.length) * 100).toFixed(1)}%` }
+      ]
+    });
   };
 
   const getTotalStudents = () => {
@@ -289,11 +212,24 @@ const TeacherAttendance: React.FC = () => {
       <div className="container mx-auto px-4 py-6">
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Header */}
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight">Take Attendance</h1>
-            <p className="text-muted-foreground hidden md:block">
-              Manage attendance for your classes and track student participation
-            </p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold tracking-tight">Take Attendance</h1>
+              <p className="text-muted-foreground hidden md:block">
+                Manage attendance for your classes and track student participation
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <Button variant="outline" onClick={handleExportCSV} className="flex-1 sm:flex-initial">
+                <Download className="mr-2 h-4 w-4" />
+                <span>Export CSV</span>
+              </Button>
+              <Button onClick={handlePrintReport} className="flex-1 sm:flex-initial">
+                <Printer className="mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">Print Attendance Register</span>
+                <span className="sm:hidden">Print Ledger</span>
+              </Button>
+            </div>
           </div>
 
           {/* Stats Cards */}

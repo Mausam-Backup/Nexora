@@ -4,14 +4,21 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { usePageLoading } from "@/hooks/use-page-loading"
 import { GenericPageSkeleton } from "@/components/ui/page-skeleton"
-import { Download, TrendingUp, Award, FileText, Clock, ShieldCheck } from "lucide-react"
+import { Download, TrendingUp, Award, FileText, Clock, ShieldCheck, Printer, AlertTriangle } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Progress } from "@/components/ui/progress"
 import { SubjectDetailModal } from "@/components/marks/SubjectDetailModal"
 import { coeService } from "@/services/coeService"
+import { useERPData } from "@/hooks/useERPData"
+import { useAuth } from "@/contexts/AuthContext"
+import { exportToCSV, generatePrintableReport } from "@/utils/exportUtils"
 
 export default function ViewMarks() {
   const isLoading = usePageLoading()
+  const { user } = useAuth()
+  const { getStudent, students } = useERPData()
+  const student = getStudent(user?.id || '20CS001') || students[0]
+
   const [selectedSubject, setSelectedSubject] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -21,20 +28,26 @@ export default function ViewMarks() {
     return <GenericPageSkeleton />
   }
 
+  const currentSemesterSubjects = Object.values(student.marks)
+  const totalCredits = currentSemesterSubjects.reduce((acc, s) => acc + s.credits, 0)
+  const currentSGPA = totalCredits > 0 
+    ? Number((currentSemesterSubjects.reduce((acc, s) => acc + (s.gp * s.credits), 0) / totalCredits).toFixed(2))
+    : student.cgpa
+
   const handleSubjectClick = (subject: any) => {
     // Generate detailed breakdown data
     const detailedSubject = {
       ...subject,
       internalBreakdown: {
-        assignment1: Math.floor(subject.internal * 0.15), // 15% of internal
-        assignment2: Math.floor(subject.internal * 0.15), // 15% of internal  
-        quiz1: Math.floor(subject.internal * 0.15), // 15% of internal
-        quiz2: Math.floor(subject.internal * 0.15), // 15% of internal
-        attendance: subject.internal - (Math.floor(subject.internal * 0.15) * 4) // Remaining
+        assignment1: Math.floor(subject.internal * 0.25),
+        assignment2: Math.floor(subject.internal * 0.25),
+        quiz1: Math.floor(subject.internal * 0.25),
+        quiz2: subject.internal - (Math.floor(subject.internal * 0.25) * 3),
+        attendance: 5
       },
       externalBreakdown: {
-        midterm: Math.floor(subject.external * 0.43), // 30/70 ratio
-        endterm: subject.external - Math.floor(subject.external * 0.43) // Remaining 40/70
+        midterm: Math.floor(subject.external * 0.43),
+        endterm: subject.external - Math.floor(subject.external * 0.43)
       }
     }
     setSelectedSubject(detailedSubject)
@@ -46,17 +59,68 @@ export default function ViewMarks() {
     setSelectedSubject(null)
   }
 
+  const handleDownloadTranscript = () => {
+    generatePrintableReport({
+      title: "Official Academic Grade Transcript",
+      subtitle: "Office of the Controller of Examinations • Autonomous Transcript Record",
+      studentInfo: {
+        name: student.name,
+        rollNumber: student.rollNumber,
+        department: student.department,
+        semester: student.semester
+      },
+      statusBadge: {
+        text: student.clearances.feeClearance ? "ACADEMIC CLEARANCE GRANTED" : "FINANCIAL HOLD ON RECORD",
+        variant: student.clearances.feeClearance ? "success" : "danger"
+      },
+      columns: ["Subject Code", "Subject Name", "Credits", "Internal (30)", "External (70)", "Total (100)", "Grade", "Grade Points"],
+      rows: currentSemesterSubjects.map(s => [
+        s.subjectCode,
+        s.subjectName,
+        s.credits,
+        s.internal,
+        s.external,
+        s.total,
+        s.grade,
+        s.gp
+      ]),
+      summaryStats: [
+        { label: "Semester SGPA", value: currentSGPA },
+        { label: "Cumulative CGPA", value: student.cgpa },
+        { label: "Academic Standing", value: student.cgpa >= 8.5 ? "First Class with Distinction" : "First Class" }
+      ]
+    })
+  }
+
+  const handleExportCSV = () => {
+    const headers = ["Subject Code", "Subject Name", "Credits", "Internal", "External", "Total", "Grade", "Grade Points"]
+    const rows = currentSemesterSubjects.map(s => [
+      s.subjectCode,
+      s.subjectName,
+      s.credits,
+      s.internal,
+      s.external,
+      s.total,
+      s.grade,
+      s.gp
+    ])
+    exportToCSV(`${student.rollNumber}_Academic_Marks`, headers, rows)
+  }
+
   const semesters = [
     {
-      semester: "6th Semester",
-      subjects: [
-        { code: "CS301", name: "Database Management Systems", credits: 4, internal: 28, external: 75, total: 103, grade: "A+", gp: 10 },
-        { code: "CS302", name: "Software Engineering", credits: 4, internal: 25, external: 70, total: 95, grade: "A", gp: 9 },
-        { code: "CS303", name: "Computer Networks", credits: 4, internal: 30, external: 68, total: 98, grade: "A", gp: 9 },
-        { code: "CS304", name: "Operating Systems", credits: 4, internal: 27, external: 72, total: 99, grade: "A", gp: 9 },
-        { code: "CS305", name: "Web Technologies", credits: 3, internal: 29, external: 78, total: 107, grade: "A+", gp: 10 },
-      ],
-      sgpa: 9.32,
+      semester: `Semester ${student.semester} (Current)`,
+      subjects: currentSemesterSubjects.map(s => ({
+        code: s.subjectCode,
+        name: s.subjectName,
+        credits: s.credits,
+        internal: s.internal,
+        external: s.external,
+        total: s.total,
+        grade: s.grade,
+        gp: s.gp
+      })),
+      sgpa: currentSGPA,
       status: "Current"
     },
     {
@@ -74,11 +138,11 @@ export default function ViewMarks() {
   ]
 
   const overallStats = {
-    cgpa: 8.65,
-    totalCredits: 145,
+    cgpa: student.cgpa,
+    totalCredits: 160,
     completedCredits: 128,
-    rank: 12,
-    totalStudents: 180
+    rank: student.cgpa >= 9.0 ? 3 : student.cgpa >= 8.0 ? 12 : 38,
+    totalStudents: students.length
   }
 
   return (
@@ -90,12 +154,35 @@ export default function ViewMarks() {
             View your semester-wise marks and performance
           </p>
         </div>
-        <Button className="w-full sm:w-auto">
-          <Download className="mr-2 h-4 w-4" />
-          <span className="hidden sm:inline">Download Transcript</span>
-          <span className="sm:hidden">Download</span>
-        </Button>
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" onClick={handleExportCSV} className="flex-1 sm:flex-initial">
+            <Download className="mr-2 h-4 w-4" />
+            <span>Export CSV</span>
+          </Button>
+          <Button onClick={handleDownloadTranscript} className="flex-1 sm:flex-initial">
+            <Printer className="mr-2 h-4 w-4" />
+            <span className="hidden sm:inline">Print / Save Transcript</span>
+            <span className="sm:hidden">Transcript</span>
+          </Button>
+        </div>
       </div>
+
+      {/* Academic Warning / Probation Banner if CGPA < 5.5 */}
+      {student.cgpa < 5.5 && (
+        <div className="p-4 rounded-xl border-2 border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-400 flex items-start gap-3">
+          <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1 text-sm">
+            <div className="font-bold flex items-center gap-2">
+              <span>Official Academic Warning: Remedial Mentorship Required</span>
+              <Badge variant="destructive" className="text-[10px] uppercase">Probation Standing</Badge>
+            </div>
+            <p className="mt-1 text-xs text-foreground/80">
+              Your cumulative CGPA ({student.cgpa.toFixed(2)}) is below the university minimum academic standard of 5.50. 
+              Under statutory regulation Section 4.2, you have been assigned to mandatory faculty office hours with your department counselor.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Overall Statistics */}
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">

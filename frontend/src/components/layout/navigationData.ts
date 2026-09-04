@@ -21,6 +21,7 @@ import {
   TrendingUp,
   ShieldAlert,
   Scale,
+  Globe,
   type LucideIcon,
 } from "lucide-react"
 
@@ -43,7 +44,7 @@ export interface SecondaryNavItem {
   icon: LucideIcon
 }
 
-// Student: High-Impact Core Modules on Top
+// Student: High-Impact Core ERP Modules on Top
 export const studentPrimaryNav: NavItem[] = [
   {
     title: "Dashboard",
@@ -52,10 +53,16 @@ export const studentPrimaryNav: NavItem[] = [
     isActive: true,
   },
   {
+    title: "Attendance Tracker",
+    url: "/attendance/student",
+    icon: CheckSquare,
+    badge: "Live 88.9%",
+  },
+  {
     title: "Academic Performance",
     url: "/view-marks",
     icon: BarChart3,
-    badge: "Insights",
+    badge: "Grades",
     items: [
       {
         title: "View Marks & SGPA",
@@ -67,6 +74,18 @@ export const studentPrimaryNav: NavItem[] = [
         url: "/academic-progress",
       },
     ],
+  },
+  {
+    title: "Fees & Billing Ledger",
+    url: "/billing-payments",
+    icon: DollarSign,
+    badge: "Ledger",
+  },
+  {
+    title: "Examinations & Admit Card",
+    url: "/schedule/exams",
+    icon: Award,
+    badge: "Hall Ticket",
   },
   {
     title: "Courses & Academics",
@@ -101,7 +120,7 @@ export const studentPrimaryNav: NavItem[] = [
         url: "/schedule/classes",
       },
       {
-        title: "Exam Schedule",
+        title: "Exam Timetable",
         url: "/schedule/exams",
       },
       {
@@ -111,24 +130,13 @@ export const studentPrimaryNav: NavItem[] = [
     ],
   },
   {
-    title: "Attendance Tracker",
-    url: "/attendance/student",
-    icon: CheckSquare,
-    badge: "Live",
-  },
-  {
-    title: "Fees & Billing",
-    url: "/billing-payments",
-    icon: DollarSign,
-  },
-  {
     title: "Digital Student ID",
     url: "/student-id",
     icon: QrCode,
     badge: "QR Pass",
   },
   {
-    title: "Campus Network",
+    title: "Campus Network & Notices",
     url: "/announcements",
     icon: Users,
     items: [
@@ -145,15 +153,16 @@ export const studentPrimaryNav: NavItem[] = [
 ]
 
 export const studentSecondaryNav: SecondaryNavItem[] = [
+  // Academic & Productivity Tools on Top
+  {
+    name: "Ask AI Academic Assistant",
+    url: "/ask-ai",
+    icon: Bot,
+  },
   {
     name: "Notes & Materials",
     url: "/notes",
     icon: FileText,
-  },
-  {
-    name: "Expense Tracker",
-    url: "/expenses",
-    icon: TrendingUp,
   },
   {
     name: "Tasks & Todos",
@@ -161,19 +170,31 @@ export const studentSecondaryNav: SecondaryNavItem[] = [
     icon: CheckSquare,
   },
   {
-    name: "Pomodoro Focus",
-    url: "/pomodoro",
-    icon: Timer,
-  },
-  {
     name: "Academic Calculators",
     url: "/calculators",
     icon: Calculator,
   },
   {
-    name: "Ask AI Assistant",
-    url: "/ask-ai",
-    icon: Bot,
+    name: "Pomodoro Focus",
+    url: "/pomodoro",
+    icon: Timer,
+  },
+  {
+    name: "Daily Motivation",
+    url: "/motivation",
+    icon: Zap,
+  },
+
+  // Non-ERP Utilities moved to the bottom
+  {
+    name: "Personal Expenses",
+    url: "/expenses",
+    icon: TrendingUp,
+  },
+  {
+    name: "Study Music Player",
+    url: "/music",
+    icon: Music,
   },
   {
     name: "Mind & Meditation",
@@ -181,19 +202,14 @@ export const studentSecondaryNav: SecondaryNavItem[] = [
     icon: Brain,
   },
   {
-    name: "Daily Motivation",
-    url: "/motivation",
-    icon: Zap,
-  },
-  {
     name: "Fitness Tracker",
     url: "/fitness",
     icon: Dumbbell,
   },
   {
-    name: "Study Music Player",
-    url: "/music",
-    icon: Music,
+    name: "Wikipedia Reader",
+    url: "/wikipedia",
+    icon: Globe,
   },
 ]
 
@@ -201,7 +217,7 @@ export const studentSecondaryNav: SecondaryNavItem[] = [
 export const teacherPrimaryNav: NavItem[] = [
   {
     title: "Faculty Dashboard",
-    url: "/",
+    url: "/teacher/attendance",
     icon: LayoutDashboard,
     isActive: true,
   },

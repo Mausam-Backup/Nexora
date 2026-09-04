@@ -25,7 +25,7 @@ export const AdminRoutes: React.FC = () => {
       {/* Default admin dashboard */}
       <Route path="/" element={
         <RoleRoute allowedRoles={['admin']}>
-          <Index />
+          <AdminOverview />
         </RoleRoute>
       } />
       <Route path="/profile" element={

@@ -19,7 +19,7 @@ export const TeacherRoutes: React.FC = () => {
       {/* Default teacher dashboard */}
       <Route path="/" element={
         <RoleRoute allowedRoles={['teacher']}>
-          <Index />
+          <TeacherAttendance />
         </RoleRoute>
       } />
       <Route path="/profile" element={

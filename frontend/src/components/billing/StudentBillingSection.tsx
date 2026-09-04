@@ -10,62 +10,29 @@ import { BillingPagination } from "./BillingPagination"
 import { CreateBillDialog } from "./CreateBillDialog"
 import { BulkBillDialog } from "./BulkBillDialog"
 import { useToast } from "@/hooks/use-toast"
-
-// Mock student billing data
-const studentBills: BillData[] = [
-  {
-    id: 'TUI-2024-001',
-    studentId: 'STU001',
-    description: 'Semester 8 Tuition Fee',
-    amount: 75000,
-    dueDate: '2024-07-15',
-    createdAt: '2024-06-01T00:00:00Z',
-    status: 'paid',
-    paymentDate: '2024-07-10',
-    receiptNo: 'RCP-STU-001'
-  },
-  {
-    id: 'LAB-2024-002',
-    studentId: 'STU002',
-    description: 'Computer Science Lab Fee',
-    amount: 8500,
-    dueDate: '2024-08-15',
-    createdAt: '2024-07-01T00:00:00Z',
-    status: 'pending'
-  },
-  {
-    id: 'ACC-2024-003',
-    studentId: 'STU003',
-    description: 'Hostel Accommodation Fee',
-    amount: 45000,
-    dueDate: '2024-07-01',
-    createdAt: '2024-06-15T00:00:00Z',
-    status: 'overdue'
-  },
-  {
-    id: 'LIB-2024-004',
-    studentId: 'STU004',
-    description: 'Library Fee',
-    amount: 2000,
-    dueDate: '2024-09-01',
-    createdAt: '2024-08-01T00:00:00Z',
-    status: 'pending'
-  },
-  {
-    id: 'SPT-2024-005',
-    studentId: 'STU005',
-    description: 'Sports Fee - Annual',
-    amount: 3500,
-    dueDate: '2024-07-31',
-    createdAt: '2024-06-20T00:00:00Z',
-    status: 'paid',
-    paymentDate: '2024-07-25',
-    receiptNo: 'RCP-STU-002'
-  }
-]
+import { useERPData } from "@/hooks/useERPData"
+import { exportToCSV, generatePrintableReport } from "@/utils/exportUtils"
 
 export function StudentBillingSection() {
   const { toast } = useToast()
+  const { students } = useERPData()
+
+  // Derive student bills dynamically from unified ERP students
+  const studentBills: BillData[] = useMemo(() => {
+    return students.flatMap(student =>
+      student.fees.bills.map(b => ({
+        id: b.id,
+        studentId: `${student.rollNumber} - ${student.name}`,
+        description: b.title,
+        amount: b.amount,
+        dueDate: b.dueDate,
+        createdAt: `${b.dueDate}T00:00:00Z`,
+        status: b.status,
+        paymentDate: b.paidAt,
+        receiptNo: b.receiptNo
+      }))
+    )
+  }, [students])
   const [filters, setFilters] = useState({
     search: '',
     type: '',
@@ -195,16 +162,44 @@ export function StudentBillingSection() {
   }
 
   const handleDownloadReceipt = (bill: BillData) => {
-    toast({
-      title: "Download Started",
-      description: `Downloading receipt ${bill.receiptNo}`
+    generatePrintableReport({
+      title: "Official Institutional Fee Receipt",
+      subtitle: "Office of the Dean of Finance & Accounts • Institutional Ledger Copy",
+      statusBadge: {
+        text: "PAYMENT VERIFIED",
+        variant: "success"
+      },
+      columns: ["Receipt No", "Student Details", "Description", "Amount (INR)", "Due Date", "Paid Date", "Status"],
+      rows: [
+        [
+          bill.receiptNo || `RCP-${bill.id.slice(-6)}`,
+          bill.studentId || "Student",
+          bill.description,
+          `₹${bill.amount.toLocaleString('en-IN')}`,
+          bill.dueDate,
+          bill.paymentDate || new Date().toISOString().split('T')[0],
+          "PAID"
+        ]
+      ]
     })
   }
 
   const handleExport = () => {
+    const headers = ["Bill ID", "Student Details", "Description", "Amount (INR)", "Due Date", "Status", "Payment Date", "Receipt No"]
+    const rows = studentBills.map(b => [
+      b.id,
+      b.studentId || '',
+      b.description,
+      b.amount,
+      b.dueDate,
+      b.status.toUpperCase(),
+      b.paymentDate || 'N/A',
+      b.receiptNo || 'N/A'
+    ])
+    exportToCSV("Institutional_Student_Fee_Ledger", headers, rows)
     toast({
-      title: "Export Started",
-      description: "Downloading student billing data as CSV"
+      title: "Export Completed",
+      description: "Downloaded institutional student fee ledger as CSV"
     })
   }
 

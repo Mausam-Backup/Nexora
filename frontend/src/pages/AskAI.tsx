@@ -3,8 +3,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Send, Bot, User, BookOpen, Calculator, Clock, Lightbulb } from 'lucide-react'
+import { Send, Bot, User, ShieldAlert, CreditCard, Award, Calendar } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { useAuth } from '@/contexts/AuthContext'
+import { useERPData } from '@/hooks/useERPData'
 
 interface Message {
   id: string
@@ -28,6 +30,12 @@ const AskAI = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
+  const { user } = useAuth()
+  const { students, getStudent } = useERPData()
+
+  // Resolve current active student from ERP state
+  const activeStudentId = user?.id || '20CS001'
+  const currentStudent = getStudent(activeStudentId) || students[0]
 
   // Handle mobile keyboard visibility
   useEffect(() => {
@@ -61,60 +69,145 @@ const AskAI = () => {
 
   const suggestions: SuggestionCard[] = [
     {
-      title: "Study Techniques",
-      subtitle: "Effective Learning Methods",
-      icon: <BookOpen className="h-5 w-5" />,
-      prompt: "What are the most effective study techniques for college students?"
+      title: "Exam Eligibility",
+      subtitle: "Attendance & Clearance Check",
+      icon: <ShieldAlert className="h-5 w-5 text-amber-500" />,
+      prompt: "Am I eligible to sit for the upcoming end-semester exams?"
     },
     {
-      title: "Math Help",
-      subtitle: "Problem Solving Tips",
-      icon: <Calculator className="h-5 w-5" />,
-      prompt: "Can you help me understand calculus concepts better?"
+      title: "Fee Clearance",
+      subtitle: "Dues & Bill Breakdown",
+      icon: <CreditCard className="h-5 w-5 text-emerald-500" />,
+      prompt: "What are my outstanding fee dues and clearance status?"
     },
     {
-      title: "Time Management",
-      subtitle: "Academic Balance",
-      icon: <Clock className="h-5 w-5" />,
-      prompt: "How can I better manage my time between studies and other activities?"
+      title: "Attendance Standing",
+      subtitle: "75% Minimum Gate Check",
+      icon: <Calendar className="h-5 w-5 text-blue-500" />,
+      prompt: "What is my current attendance percentage and do I have any course shortages?"
     },
     {
-      title: "Research Tips",
-      subtitle: "Academic Writing",
-      icon: <Lightbulb className="h-5 w-5" />,
-      prompt: "What are the best practices for academic research and citation?"
+      title: "Academic Transcript",
+      subtitle: "GPA & Subject Performance",
+      icon: <Award className="h-5 w-5 text-purple-500" />,
+      prompt: "Can you summarize my current CGPA, SGPA, and subject marks?"
     }
   ]
 
-  // Function to generate system prompt with creator information
-  const getSystemPrompt = (message: string): string => {
-    const lowerMessage = message.toLowerCase()
-    
-    // Check if user is asking about the creator
-    if (lowerMessage.includes('mausam kar') || lowerMessage.includes('creator') || lowerMessage.includes('developer') || lowerMessage.includes('who made') || lowerMessage.includes('who created')) {
-      return `You are CampusSync AI, a helpful AI assistant for students. The user is asking about the creator of this application. Here's the information about Mausam Kar:
+  // Local ERP Rule-based Copilot response generator (Zero-token, offline-ready)
+  const generateLocalERPResponse = (query: string): string | null => {
+    const q = query.toLowerCase()
+    const s = currentStudent
 
-**About Mausam Kar - Creator of this Student Hub Application:**
+    if (!s) return null
 
-Mausam Kar is a Computer Science and Engineering student at VIT Bhopal, specializing in Artificial Intelligence and Machine Learning. Originally from Assam, he blends creativity and technology to craft impactful, user-focused solutions.
-
-**Technical Skills:**
-• Full-stack development (React.js, HTML5, CSS3, JavaScript, Tailwind CSS)
-• Backend (Node.js)
-• AI/ML (Python, TensorFlow, NLP)
-• UI/UX Design
-• Prompt Engineering
-
-**Currently Exploring:**
-Cloud Computing (AWS/GCP), DevOps, and Advanced Data Analytics to build scalable and ethical intelligent systems.
-
-**About him:**
-Driven by curiosity, Mausam enjoys contributing to open-source projects, participating in hackathons, and experimenting with generative AI. He's passionate about bridging regional innovation with global tech.
-
-Please provide a helpful response about Mausam Kar based on this information. User's question: ${message}`
+    // Creator query
+    if (q.includes('mausam') || q.includes('creator') || q.includes('who made') || q.includes('who created')) {
+      return `About the Creator:\n\nMausam Kar is a Computer Science and Engineering student specializing in Artificial Intelligence and Full-Stack Systems. He engineered CampusSync / Nexora to solve ERP fragmentation in collegiate education.`
     }
-    
-    return `You are CampusSync AI, a helpful AI assistant for students built into a student management application created by Mausam Kar. Please provide a well-formatted, clear, and organized response to this question. Use proper formatting with clear sections, bullet points, and structure. Avoid using asterisks (*) for formatting. Instead, use clear headings and organized lists.
+
+    // Exam Eligibility query
+    if (q.includes('exam') || q.includes('eligible') || q.includes('admit') || q.includes('hall ticket') || q.includes('debar')) {
+      const isDebarred = s.examDebarred
+      const attendanceLow = s.overallAttendance < 75
+      const feesUnpaid = !s.feeClearance || s.totalDue > 0
+
+      let reply = `Exam Eligibility Assessment for ${s.name} (${s.id}):\n\n`
+      if (isDebarred) {
+        reply += `Status: DEBARRED / NOT ELIGIBLE ❌\n`
+        reply += `Reason: ${s.debarReason || 'Statutory clearance criteria not met.'}\n\n`
+      } else {
+        reply += `Status: CLEARED FOR EXAMS ✅\n`
+        reply += `All academic and financial prerequisites are satisfied.\n\n`
+      }
+
+      reply += `Cross-Module Audit Gate:\n`
+      reply += `• Attendance Gate (≥75%): ${s.overallAttendance}% ${attendanceLow ? '⚠️ SHORTAGE DETECTED (Debarred)' : '✅ Cleared'}\n`
+      reply += `• Financial Clearance Gate: ₹${s.totalDue.toLocaleString('en-IN')} outstanding ${feesUnpaid ? '⚠️ DUES PENDING' : '✅ Cleared'}\n`
+      reply += `• Hall Ticket Access: ${isDebarred ? 'LOCKED until clearance is resolved.' : 'UNLOCKED and available for download in Exams portal.'}`
+      return reply
+    }
+
+    // Fees / Dues query
+    if (q.includes('fee') || q.includes('due') || q.includes('bill') || q.includes('payment') || q.includes('clearance') || q.includes('tuition')) {
+      let reply = `Financial Clearance & Billing Summary for ${s.name} (${s.id}):\n\n`
+      reply += `• Overall Financial Clearance: ${s.feeClearance ? 'CLEARED ✅' : 'ON HOLD ⚠️'}\n`
+      reply += `• Total Outstanding Balance: ₹${s.totalDue.toLocaleString('en-IN')}\n\n`
+      reply += `Itemized Bill Ledger:\n`
+      s.feeBills.forEach(b => {
+        reply += `• ${b.title}: ₹${b.amount.toLocaleString('en-IN')} — Status: ${b.status.toUpperCase()} (Due: ${b.dueDate})\n`
+      })
+      if (s.totalDue > 0) {
+        reply += `\nAction Required: Settle outstanding dues via the Student Billing module to remove any registration or exam holds.`
+      } else {
+        reply += `\nNo pending dues detected. All fee obligations are satisfied for this academic cycle.`
+      }
+      return reply
+    }
+
+    // Attendance query
+    if (q.includes('attendance') || q.includes('present') || q.includes('absent') || q.includes('shortage') || q.includes('class')) {
+      let reply = `Official Attendance Standing for ${s.name} (${s.id}):\n\n`
+      reply += `• Overall Cumulative Attendance: ${s.overallAttendance}% ${s.overallAttendance < 75 ? '⚠️ (CRITICAL SHORTAGE — Below 75%)' : '✅ (Meets minimum 75% standard)'}\n\n`
+      reply += `Course-by-Course Attendance Ledger:\n`
+      s.attendanceRecords.forEach(r => {
+        const flag = r.percentage < 75 ? '⚠️ SHORTAGE' : '✅ Good'
+        reply += `• ${r.courseName} (${r.courseId}): ${r.attendedClasses}/${r.totalClasses} classes (${r.percentage}%) — ${flag}\n`
+      })
+      if (s.overallAttendance < 75) {
+        reply += `\nWarning: University regulations require a mandatory minimum of 75% attendance to avoid debarment.`
+      }
+      return reply
+    }
+
+    // Marks / CGPA / SGPA / Performance query
+    if (q.includes('mark') || q.includes('grade') || q.includes('cgpa') || q.includes('sgpa') || q.includes('result') || q.includes('transcript') || q.includes('score')) {
+      let reply = `Academic Transcript & Grading Summary for ${s.name} (${s.id}):\n\n`
+      reply += `• Cumulative GPA (CGPA): ${s.cgpa.toFixed(2)}\n`
+      reply += `• Semester GPA (SGPA): ${s.sgpa.toFixed(2)}\n`
+      reply += `• Total Earned Credits: ${s.totalCredits}\n\n`
+      reply += `Subject-wise Assessment Record:\n`
+      s.marks.forEach(m => {
+        reply += `• ${m.courseName} (${m.courseCode}): Internal ${m.internalMarks}/30 | Mid-Sem ${m.midSemMarks}/30 | End-Sem ${m.endSemMarks}/40 ➔ Total: ${m.totalMarks}/100 [Grade: ${m.grade}, Points: ${m.gradePoint}]\n`
+      })
+      return reply
+    }
+
+    // Profile or General ERP Status query
+    if (q.includes('profile') || q.includes('who am i') || q.includes('status') || q.includes('standing') || q.includes('overview') || q.includes('summary')) {
+      let reply = `Integrated Student Profile Overview for ${s.name} (${s.id}):\n\n`
+      reply += `• Department: ${s.department} (Semester ${s.semester})\n`
+      reply += `• Attendance: ${s.overallAttendance}% (${s.overallAttendance >= 75 ? 'Cleared' : 'Shortage ⚠️'})\n`
+      reply += `• CGPA: ${s.cgpa.toFixed(2)} | SGPA: ${s.sgpa.toFixed(2)}\n`
+      reply += `• Fee Dues: ₹${s.totalDue.toLocaleString('en-IN')} (${s.feeClearance ? 'Cleared' : 'Pending Hold ⚠️'})\n`
+      reply += `• Exam Status: ${s.examDebarred ? 'Debarred ❌' : 'Eligible ✅'}\n`
+      return reply
+    }
+
+    return null
+  }
+
+  // Function to generate system prompt with creator information and live ERP context
+  const getSystemPrompt = (message: string): string => {
+    const s = currentStudent
+    const erpContext = s ? `
+LIVE STUDENT ERP CONTEXT (REAL-TIME DATABASE):
+• Student ID: ${s.id}
+• Full Name: ${s.name}
+• Department: ${s.department}, Semester: ${s.semester}
+• Overall Attendance: ${s.overallAttendance}% (University Gate: >= 75%)
+• Fee Clearance: ${s.feeClearance ? 'CLEARED' : 'PENDING'} (Total Due: ₹${s.totalDue})
+• Exam Debarred: ${s.examDebarred ? `YES - ${s.debarReason}` : 'NO - ELIGIBLE'}
+• CGPA: ${s.cgpa}, SGPA: ${s.sgpa}, Credits: ${s.totalCredits}
+• Subject Marks: ${s.marks.map(m => `${m.courseName}: ${m.totalMarks}/100 (${m.grade})`).join(', ')}
+• Course Attendance: ${s.attendanceRecords.map(a => `${a.courseName}: ${a.percentage}%`).join(', ')}
+` : ''
+
+    return `You are CampusSync ERP AI, an intelligent integrated assistant for student academic and administrative inquiries.
+${erpContext}
+
+Always utilize the student's live ERP data above to answer questions concerning grades, fee balances, exam hall ticket clearance, or attendance.
+Provide well-structured answers using clear bullet points and headings. Avoid excessive asterisks.
 
 Question: ${message}`
   }
@@ -122,12 +215,10 @@ Question: ${message}`
   // Function to clean and format AI response
   const formatAIResponse = (response: string): string => {
     return response
-      // Remove excessive asterisks and formatting
       .replace(/\*\*\*/g, '')
       .replace(/\*\*/g, '')
       .replace(/\* \*/g, '• ')
       .replace(/^\* /gm, '• ')
-      // Clean up spacing
       .replace(/\n{3,}/g, '\n\n')
       .trim()
   }
@@ -154,13 +245,40 @@ Question: ${message}`
     setInput('')
     setIsLoading(true)
 
+    // Check if query can be answered directly by the ERP engine
+    const localERPAnswer = generateLocalERPResponse(messageContent)
+    if (localERPAnswer) {
+      setTimeout(() => {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: localERPAnswer,
+          role: 'assistant',
+          timestamp: new Date()
+        }
+        setMessages(prev => [...prev, assistantMessage])
+        setIsLoading(false)
+      }, 350)
+      return
+    }
+
     try {
       // Use environment variable for API key
       const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'YOUR_API_KEY_HERE'
       
-      // Check if API key is properly configured
+      // If API key is not configured, give a helpful fallback response with student context
       if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
-        throw new Error('Gemini API key is not configured. Please add your API key to the .env.local file.')
+        setTimeout(() => {
+          const fallbackResponse = `I'm CampusSync ERP AI. For questions about your attendance, fees, marks, or exam hall tickets, ask me directly (e.g. "Am I eligible for exams?").\n\nFor general open-ended queries beyond your ERP records, connect a Gemini API key in .env.local (VITE_GEMINI_API_KEY).`
+          const assistantMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            content: fallbackResponse,
+            role: 'assistant',
+            timestamp: new Date()
+          }
+          setMessages(prev => [...prev, assistantMessage])
+          setIsLoading(false)
+        }, 300)
+        return
       }
       
       // Call Gemini API directly
@@ -193,7 +311,6 @@ Question: ${message}`
       const data = await response.json()
       let aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not generate a response.'
       
-      // Clean up and format the response
       aiResponse = formatAIResponse(aiResponse)
 
       const assistantMessage: Message = {
@@ -238,14 +355,13 @@ Question: ${message}`
               </div>
               <div className="space-y-2">
                 <h1 className="text-3xl font-semibold text-foreground">
-                  Hi, Student! 👋
+                  Hi, {currentStudent ? currentStudent.name.split(' ')[0] : 'Student'}! 👋
                 </h1>
                 <p className="text-xl text-foreground/80">
-                  How can I help you with your studies today?
+                  How can I assist your academic journey today?
                 </p>
-                <p className="hidden sm:block text-sm text-muted-foreground max-w-md mx-auto italic">
-                  Ready to assist you with anything you need, from answering academic questions 
-                  to providing study tips and research guidance. Let's get started!
+                <p className="hidden sm:block text-sm text-muted-foreground max-w-md mx-auto">
+                  Integrated CampusSync ERP Copilot • Live Attendance &bull; Exam Eligibility Gate &bull; Fee Status &bull; Transcripts
                 </p>
               </div>
             </div>

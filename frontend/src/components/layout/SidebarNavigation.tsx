@@ -29,9 +29,8 @@ export const SidebarNavigation: React.FC = () => {
     avatar: "/placeholder.svg",
   }
 
-  // Header icon reflecting user role
   const HeaderIcon = role === "admin" ? ShieldCheck : role === "teacher" ? Briefcase : GraduationCap
-  const homeLink = role === "admin" ? "/admin/overview" : "/"
+  const homeLink = role === "admin" ? "/admin/overview" : role === "teacher" ? "/teacher/attendance" : "/"
 
   return (
     <Sidebar variant="inset" className="scrollbar-hide">

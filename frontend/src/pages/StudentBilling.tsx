@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { GenericPageSkeleton } from "@/components/ui/page-skeleton"
-import { Download, CreditCard, Receipt, DollarSign, Calendar, FileText, Clock, Hash, Bell } from "lucide-react"
+import { Download, CreditCard, Receipt, DollarSign, Calendar, FileText, Clock, Hash, Bell, AlertTriangle, CheckCircle, Printer } from "lucide-react"
 import { usePageLoading } from "@/hooks/use-page-loading"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { SEO } from "@/components/SEO"
@@ -12,12 +12,18 @@ import { BillingFilters } from "@/components/billing/BillingFilters"
 import { BillingTable, type BillData } from "@/components/billing/BillingTable"
 import { BillingPagination } from "@/components/billing/BillingPagination"
 import { useToast } from "@/hooks/use-toast"
+import { useERPData } from "@/hooks/useERPData"
+import { useAuth } from "@/contexts/AuthContext"
+import { exportToCSV, generatePrintableReport } from "@/utils/exportUtils"
 
 export default function StudentBilling() {
   const isLoading = usePageLoading()
   const isMobile = useIsMobile()
   const { toast } = useToast()
-  const [bills, setBills] = useState<BillData[]>([])
+  const { user } = useAuth()
+  const { getStudent, students, markBillPaid } = useERPData()
+  const student = getStudent(user?.id || '20CS001') || students[0]
+
   const [filters, setFilters] = useState({
     search: '',
     type: '',
@@ -29,68 +35,20 @@ export default function StudentBilling() {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(25)
 
-  // Mock student billing data
-  useEffect(() => {
-    const mockBills: BillData[] = [
-      {
-        id: 'STU-2024-001',
-        studentId: 'ST2024001',
-        description: 'Semester 8 Tuition Fee',
-        amount: 75000,
-        dueDate: '2024-07-15',
-        createdAt: '2024-06-01T00:00:00Z',
-        status: 'paid',
-        paymentDate: '2024-07-10',
-        receiptNo: 'RCP-STU-001'
-      },
-      {
-        id: 'STU-2024-002',
-        studentId: 'ST2024001',
-        description: 'Library Fee',
-        amount: 2000,
-        dueDate: '2024-08-15',
-        createdAt: '2024-07-01T00:00:00Z',
-        status: 'pending'
-      },
-      {
-        id: 'STU-2024-003',
-        studentId: 'ST2024001',
-        description: 'Lab Fee - Computer Science',
-        amount: 5000,
-        dueDate: '2024-07-01',
-        createdAt: '2024-06-15T00:00:00Z',
-        status: 'overdue'
-      },
-      {
-        id: 'STU-2024-004',
-        studentId: 'ST2024001',
-        description: 'Sports Fee',
-        amount: 1500,
-        dueDate: '2024-09-01',
-        createdAt: '2024-08-01T00:00:00Z',
-        status: 'pending'
-      },
-      {
-        id: 'STU-2024-005',
-        studentId: 'ST2024001',
-        description: 'Hostel Fee - Q1',
-        amount: 25000,
-        dueDate: '2024-07-31',
-        createdAt: '2024-06-20T00:00:00Z',
-        status: 'paid',
-        paymentDate: '2024-07-25',
-        receiptNo: 'RCP-STU-002'
-      }
-    ]
-    
-    const saved = localStorage.getItem('campussync-student-bills')
-    if (saved) {
-      setBills(JSON.parse(saved))
-    } else {
-      setBills(mockBills)
-      localStorage.setItem('campussync-student-bills', JSON.stringify(mockBills))
-    }
-  }, [])
+  // Derive bills live from unified ERP student
+  const bills: BillData[] = useMemo(() => {
+    return student.fees.bills.map(b => ({
+      id: b.id,
+      studentId: student.rollNumber,
+      description: b.title,
+      amount: b.amount,
+      dueDate: b.dueDate,
+      createdAt: `${b.dueDate}T00:00:00Z`,
+      status: b.status,
+      paymentDate: b.paidAt,
+      receiptNo: b.receiptNo
+    }))
+  }, [student])
 
   // Filter and sort bills
   const filteredBills = useMemo(() => {
@@ -193,24 +151,90 @@ export default function StudentBilling() {
     }
   }, [bills])
 
+  const handlePay = (bill: BillData) => {
+    markBillPaid(student.id, bill.id)
+    toast({
+      title: "Payment Received & Reconciled",
+      description: `₹${bill.amount.toLocaleString('en-IN')} paid for ${bill.description}. Clearance updated in real-time!`
+    })
+    // Immediately generate official university fee receipt
+    setTimeout(() => {
+      handleDownloadReceipt({
+        ...bill,
+        status: 'paid',
+        paymentDate: new Date().toISOString().split('T')[0],
+        receiptNo: bill.receiptNo || `RCP-${Date.now().toString().slice(-6)}`
+      })
+    }, 350)
+  }
+
+  const handleMakePayment = () => {
+    const unpaid = bills.find(b => b.status === 'overdue') || bills.find(b => b.status === 'pending')
+    if (unpaid) {
+      handlePay(unpaid)
+    } else {
+      toast({
+        title: "All Dues Paid",
+        description: "You have no outstanding fee bills."
+      })
+    }
+  }
+
   const handleViewDetails = (bill: BillData) => {
     toast({
-      title: "Bill Details",
-      description: `Viewing details for ${bill.id}`
+      title: `Bill ${bill.id}`,
+      description: `${bill.description} — ₹${bill.amount.toLocaleString('en-IN')} (${bill.status.toUpperCase()})`
     })
   }
 
   const handleDownloadReceipt = (bill: BillData) => {
-    toast({
-      title: "Download Started",
-      description: `Downloading receipt ${bill.receiptNo}`
+    generatePrintableReport({
+      title: "Official Institutional Fee Receipt",
+      subtitle: "Office of the Comptroller of Accounts • CampusSync Unified Ledger",
+      studentInfo: {
+        name: student.name,
+        rollNumber: student.rollNumber,
+        department: student.department,
+        semester: student.semester
+      },
+      statusBadge: {
+        text: "PAYMENT CONFIRMED",
+        variant: "success"
+      },
+      columns: ["Receipt No", "Description", "Due Date", "Paid Date", "Amount (INR)", "Status"],
+      rows: [
+        [
+          bill.receiptNo || `RCP-${bill.id.slice(-6)}`,
+          bill.description,
+          bill.dueDate,
+          bill.paymentDate || new Date().toISOString().split('T')[0],
+          `₹${bill.amount.toLocaleString('en-IN')}`,
+          "PAID"
+        ]
+      ],
+      summaryStats: [
+        { label: "Amount Paid", value: `₹${bill.amount.toLocaleString('en-IN')}` },
+        { label: "Remaining Balance Due", value: `₹${student.fees.outstanding.toLocaleString('en-IN')}` },
+        { label: "Institutional Clearance", value: student.fees.outstanding === 0 ? "Complete Clearance" : "Pending Balance" }
+      ]
     })
   }
 
   const handleExport = () => {
+    const headers = ["Bill ID", "Description", "Amount (INR)", "Due Date", "Status", "Payment Date", "Receipt No"]
+    const rows = bills.map(b => [
+      b.id,
+      b.description,
+      b.amount,
+      b.dueDate,
+      b.status.toUpperCase(),
+      b.paymentDate || 'N/A',
+      b.receiptNo || 'N/A'
+    ])
+    exportToCSV(`${student.rollNumber}_Fee_Billing_Ledger`, headers, rows)
     toast({
-      title: "Export Started",
-      description: "Downloading billing data as CSV"
+      title: "Export Completed",
+      description: `Downloaded billing ledger with ${bills.length} bills as CSV`
     })
   }
 
@@ -233,21 +257,46 @@ export default function StudentBilling() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-3xl font-bold tracking-tight">Billing & Payments</h1>
-          <p className="text-muted-foreground text-sm hidden sm:block">Manage your fees and payment history</p>
+          <p className="text-muted-foreground text-sm hidden sm:block">
+            {student.name} • {student.rollNumber} • Semester {student.semester}
+          </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" className="w-full sm:w-auto">
-            <Bell className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Payment Reminders</span>
-            <span className="sm:hidden">Reminders</span>
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" onClick={handleExport} className="flex-1 sm:flex-initial">
+            <Download className="mr-2 h-4 w-4" />
+            <span>Export CSV</span>
           </Button>
-          <Button className="w-full sm:w-auto">
+          <Button onClick={handleMakePayment} className="flex-1 sm:flex-initial bg-primary">
             <CreditCard className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Make Payment</span>
-            <span className="sm:hidden">Pay Now</span>
+            <span>Pay Outstanding Dues</span>
           </Button>
         </div>
       </div>
+
+      {/* Cross-Module Financial Hold Alert */}
+      {!student.clearances.feeClearance ? (
+        <Card className="border-destructive/40 bg-destructive/10 text-destructive">
+          <CardContent className="p-4 flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5 text-destructive" />
+            <div className="space-y-1">
+              <p className="font-semibold text-sm">FINANCIAL HOLD ACTIVE: ₹{student.fees.outstanding.toLocaleString('en-IN')} OVERDUE</p>
+              <p className="text-xs">
+                You have overdue fee bills. Institutional policy requires fee clearance prior to semester admit card generation and grade card release. Click "Pay Outstanding Dues" or click "Pay Bill" in the table below to settle this balance immediately.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300">
+          <CardContent className="p-3.5 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-emerald-600" />
+              <span>Financial Status: <strong>NO DUES PENDING (Full Clearance)</strong></span>
+            </div>
+            <Badge variant="outline" className="border-emerald-500 text-emerald-600">Accounts Verified</Badge>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats */}
       <BillingStats
@@ -286,6 +335,7 @@ export default function StudentBilling() {
             bills={paginatedBills}
             onViewDetails={handleViewDetails}
             onDownloadReceipt={handleDownloadReceipt}
+            onPay={handlePay}
             userType="student"
             showActions={true}
           />

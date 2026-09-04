@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, MapPin, Plus, Calendar, User, Edit3, Archive, X, RotateCcw } from "lucide-react";
+import { Clock, MapPin, Plus, Calendar, User, Edit3, Archive, X, RotateCcw, CheckCircle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePageLoading } from "@/hooks/use-page-loading";
 import { GenericPageSkeleton } from "@/components/ui/page-skeleton";
@@ -28,6 +29,7 @@ interface ClassData {
 }
 
 const TeacherTimetable = () => {
+  const navigate = useNavigate();
   const isLoading = usePageLoading();
   const { toast } = useToast();
   
@@ -544,6 +546,17 @@ const TeacherTimetable = () => {
           )}
           <DialogFooter className="gap-2">
             <Button 
+              variant="default"
+              size="sm"
+              className="gap-1.5 bg-primary text-primary-foreground"
+              onClick={() => {
+                navigate('/teacher/attendance');
+              }}
+            >
+              <CheckCircle className="h-4 w-4" />
+              Take Attendance
+            </Button>
+            <Button 
               variant="outline" 
               size="sm"
               onClick={() => setSelectedClass(null)}
@@ -619,6 +632,15 @@ const TeacherTimetable = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 gap-1 text-xs text-primary border-primary/30 hover:bg-primary/10"
+                        onClick={() => navigate('/teacher/attendance')}
+                      >
+                        <CheckCircle className="h-3.5 w-3.5" />
+                        Take Attendance
+                      </Button>
                       <Button
                         variant="ghost"
                         size="icon"

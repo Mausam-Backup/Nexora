@@ -12,6 +12,8 @@ import { useToast } from '@/hooks/use-toast';
 import { coeService } from '@/services/coeService';
 import type { Exam } from '@/types/exam';
 import type { ExamHallTicket, ExamSeatingArrangement } from '@/types/examination-controller';
+import { useERPData } from '@/hooks/useERPData';
+import { exportToCSV, generatePrintableReport } from '@/utils/exportUtils';
 import {
   Calendar,
   Clock,
@@ -26,8 +28,10 @@ import {
   ShieldAlert,
   RotateCcw,
   CheckCircle2,
+  CheckCircle,
   FileText,
-  Printer
+  Printer,
+  Lock
 } from 'lucide-react';
 import { format, isToday, isFuture, differenceInDays } from 'date-fns';
 
@@ -37,12 +41,15 @@ interface StudentExamViewProps {
   studentBranch: string;
 }
 
-export default function StudentExamView({
+export function StudentExamView({
   studentId,
   studentSemester,
   studentBranch,
 }: StudentExamViewProps) {
   const { toast } = useToast();
+  const { getStudent, students } = useERPData();
+  const student = getStudent(studentId || '20CS001') || students[0];
+
   const [isPublished, setIsPublished] = useState(false);
   const [hallTicket, setHallTicket] = useState<ExamHallTicket | null>(null);
   const [seatingList, setSeatingList] = useState<ExamSeatingArrangement[]>([]);
@@ -53,77 +60,52 @@ export default function StudentExamView({
   const [selectedSubjectForReval, setSelectedSubjectForReval] = useState<any>(null);
   const [revalReason, setRevalReason] = useState('');
 
+  // Calculate live cumulative attendance percentage
+  const totalAttended = Object.values(student.attendance).reduce((acc, curr) => acc + curr.attended, 0);
+  const totalClasses = Object.values(student.attendance).reduce((acc, curr) => acc + curr.total, 0);
+  const liveAttendancePct = totalClasses > 0 ? Number(((totalAttended / totalClasses) * 100).toFixed(1)) : 85.0;
+
   useEffect(() => {
     setIsPublished(coeService.isResultsPublished());
-    const ticket = coeService.getStudentHallTicket(studentId) || coeService.getStudentHallTicket('1');
+    const ticket = coeService.getStudentHallTicket(student.rollNumber) || coeService.getStudentHallTicket(studentId) || coeService.getStudentHallTicket('1');
     setHallTicket(ticket);
     const seatings = coeService.getSeatingArrangements();
-    setSeatingList(seatings.filter((s) => s.studentId === studentId || s.studentId === '1'));
-  }, [studentId]);
+    setSeatingList(seatings.filter((s) => s.studentId === student.rollNumber || s.studentId === studentId || s.studentId === '1'));
+  }, [studentId, student]);
 
-  // Student exams
-  const [exams] = useState<Exam[]>([
-    {
-      id: '1',
-      course: 'Data Structures and Algorithms',
-      courseCode: 'CSE201',
-      semester: studentSemester,
-      branch: studentBranch,
-      examType: 'midterm',
-      date: '2024-11-22',
-      time: '09:00',
-      duration: 180,
-      location: 'Hall LH-101',
-      maxMarks: 100,
-      instructor: 'Dr. Sarah Johnson',
-      instructorId: 'T001',
-      topics: ['Arrays', 'Linked Lists', 'Stacks', 'Queues', 'Binary Trees'],
-      status: 'scheduled',
-      createdAt: '2024-10-01',
-      updatedAt: '2024-10-01',
-      createdBy: 'coe_001',
-    },
-    {
-      id: '2',
-      course: 'Database Management Systems',
-      courseCode: 'CSE301',
-      semester: studentSemester,
-      branch: studentBranch,
-      examType: 'endterm',
-      date: '2024-11-25',
-      time: '14:00',
-      duration: 180,
-      location: 'Hall LH-102',
-      maxMarks: 100,
-      instructor: 'Dr. Sarah Johnson',
-      instructorId: 'T001',
-      topics: ['SQL Queries', 'Relational Algebra', 'Normalization', 'ACID Transactions'],
-      status: 'scheduled',
-      createdAt: '2024-10-01',
-      updatedAt: '2024-10-01',
-      createdBy: 'coe_001',
-    },
-    {
-      id: '3',
-      course: 'Operating Systems',
-      courseCode: 'CS304',
-      semester: studentSemester,
-      branch: studentBranch,
-      examType: 'endterm',
-      date: '2024-11-28',
-      time: '09:00',
-      duration: 180,
-      location: 'Hall LH-101',
-      maxMarks: 100,
-      instructor: 'Dr. Emily Davis',
-      instructorId: 'T003',
-      topics: ['CPU Scheduling', 'Deadlocks', 'Memory Management', 'File Systems'],
-      status: 'scheduled',
-      createdAt: '2024-10-01',
-      updatedAt: '2024-10-01',
-      createdBy: 'coe_001',
-    },
-  ]);
+  // Derive exams from student's curriculum subjects
+  const exams: Exam[] = useMemo(() => {
+    const subjects = Object.values(student.marks);
+    const baseDate = new Date();
+    baseDate.setDate(baseDate.getDate() + 7);
+
+    return subjects.map((sub, idx) => {
+      const examDate = new Date(baseDate);
+      examDate.setDate(baseDate.getDate() + (idx * 3));
+      const dateStr = examDate.toISOString().split('T')[0];
+
+      return {
+        id: `exam-${sub.subjectCode}`,
+        course: sub.subjectName,
+        courseCode: sub.subjectCode,
+        semester: student.semester,
+        branch: student.department,
+        examType: 'endterm' as const,
+        date: dateStr,
+        time: idx % 2 === 0 ? '09:30' : '14:00',
+        duration: 180,
+        location: idx % 2 === 0 ? 'Hall LH-101 (Aryabhatta Complex)' : 'Hall LH-102 (Science Block)',
+        maxMarks: 100,
+        instructor: 'Dr. Sarah Johnson',
+        instructorId: 'T001',
+        topics: ['Complete Curriculum (Units I - V)'],
+        status: 'scheduled' as const,
+        createdAt: '2024-10-01',
+        updatedAt: '2024-10-01',
+        createdBy: 'coe_001'
+      };
+    });
+  }, [student]);
 
   // Semester results for published view
   const semesterMarks = [
@@ -160,10 +142,70 @@ export default function StudentExamView({
     toast({ title: 'Downloading PDF', description: 'Preparing official Hall Ticket print pass...' });
   };
 
+  const handleDownloadAdmitCard = () => {
+    if (!student.clearances.admitCardIssued) {
+      const reasons = [];
+      if (!student.clearances.attendanceClearance) reasons.push("Attendance below 75% threshold (Debarred)");
+      if (!student.clearances.feeClearance) reasons.push(`Overdue fee balance of ₹${student.fees.outstanding.toLocaleString('en-IN')}`);
+      
+      toast.error(`Admit Card Locked: ${reasons.join(" • ")}`);
+      return;
+    }
+
+    generatePrintableReport({
+      title: "End-Semester Examination Hall Ticket / Admit Card",
+      subtitle: "Office of the Controller of Examinations • Official Autonomous Verification",
+      studentInfo: {
+        name: student.name,
+        rollNumber: student.rollNumber,
+        department: student.department,
+        semester: student.semester
+      },
+      statusBadge: {
+        text: "OFFICIALLY CLEARED & ADMITTED",
+        variant: "success"
+      },
+      columns: ["Course Code", "Course Name", "Exam Date", "Session Time", "Venue Hall", "Max Marks", "Invigilator Sign"],
+      rows: exams.map(e => [
+        e.courseCode,
+        e.course,
+        e.date,
+        e.time,
+        e.location,
+        `${e.maxMarks} Marks`,
+        "__________________"
+      ]),
+      summaryStats: [
+        { 
+          label: "Cumulative Attendance", 
+          value: `${(Object.values(student.attendance).reduce((sum, s) => sum + s.attended, 0) / Math.max(1, Object.values(student.attendance).reduce((sum, s) => sum + s.total, 0)) * 100).toFixed(1)}% (Eligible)` 
+        },
+        { label: "Financial Clearance", value: "No Outstanding Dues" },
+        { label: "Controller Seal", value: "AUTHENTICATED" }
+      ]
+    });
+    toast.success("Hall ticket generated successfully!");
+  };
+
+  const handleExportScheduleCSV = () => {
+    const headers = ["Course Code", "Course Name", "Semester", "Exam Date", "Exam Time", "Venue Hall", "Max Marks"];
+    const rows = exams.map(e => [
+      e.courseCode,
+      e.course,
+      `Sem ${e.semester}`,
+      e.date,
+      e.time,
+      e.location,
+      e.maxMarks
+    ]);
+    exportToCSV(`${student.rollNumber}_Exam_Schedule`, headers, rows);
+    toast.success("Exported examination schedule to CSV");
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Header with Admit Card & CSV Export */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
             <BookOpen className="h-6 w-6" />
@@ -171,18 +213,65 @@ export default function StudentExamView({
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Examinations & Marksheet</h1>
             <p className="text-sm text-muted-foreground">
-              Semester {studentSemester} • {studentBranch} • Candidate Roll: <span className="font-mono font-semibold text-foreground">{hallTicket?.rollNumber || 'CS21001'}</span>
+              {student.name} • <span className="font-mono font-semibold text-foreground">{student.rollNumber}</span> • Sem {student.semester} • {student.department}
             </p>
           </div>
         </div>
 
-        {hallTicket?.isEligible && (
-          <Button onClick={handlePrintHallTicket} className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs shadow-sm">
-            <Printer className="mr-2 h-4 w-4" />
-            Download Hall Ticket PDF
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" size="sm" onClick={handleExportScheduleCSV} className="flex-1 sm:flex-initial">
+            <Download className="mr-2 h-4 w-4" />
+            <span>Export CSV</span>
           </Button>
-        )}
+          <Button 
+            size="sm" 
+            onClick={handleDownloadAdmitCard}
+            className={`flex-1 sm:flex-initial ${!student.clearances.admitCardIssued ? 'border border-destructive text-destructive bg-destructive/10 hover:bg-destructive/20' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
+          >
+            {!student.clearances.admitCardIssued ? (
+              <>
+                <Lock className="mr-2 h-4 w-4 text-destructive" />
+                <span>Hall Ticket Locked</span>
+              </>
+            ) : (
+              <>
+                <Printer className="mr-2 h-4 w-4" />
+                <span>Print Official Admit Card</span>
+              </>
+            )}
+          </Button>
+        </div>
       </div>
+
+      {/* Cross-Module Debarment / Financial Hold Alert */}
+      {!student.clearances.admitCardIssued ? (
+        <Card className="border-destructive/50 bg-destructive/10 text-destructive">
+          <CardContent className="p-4 space-y-2">
+            <div className="flex items-center gap-2 font-bold text-sm">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <span>EXAMINATION HALL TICKET ISSUANCE WITHHELD</span>
+            </div>
+            <div className="text-xs space-y-1 pl-7">
+              {!student.clearances.attendanceClearance && (
+                <p>• <strong>Attendance Debarment:</strong> Cumulative attendance is {liveAttendancePct}% (below mandatory 75.0% statutory threshold). You are debarred from end-semester examinations.</p>
+              )}
+              {!student.clearances.feeClearance && (
+                <p>• <strong>Financial Hold:</strong> You have an overdue balance of ₹{student.fees.outstanding.toLocaleString('en-IN')}. Outstanding bills must be cleared before the hall ticket is unlocked.</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300">
+          <CardContent className="p-3.5 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-emerald-600" />
+              <span>Institutional Clearance Granted: <strong>Attendance ({liveAttendancePct}%) & Fees Verified (Hall Ticket Available)</strong></span>
+            </div>
+            <Badge variant="outline" className="border-emerald-500 text-emerald-600">Verified & Approved</Badge>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Main Tabs */}
       <Tabs defaultValue="hall-ticket" className="w-full">
@@ -203,7 +292,7 @@ export default function StudentExamView({
 
         {/* TAB 1: Digital Hall Ticket */}
         <TabsContent value="hall-ticket" className="mt-4 space-y-4">
-          {hallTicket && !hallTicket.isEligible ? (
+          {!student.clearances.admitCardIssued || (hallTicket && !hallTicket.isEligible) ? (
             /* Debarred Banner */
             <Card className="border-red-300 dark:border-red-900 bg-red-50/50 dark:bg-red-950/20">
               <CardContent className="p-6 text-center space-y-4">
@@ -218,12 +307,12 @@ export default function StudentExamView({
                     Hall Ticket Withheld / Ineligible
                   </h3>
                   <p className="text-sm text-red-800 dark:text-red-300 max-w-xl mx-auto">
-                    Reason: <strong>{hallTicket.debarReason || 'Attendance below statutory requirement (75%)'}</strong>
+                    Reason: <strong>{!student.clearances.attendanceClearance ? 'Attendance below statutory requirement (75%)' : 'Tuition fee clearance pending'}</strong>
                   </p>
                 </div>
                 <div className="p-4 rounded-xl bg-card border max-w-md mx-auto text-xs text-muted-foreground text-left space-y-1.5">
-                  <div>Candidate Attendance: <strong className="text-red-600 font-mono">{hallTicket.attendancePercentage}%</strong> (Min required: 75.0%)</div>
-                  <div>Tuition Fee Dues: <strong>{hallTicket.feeCleared ? 'Cleared' : 'Outstanding Payment'}</strong></div>
+                  <div>Candidate Attendance: <strong className="text-red-600 font-mono">{liveAttendancePct}%</strong> (Min required: 75.0%)</div>
+                  <div>Tuition Fee Dues: <strong>{student.clearances.feeClearance ? 'Cleared' : `Outstanding (₹${student.fees.outstanding.toLocaleString('en-IN')})`}</strong></div>
                   <div className="pt-2 border-t text-[11px] italic">
                     To appeal this debarment, submit formal petition to the Office of the Controller of Examinations (Admin Block 108).
                   </div>
@@ -255,20 +344,20 @@ export default function StudentExamView({
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b">
                   <div className="flex items-center gap-4">
                     <div className="w-20 h-20 rounded-xl bg-indigo-100 dark:bg-indigo-950 flex items-center justify-center font-bold text-2xl text-indigo-600 border shrink-0">
-                      {hallTicket?.studentName ? hallTicket.studentName.charAt(0) : 'S'}
+                      {student.name ? student.name.charAt(0) : 'S'}
                     </div>
                     <div className="space-y-1">
-                      <h3 className="text-lg font-bold">{hallTicket?.studentName || 'Demo User'}</h3>
+                      <h3 className="text-lg font-bold">{student.name}</h3>
                       <div className="text-xs text-muted-foreground flex flex-wrap gap-2">
-                        <span>Roll: <strong className="text-foreground font-mono">{hallTicket?.rollNumber || 'CS21001'}</strong></span>
+                        <span>Roll: <strong className="text-foreground font-mono">{student.rollNumber}</strong></span>
                         <span>•</span>
-                        <span>Branch: <strong className="text-foreground">{studentBranch}</strong></span>
+                        <span>Branch: <strong className="text-foreground">{student.department}</strong></span>
                         <span>•</span>
-                        <span>Sem: <strong className="text-foreground">{studentSemester}</strong></span>
+                        <span>Sem: <strong className="text-foreground">{student.semester}</strong></span>
                       </div>
                       <div className="text-xs text-emerald-600 font-semibold flex items-center gap-1">
                         <CheckCircle2 className="h-3.5 w-3.5" />
-                        Attendance Cleared ({hallTicket?.attendancePercentage || 88.5}%) • Dues Cleared
+                        Attendance Cleared ({liveAttendancePct}%) • Dues Cleared
                       </div>
                     </div>
                   </div>
@@ -279,7 +368,7 @@ export default function StudentExamView({
                       <QrCode className="w-full h-full text-indigo-950" />
                     </div>
                     <div className="font-mono text-[10px] text-muted-foreground tracking-widest">
-                      {hallTicket?.qrToken || 'HT-2024-VERIFIED'}
+                      {hallTicket?.qrToken || `HT-2024-${student.rollNumber}`}
                     </div>
                   </div>
                 </div>
@@ -601,3 +690,5 @@ export default function StudentExamView({
     </div>
   );
 }
+
+export default StudentExamView;

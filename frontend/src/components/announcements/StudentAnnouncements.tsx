@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AnnouncementCard } from './AnnouncementCard'
 import { Search, Filter, SortDesc } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
+import { useERPData } from '@/hooks/useERPData'
 
 // Mock data for announcements
 const mockAnnouncements = [
@@ -47,11 +49,47 @@ const mockAnnouncements = [
 ]
 
 export const StudentAnnouncements: React.FC = () => {
+  const { user } = useAuth()
+  const { getStudent, students } = useERPData()
+  const student = getStudent(user?.id || '20CS001') || students[0]
+
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [sortBy, setSortBy] = useState('date')
 
-  const filteredAnnouncements = mockAnnouncements
+  const erpAnnouncements = useMemo(() => {
+    const list: any[] = []
+
+    if (!student.clearances.attendanceClearance) {
+      list.push({
+        id: 'erp-alert-att',
+        title: '🚨 CRITICAL: Statutory Attendance Debarment Notice',
+        content: `Attention ${student.name} (${student.rollNumber}): Your overall cumulative attendance is below the mandatory 75% standard. Under Autonomous Academic Regulation 4.2, your End-Semester Hall Ticket is LOCKED. Please report to the Dean of Academic Affairs.`,
+        author: 'Office of the Controller of Examinations',
+        priority: 'high' as const,
+        category: 'Academic',
+        date: new Date(),
+        attachments: []
+      })
+    }
+
+    if (!student.clearances.feeClearance || student.fees.outstanding > 0) {
+      list.push({
+        id: 'erp-alert-fee',
+        title: '⚠️ Institutional Finance Alert: Pending Fee Balance',
+        content: `A balance of ₹${student.fees.outstanding.toLocaleString('en-IN')} remains outstanding on your student account. Please clear dues in the Billing module to lift academic and registration holds.`,
+        author: 'Comptroller of Accounts',
+        priority: 'high' as const,
+        category: 'General',
+        date: new Date(),
+        attachments: []
+      })
+    }
+
+    return [...list, ...mockAnnouncements]
+  }, [student])
+
+  const filteredAnnouncements = erpAnnouncements
     .filter(announcement => {
       const matchesSearch = announcement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           announcement.content.toLowerCase().includes(searchTerm.toLowerCase())

@@ -26,19 +26,23 @@ const billCategories = [
   { id: 'misc', name: 'Miscellaneous', icon: '📋' }
 ]
 
-// Mock student data
-const mockStudents = [
-  { id: 'S001', name: 'John Doe', rollNo: 'CS21001', branch: 'Computer Science', year: '3rd Year', semester: '5th' },
-  { id: 'S002', name: 'Jane Smith', rollNo: 'EC21002', branch: 'Electronics & Communication', year: '2nd Year', semester: '4th' },
-  { id: 'S003', name: 'Mike Johnson', rollNo: 'ME21003', branch: 'Mechanical Engineering', year: '1st Year', semester: '2nd' },
-  { id: 'S004', name: 'Sarah Wilson', rollNo: 'CS21004', branch: 'Computer Science', year: '4th Year', semester: '7th' },
-  { id: 'S005', name: 'David Brown', rollNo: 'EE21005', branch: 'Electrical Engineering', year: '2nd Year', semester: '3rd' }
-]
+import { useERPData } from "@/hooks/useERPData"
 
 export function CreateBillDialog({ open, onOpenChange }: CreateBillDialogProps) {
   const { toast } = useToast()
+  const { students, createBill } = useERPData()
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedStudent, setSelectedStudent] = useState<typeof mockStudents[0] | null>(null)
+
+  const erpStudents = students.map(s => ({
+    id: s.id,
+    name: s.name,
+    rollNo: s.rollNumber,
+    branch: s.department,
+    year: `Year ${Math.ceil(s.semester / 2)}`,
+    semester: `Sem ${s.semester}`
+  }))
+
+  const [selectedStudent, setSelectedStudent] = useState<typeof erpStudents[0] | null>(null)
   const [formData, setFormData] = useState({
     category: '',
     amount: '',
@@ -47,7 +51,7 @@ export function CreateBillDialog({ open, onOpenChange }: CreateBillDialogProps) 
     notes: ''
   })
 
-  const filteredStudents = mockStudents.filter(student =>
+  const filteredStudents = erpStudents.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.rollNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.branch.toLowerCase().includes(searchTerm.toLowerCase())
@@ -63,9 +67,20 @@ export function CreateBillDialog({ open, onOpenChange }: CreateBillDialogProps) 
       return
     }
 
+    const categoryObj = billCategories.find(c => c.id === formData.category)
+    const billTitle = formData.description || (categoryObj ? categoryObj.name : 'Tuition Fee')
+
+    // Persist new bill into ERP database
+    createBill(selectedStudent.id, {
+      title: billTitle,
+      amount: Number(formData.amount),
+      dueDate: formData.dueDate,
+      status: 'pending'
+    })
+
     toast({
       title: "Bill Created Successfully",
-      description: `Bill created for ${selectedStudent.name} - ${billCategories.find(c => c.id === formData.category)?.name}`
+      description: `Bill of ₹${Number(formData.amount).toLocaleString('en-IN')} billed to ${selectedStudent.name} (${selectedStudent.rollNo})`
     })
     
     // Reset form

@@ -56,14 +56,19 @@ import {
   Area,
   BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
+  ResponsiveContainer,
+  ReferenceLine,
+  LineChart,
+  Line
 } from 'recharts'
 
 export const AdminOverview: React.FC = () => {
@@ -150,11 +155,24 @@ export const AdminOverview: React.FC = () => {
     { month: 'Jul', earned: 506, due: 85, expense: 150 },
   ]
 
-  // Attendance donut breakdown using exact semantic pastel palette
-  const attendanceBreakdown = [
-    { name: 'Present (94.6%)', value: 94.6, color: '#4FA1D8' },       // Teal Accent
-    { name: 'Absent (4.6%)', value: 4.6, color: '#FFA5A8' },          // Soft Coral Red
-    { name: 'Late / Condoned (0.8%)', value: 0.8, color: '#A1E8DD' },  // Pastel Turquoise
+  // Radar chart data — Present/Absent/Late ratio across weeks (replaces pie chart)
+  const radarAttendanceData = [
+    { week: 'Mon', present: 96, absent: 3, late: 1 },
+    { week: 'Tue', present: 94, absent: 4, late: 2 },
+    { week: 'Wed', present: 95, absent: 3.5, late: 1.5 },
+    { week: 'Thu', present: 93, absent: 5, late: 2 },
+    { week: 'Fri', present: 91, absent: 6, late: 3 },
+    { week: 'Sat', present: 97, absent: 2, late: 1 },
+  ]
+
+  // Attendance heatmap: 7 days x 4 depts, value = attendance % (0-100)
+  const heatmapDepts = ['CSE', 'ECE', 'MECH', 'IT']
+  const heatmapDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  const heatmapData = [
+    [92, 88, 95, 91, 89, 96, 0],  // CSE
+    [86, 84, 90, 87, 83, 91, 0],  // ECE
+    [78, 80, 85, 82, 76, 88, 0],  // MECH
+    [94, 91, 96, 93, 92, 97, 0],  // IT
   ]
 
   // Department course performance (Edukors Image 2)
@@ -387,35 +405,66 @@ export const AdminOverview: React.FC = () => {
                 </span>
               </div>
 
+              {/* Premium Annotated Line Chart — inspired by image2 labeled data points */}
               <div className="h-[270px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={studentGrowthData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <LineChart data={studentGrowthData} margin={{ top: 24, right: 24, left: -20, bottom: 0 }}>
                     <defs>
-                      <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#5EA6EB" stopOpacity={0.4}/>
-                        <stop offset="95%" stopColor="#5EA6EB" stopOpacity={0.0}/>
+                      <linearGradient id="areaGradTotal" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#5EA6EB" stopOpacity={0.25}/>
+                        <stop offset="100%" stopColor="#5EA6EB" stopOpacity={0}/>
                       </linearGradient>
-                      <linearGradient id="colorNew" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#A1E8DD" stopOpacity={0.45}/>
-                        <stop offset="95%" stopColor="#A1E8DD" stopOpacity={0.0}/>
+                      <linearGradient id="areaGradNew" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#FA85BD" stopOpacity={0.18}/>
+                        <stop offset="100%" stopColor="#FA85BD" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} stroke="#ACB2BB" />
+                    <CartesianGrid strokeDasharray="4 4" opacity={0.10} vertical={false} stroke="#ACB2BB" />
                     <XAxis dataKey="month" stroke="#ACB2BB" fontSize={11} tickLine={false} axisLine={false} />
                     <YAxis stroke="#ACB2BB" fontSize={11} tickLine={false} axisLine={false} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'var(--card-bg, #151D30)',
-                        borderColor: '#222F4C',
-                        borderRadius: '16px',
-                        boxShadow: '0 8px 30px rgba(0,0,0,0.2)',
+                        background: 'rgba(15,23,42,0.92)',
+                        border: '1px solid #222F4C',
+                        borderRadius: '14px',
                         color: '#F9FAFB',
-                        fontSize: '12px'
+                        fontSize: '12px',
+                        boxShadow: '0 12px 40px rgba(0,0,0,0.4)'
                       }}
                     />
-                    <Area type="monotone" dataKey="total" name="Total Students" stroke="#5EA6EB" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />
-                    <Area type="monotone" dataKey="newStudents" name="New Admissions" stroke="#A1E8DD" strokeWidth={3} fillOpacity={1} fill="url(#colorNew)" />
-                  </AreaChart>
+                    {/* Reference band — "Therapeutic Window" style target zone */}
+                    <ReferenceLine y={1500} stroke="#5EA6EB" strokeDasharray="6 3" strokeOpacity={0.4}
+                      label={{ value: 'Target 1,500', position: 'right', fill: '#5EA6EB', fontSize: 9, fontWeight: 700 }}
+                    />
+                    <Line
+                      type="monotone" dataKey="total" name="Total Active Cohort"
+                      stroke="#5EA6EB" strokeWidth={3}
+                      dot={(props: any) => {
+                        const { cx, cy, payload } = props
+                        return (
+                          <g key={payload.month}>
+                            <circle cx={cx} cy={cy} r={5} fill="#5EA6EB" stroke="white" strokeWidth={2} />
+                            <rect x={cx - 20} y={cy - 24} width={40} height={16} rx={6} fill="#5EA6EB" />
+                            <text x={cx} y={cy - 13} textAnchor="middle" fill="white" fontSize={9} fontWeight={700}>{payload.total.toLocaleString()}</text>
+                          </g>
+                        )
+                      }}
+                      activeDot={{ r: 7, fill: '#5EA6EB', stroke: 'white', strokeWidth: 2 }}
+                    />
+                    <Line
+                      type="monotone" dataKey="newStudents" name="New Admissions"
+                      stroke="#FA85BD" strokeWidth={2.5} strokeDasharray="6 3"
+                      dot={(props: any) => {
+                        const { cx, cy, payload } = props
+                        return (
+                          <g key={`new-${payload.month}`}>
+                            <circle cx={cx} cy={cy} r={4} fill="#FA85BD" stroke="white" strokeWidth={2} />
+                          </g>
+                        )
+                      }}
+                      activeDot={{ r: 6, fill: '#FA85BD', stroke: 'white', strokeWidth: 2 }}
+                    />
+                  </LineChart>
                 </ResponsiveContainer>
               </div>
               <div className="mt-2 flex items-center justify-center gap-6 text-xs font-semibold">
@@ -424,8 +473,8 @@ export const AdminOverview: React.FC = () => {
                   <span className="text-[#101828] dark:text-[#F9FAFB]">Total Active Cohort</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-3 w-3 rounded-full bg-[#A1E8DD]" />
-                  <span className="text-[#101828] dark:text-[#F9FAFB]">New Enrollments</span>
+                  <span className="h-0.5 w-6 bg-[#FA85BD] rounded" style={{ borderTop: '2px dashed #FA85BD', background: 'none', display: 'inline-block' }} />
+                  <span className="text-[#101828] dark:text-[#F9FAFB]">New Admissions</span>
                 </div>
               </div>
             </div>
@@ -676,60 +725,157 @@ export const AdminOverview: React.FC = () => {
 
           {/* RIGHT COLUMN: 4 Columns (Donut, Attention Alerts, Activities) */}
           <div className="lg:col-span-4 space-y-6">
-            {/* Attendance Overview Donut (Shikhaor Image 4 with Exact Semantic Pastel Palette) */}
-            <div className="rounded-3xl border border-[#E4E7EC] dark:border-[#222F4C] shadow-card bg-white dark:bg-[#151D30] p-6 space-y-3">
-              <div>
-                <h3 className="text-base font-bold text-[#101828] dark:text-[#F9FAFB]">
-                  Attendance Overview
-                </h3>
-                <p className="text-xs text-[#475467] dark:text-[#98A2B3]">
-                  Institutional daily breakdown
-                </p>
+            {/* ─── ATTENDANCE HEATMAP (image3 style: colored grid of dept x day) ─── */}
+            <div className="rounded-3xl border border-[#E4E7EC] dark:border-[#222F4C] shadow-card bg-white dark:bg-[#151D30] p-5 space-y-4">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h3 className="text-sm font-bold text-[#101828] dark:text-[#F9FAFB]">Weekly Attendance Heatmap</h3>
+                  <p className="text-[11px] text-[#475467] dark:text-[#98A2B3]">Dept × Day — color intensity = attendance %</p>
+                </div>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#C4EFDF] text-[#064E3B] dark:bg-[#C4EFDF]/15 dark:text-[#C4EFDF] dark:border dark:border-[#C4EFDF]/30">Live</span>
               </div>
 
-              <div className="h-[200px] w-full flex items-center justify-center">
+              {/* Heatmap Grid */}
+              <div className="overflow-x-auto">
+                <div className="min-w-[240px]">
+                  {/* Day header */}
+                  <div className="grid mb-1.5" style={{ gridTemplateColumns: '40px repeat(7, 1fr)', gap: '3px' }}>
+                    <div />
+                    {heatmapDays.map(d => (
+                      <div key={d} className="text-center text-[9px] font-bold text-[#475467] dark:text-[#98A2B3] uppercase tracking-wide">{d}</div>
+                    ))}
+                  </div>
+                  {/* Rows */}
+                  {heatmapData.map((row, ri) => (
+                    <div key={ri} className="grid mb-1" style={{ gridTemplateColumns: '40px repeat(7, 1fr)', gap: '3px' }}>
+                      <div className="text-[9px] font-bold text-[#475467] dark:text-[#98A2B3] flex items-center">{heatmapDepts[ri]}</div>
+                      {row.map((val, ci) => {
+                        const isEmpty = val === 0
+                        const pct = val / 100
+                        // Color: green ≥90, teal 80-89, amber 75-79, coral <75, grey=weekend
+                        let bg = isEmpty
+                          ? 'bg-[#F0F2F5] dark:bg-[#222F4C]/40'
+                          : val >= 90
+                          ? `rgba(79,161,216,${0.25 + pct * 0.7})`
+                          : val >= 80
+                          ? `rgba(161,232,221,${0.35 + pct * 0.6})`
+                          : val >= 75
+                          ? `rgba(255,188,148,${0.4 + pct * 0.5})`
+                          : `rgba(255,165,168,${0.5 + pct * 0.45})`
+                        const textColor = isEmpty ? '#ACB2BB'
+                          : val >= 90 ? '#0B3A60'
+                          : val >= 80 ? '#064E3B'
+                          : val >= 75 ? '#7A3E15'
+                          : '#7A151A'
+                        return (
+                          <div
+                            key={ci}
+                            title={isEmpty ? 'Weekend' : `${heatmapDepts[ri]} ${heatmapDays[ci]}: ${val}%`}
+                            className="rounded-md aspect-square flex items-center justify-center text-[9px] font-black cursor-default transition-transform hover:scale-110"
+                            style={{
+                              background: isEmpty ? undefined : bg,
+                              color: isEmpty ? undefined : textColor,
+                            }}
+                          >
+                            {isEmpty ? '—' : val}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ))}
+                  {/* Legend */}
+                  <div className="mt-3 flex items-center gap-2 text-[9px] font-semibold text-[#475467] dark:text-[#98A2B3]">
+                    <span>Low</span>
+                    {['rgba(255,165,168,0.7)','rgba(255,188,148,0.7)','rgba(161,232,221,0.7)','rgba(79,161,216,0.7)','rgba(79,161,216,0.95)'].map((c,i) => (
+                      <div key={i} className="h-3 w-5 rounded-sm" style={{ background: c }} />
+                    ))}
+                    <span>High</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ─── RADAR CHART: Present / Absent / Late ratio (replaces pie chart, image4 reference) ─── */}
+            <div className="rounded-3xl border border-[#E4E7EC] dark:border-[#222F4C] shadow-card bg-white dark:bg-[#151D30] p-5 space-y-3">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-sm font-bold text-[#101828] dark:text-[#F9FAFB]">Attendance Breakdown</h3>
+                  <p className="text-[11px] text-[#475467] dark:text-[#98A2B3]">Weekly present · absent · late pattern</p>
+                </div>
+                {/* Big KPI number */}
+                <div className="text-right">
+                  <span className="text-2xl font-black text-[#101828] dark:text-[#F9FAFB]">94.6%</span>
+                  <span className="text-[10px] text-[#475467] dark:text-[#98A2B3] block font-semibold">Avg Present</span>
+                </div>
+              </div>
+
+              <div className="h-[190px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={attendanceBreakdown}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={55}
-                      outerRadius={75}
-                      paddingAngle={4}
-                      dataKey="value"
-                    >
-                      {attendanceBreakdown.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
+                  <RadarChart data={radarAttendanceData} cx="50%" cy="50%" outerRadius={72}>
+                    <PolarGrid stroke="#E4E7EC" strokeOpacity={0.7} radialLines={true} />
+                    <PolarAngleAxis
+                      dataKey="week"
+                      tick={{ fontSize: 10, fontWeight: 700, fill: '#475467' }}
+                      tickLine={false}
+                    />
+                    <PolarRadiusAxis
+                      angle={30}
+                      domain={[0, 100]}
+                      tick={{ fontSize: 8, fill: '#ACB2BB' }}
+                      tickCount={4}
+                      axisLine={false}
+                    />
+                    <Radar
+                      name="Present"
+                      dataKey="present"
+                      stroke="#4FA1D8"
+                      fill="#4FA1D8"
+                      fillOpacity={0.22}
+                      strokeWidth={2.5}
+                      dot={{ r: 3.5, fill: '#4FA1D8', stroke: 'white', strokeWidth: 1.5 }}
+                    />
+                    <Radar
+                      name="Absent"
+                      dataKey="absent"
+                      stroke="#FA85BD"
+                      fill="#FA85BD"
+                      fillOpacity={0.18}
+                      strokeWidth={2}
+                      strokeDasharray="5 3"
+                      dot={{ r: 3, fill: '#FA85BD', stroke: 'white', strokeWidth: 1.5 }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        background: 'rgba(15,23,42,0.92)',
+                        border: '1px solid #222F4C',
+                        borderRadius: '12px',
+                        color: '#F9FAFB',
+                        fontSize: '11px'
+                      }}
+                      formatter={(val: number, name: string) => [`${val}%`, name]}
+                    />
+                  </RadarChart>
                 </ResponsiveContainer>
               </div>
-              <div className="text-center mt-[-90px] mb-8 space-y-0.5">
-                <span className="text-2xl font-black text-[#101828] dark:text-[#F9FAFB]">94.6%</span>
-                <span className="text-[10px] text-[#475467] dark:text-[#98A2B3] block font-semibold">Today's Present</span>
-              </div>
 
-              <div className="pt-4 border-t border-[#E4E7EC] dark:border-[#222F4C] space-y-2.5 text-xs font-semibold">
-                <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-2 text-[#101828] dark:text-[#F9FAFB]">
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#4FA1D8]" /> Present (1,560)
+              {/* Legend row */}
+              <div className="flex items-center justify-between pt-2 border-t border-[#E4E7EC] dark:border-[#222F4C]">
+                <div className="flex items-center gap-3 text-[11px] font-semibold">
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-[#4FA1D8]" />
+                    <span className="text-[#101828] dark:text-[#F9FAFB]">Present</span>
+                    <span className="text-[#475467] dark:text-[#98A2B3] font-bold">1,560</span>
                   </span>
-                  <span className="text-[#475467] dark:text-[#98A2B3]">94.6%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-2 text-[#101828] dark:text-[#F9FAFB]">
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#FFA5A8]" /> Absent (75)
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-[#FA85BD]" />
+                    <span className="text-[#101828] dark:text-[#F9FAFB]">Absent</span>
+                    <span className="text-[#475467] dark:text-[#98A2B3] font-bold">75</span>
                   </span>
-                  <span className="text-[#475467] dark:text-[#98A2B3]">4.6%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-2 text-[#101828] dark:text-[#F9FAFB]">
-                    <span className="h-2.5 w-2.5 rounded-full bg-[#A1E8DD]" /> Condoned / Late (15)
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-[#A1E8DD]" />
+                    <span className="text-[#101828] dark:text-[#F9FAFB]">Late</span>
+                    <span className="text-[#475467] dark:text-[#98A2B3] font-bold">15</span>
                   </span>
-                  <span className="text-[#475467] dark:text-[#98A2B3]">0.8%</span>
                 </div>
               </div>
             </div>

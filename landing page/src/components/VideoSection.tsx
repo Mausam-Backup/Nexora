@@ -1,12 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useState, useRef, useEffect } from "react";
 
 interface VideoSectionProps {
   localVideoSrc?: string;
@@ -19,19 +13,16 @@ export default function VideoSection({
 }: VideoSectionProps) {
   const [source, setSource] = useState<"local" | "youtube">("local");
   const [isMuted, setIsMuted] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(true);
-
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const headlineTopRef = useRef<HTMLDivElement>(null);
-  const headlineBottomRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Toggle Mute
-  const toggleMute = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
+
+  const toggleMute = () => {
     const nextMuted = !isMuted;
     setIsMuted(nextMuted);
 
@@ -46,577 +37,284 @@ export default function VideoSection({
     }
   };
 
-  // GSAP ScrollTrigger Setup
-  useEffect(() => {
-    if (typeof window === "undefined" || !triggerRef.current || !cardRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Timeline for smooth pinned expansion
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: triggerRef.current,
-          start: "top top",
-          end: "+=140%",
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      // 1. Headlines glide apart & fade
-      if (headlineTopRef.current) {
-        tl.to(
-          headlineTopRef.current,
-          {
-            y: -60,
-            opacity: 0,
-            scale: 0.95,
-            ease: "power2.inOut",
-          },
-          0
-        );
-      }
-
-      if (headlineBottomRef.current) {
-        tl.to(
-          headlineBottomRef.current,
-          {
-            y: 50,
-            opacity: 0,
-            ease: "power2.inOut",
-          },
-          0
-        );
-      }
-
-      // 2. The Video Card expands to full viewport width & height
-      tl.to(
-        cardRef.current,
-        {
-          width: "100vw",
-          height: "100vh",
-          borderRadius: "0px",
-          borderWidth: "0px",
-          boxShadow: "none",
-          ease: "power2.inOut",
-        },
-        0
-      );
-
-      // Subtle parallax on the video itself during expansion
-      if (videoRef.current) {
-        tl.fromTo(
-          videoRef.current,
-          { scale: 1.12 },
-          { scale: 1.0, ease: "power2.inOut" },
-          0
-        );
-      }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  const PATH_FLAG =
+    "M 0.57148 0.0 C 0.28571 0.0, 0.28571 0.28043, 0.0 0.28043 V 1.0 C 0.22794 1.0, 0.27404 0.82154, 0.4285 0.74941 V 1.0 C 0.71427 1.0, 0.71427 0.71958, 1.0 0.71958 V 0.0 C 0.77204 0.0, 0.72594 0.17846, 0.57148 0.25059 V 0.0 Z";
 
   return (
     <div
-      ref={sectionRef}
       id="investors"
+      className="video-reveal-wrapper"
       style={{
         position: "relative",
         width: "100%",
+        height: "230vh", // Provides scroll space for the GSAP scrub reveal
         backgroundColor: "#000",
-        color: "#fff",
-        zIndex: 10,
+        zIndex: 2,
       }}
     >
-      {/* Pinned Scroll Container */}
+      {/* SVG ClipPath Definition in DOM */}
+      <svg
+        width="0"
+        height="0"
+        style={{ position: "absolute", pointerEvents: "none", opacity: 0 }}
+        aria-hidden="true"
+      >
+        <defs>
+          <clipPath id="video-flag-clip" clipPathUnits="objectBoundingBox">
+            <path id="video-flag-path" d={PATH_FLAG} />
+          </clipPath>
+        </defs>
+      </svg>
+
+      {/* Sticky Fullscreen Frame pinned during scroll */}
       <div
-        ref={triggerRef}
+        className="video-reveal-sticky"
         style={{
-          position: "relative",
+          position: "sticky",
+          top: 0,
           width: "100%",
           height: "100vh",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           overflow: "hidden",
-          backgroundColor: "#030303",
+          backgroundColor: "#000",
         }}
       >
-        {/* Ambient Subtle Grid Background */}
+        {/* Relative Positioning Anchor for Card + Overlaid Controls */}
         <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 0)",
-            backgroundSize: "32px 32px",
-            opacity: 0.35,
-            pointerEvents: "none",
-          }}
-        />
-
-        {/* Top Headline Section (Kinetic Typography) */}
-        <div
-          ref={headlineTopRef}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            textAlign: "center",
-            marginBottom: "24px",
-            zIndex: 5,
-            pointerEvents: "none",
-            willChange: "transform, opacity",
-          }}
-        >
-          {/* Category Tag with Custom SVG Icon */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "6px 16px",
-              borderRadius: "9999px",
-              backgroundColor: "rgba(202, 252, 196, 0.08)",
-              border: "1px solid rgba(202, 252, 196, 0.25)",
-              marginBottom: "14px",
-            }}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="4" fill="#cafcc4" />
-              <path
-                d="M12 2v3M12 19v3M2 12h3M19 12h3"
-                stroke="#cafcc4"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-            <span
-              style={{
-                fontFamily: "Suisseintl, sans-serif",
-                fontSize: "11px",
-                fontWeight: 600,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "#cafcc4",
-              }}
-            >
-              Cinematic Drone Experience
-            </span>
-          </div>
-
-          {/* Main Display Title */}
-          <h2
-            style={{
-              fontFamily: "Suisseintl, sans-serif",
-              fontSize: "clamp(2rem, 4.5vw, 4.2rem)",
-              fontWeight: 300,
-              letterSpacing: "-0.03em",
-              margin: 0,
-              lineHeight: 1.1,
-              color: "#fff",
-              textTransform: "uppercase",
-            }}
-          >
-            Explore <span style={{ fontWeight: 800, color: "#cafcc4" }}>VIT Bhopal</span>
-          </h2>
-        </div>
-
-        {/* Expandable Video Card */}
-        <div
-          ref={cardRef}
+          className="video-reveal-anchor"
           style={{
             position: "relative",
-            width: "56vw",
-            height: "54vh",
-            borderRadius: "44px",
-            overflow: "hidden",
-            backgroundColor: "#000",
-            boxShadow:
-              "0 40px 100px -20px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.12)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            willChange: "width, height, border-radius",
-            zIndex: 6,
           }}
         >
-          {/* Custom SVG Viewfinder Corner Brackets */}
+          {/* Expanding Video Card Container (GSAP animates width, height, clipPath) */}
           <div
+            className="video-reveal-card"
             style={{
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              zIndex: 4,
-              pointerEvents: "none",
-            }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M0 24V0H24"
-                stroke="#cafcc4"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-          <div
-            style={{
-              position: "absolute",
-              top: "20px",
-              right: "20px",
-              zIndex: 4,
-              pointerEvents: "none",
-            }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M0 0H24V24"
-                stroke="#cafcc4"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-          <div
-            style={{
-              position: "absolute",
-              bottom: "20px",
-              left: "20px",
-              zIndex: 4,
-              pointerEvents: "none",
-            }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M0 0V24H24"
-                stroke="#cafcc4"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-          <div
-            style={{
-              position: "absolute",
-              bottom: "20px",
-              right: "20px",
-              zIndex: 4,
-              pointerEvents: "none",
-            }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M0 24H24V0"
-                stroke="#cafcc4"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-
-          {/* Top Telemetry Bar inside Video Frame */}
-          <div
-            style={{
-              position: "absolute",
-              top: "20px",
-              left: "54px",
-              right: "54px",
+              position: "relative",
+              width: "70vw",
+              maxWidth: "1160px",
+              aspectRatio: "24.57 / 13.85",
+              clipPath: "url(#video-flag-clip)",
+              WebkitClipPath: "url(#video-flag-clip)",
+              overflow: "hidden",
+              backgroundColor: "#050505",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
-              zIndex: 4,
-              pointerEvents: "none",
+              justifyContent: "center",
+              willChange: "transform, width, height",
+              transition: "none",
             }}
           >
-            {/* Live REC Indicator with pulsing SVG dot */}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {/* Local HTML5 Video */}
+            {source === "local" && (
+              <video
+                ref={videoRef}
+                autoPlay
+                loop
+                muted={isMuted}
+                playsInline
+                src={localVideoSrc}
+                onError={() => setSource("youtube")}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            )}
+
+            {/* YouTube Embed Player Fallback */}
+            {source === "youtube" && (
               <div
                 style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "50%",
-                  backgroundColor: "#ff3b30",
-                  boxShadow: "0 0 10px #ff3b30",
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: "Suisseintl, monospace",
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  letterSpacing: "0.14em",
-                  color: "#fff",
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  width: "100vw",
+                  height: "56.25vw", // 16:9
+                  minHeight: "100vh",
+                  minWidth: "177.78vh",
+                  transform: "translate(-50%, -50%)",
                 }}
               >
-                REC // 4K 60FPS
-              </span>
-            </div>
+                <iframe
+                  ref={iframeRef}
+                  src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1&enablejsapi=1`}
+                  title="Video Player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    border: "none",
+                    display: "block",
+                  }}
+                />
+              </div>
+            )}
 
-            {/* Coordinates / Telemetry */}
-            <span
+            {/* Soft ambient vignette overlays */}
+            <div
               style={{
-                fontFamily: "Suisseintl, monospace",
-                fontSize: "10px",
-                letterSpacing: "0.15em",
-                color: "rgba(255, 255, 255, 0.65)",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "120px",
+                background:
+                  "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%)",
+                pointerEvents: "none",
+                zIndex: 3,
               }}
-            >
-              23°04′48″N 76°51′32″E
-            </span>
-          </div>
-
-          {/* Bottom Custom SVG Focal Tick Marks */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: "20px",
-              left: "54px",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              zIndex: 4,
-              pointerEvents: "none",
-              opacity: 0.6,
-            }}
-          >
-            <svg width="120" height="12" viewBox="0 0 120 12" fill="none">
-              <line x1="0" y1="6" x2="120" y2="6" stroke="#fff" strokeWidth="1" strokeDasharray="2 4" />
-              <line x1="20" y1="2" x2="20" y2="10" stroke="#cafcc4" strokeWidth="1.5" />
-              <line x1="60" y1="0" x2="60" y2="12" stroke="#cafcc4" strokeWidth="2" />
-              <line x1="100" y1="2" x2="100" y2="10" stroke="#cafcc4" strokeWidth="1.5" />
-            </svg>
-            <span
+            />
+            <div
               style={{
-                fontFamily: "Suisseintl, monospace",
-                fontSize: "9px",
-                color: "#cafcc4",
-                letterSpacing: "0.1em",
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: "120px",
+                background:
+                  "linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%)",
+                pointerEvents: "none",
+                zIndex: 3,
               }}
-            >
-              AF [TRACKING]
-            </span>
-          </div>
+            />
 
-          {/* Local HTML5 Video (VIT Video) */}
-          {source === "local" && (
-            <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted={isMuted}
-              playsInline
-              src={localVideoSrc}
-              onError={() => setSource("youtube")}
+            {/* 3D Central Fold Highlight Seam (Matching Reference Image) */}
+            <div
+              className="video-reveal-seam"
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: "50%",
+                width: "1.5px",
+                transform: "translateX(-50%)",
+                background:
+                  "linear-gradient(to bottom, transparent 2%, rgba(240, 255, 61, 0.95) 15%, rgba(240, 255, 61, 0.95) 85%, transparent 98%)",
+                boxShadow:
+                  "0 0 12px 2px rgba(240, 255, 61, 0.7), 0 0 4px rgba(255, 255, 255, 0.9)",
+                pointerEvents: "none",
+                zIndex: 4,
+              }}
+            />
+            <div
+              className="video-reveal-crease-glow"
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: "calc(50% - 30px)",
+                width: "30px",
+                background:
+                  "linear-gradient(to right, transparent, rgba(240, 255, 61, 0.15))",
+                pointerEvents: "none",
+                zIndex: 3,
+              }}
+            />
+
+            {/* Outer SVG Border Contour */}
+            <svg
+              className="video-reveal-border"
+              viewBox="0 0 1 1"
+              preserveAspectRatio="none"
               style={{
                 position: "absolute",
                 top: 0,
                 left: 0,
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
-                display: "block",
-              }}
-            />
-          )}
-
-          {/* YouTube Embed Player Fallback */}
-          {source === "youtube" && (
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: "100%",
-                height: "56.25vw",
-                minHeight: "100vh",
-                minWidth: "177.78vh",
-                transform: "translate(-50%, -50%)",
+                pointerEvents: "none",
+                zIndex: 5,
               }}
             >
-              <iframe
-                ref={iframeRef}
-                src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1&enablejsapi=1`}
-                title="Video Player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  border: "none",
-                  display: "block",
-                }}
+              <path
+                id="video-flag-border-path"
+                d={PATH_FLAG}
+                fill="none"
+                stroke="rgba(255, 255, 255, 0.25)"
+                strokeWidth="0.002"
+                vectorEffect="non-scaling-stroke"
               />
-            </div>
-          )}
+            </svg>
+          </div>
 
-          {/* Soft Cinematic Vignettes for Depth */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: "140px",
-              background:
-                "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%)",
-              pointerEvents: "none",
-              zIndex: 2,
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: "140px",
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)",
-              pointerEvents: "none",
-              zIndex: 2,
-            }}
-          />
-
-          {/* Modern Interactive Sound Toggle with Equalizer */}
+          {/* Floating Unmute/Mute Toggle placed on anchor to prevent clip cutoff */}
           <button
             onClick={toggleMute}
             type="button"
             aria-label={isMuted ? "Unmute audio" : "Mute audio"}
             style={{
               position: "absolute",
-              bottom: "24px",
-              right: "24px",
+              bottom: "28px",
+              right: "28px",
+              width: "46px",
+              height: "46px",
               display: "flex",
               alignItems: "center",
-              gap: "10px",
-              padding: "10px 18px",
-              backgroundColor: "rgba(10, 10, 10, 0.65)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
-              borderRadius: "9999px",
+              justifyContent: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.65)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+              border: "1px solid rgba(255, 255, 255, 0.25)",
+              borderRadius: "50%",
               color: "#fff",
               cursor: "pointer",
               transition: "all 0.25s ease",
               zIndex: 10,
-              boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.6)",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(202, 252, 196, 0.15)";
-              e.currentTarget.style.borderColor = "rgba(202, 252, 196, 0.5)";
-              e.currentTarget.style.transform = "scale(1.05)";
+              e.currentTarget.style.backgroundColor =
+                "rgba(255, 255, 255, 0.25)";
+              e.currentTarget.style.transform = "scale(1.08)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(10, 10, 10, 0.65)";
-              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+              e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.65)";
               e.currentTarget.style.transform = "scale(1)";
             }}
           >
-            {/* Custom SVG Sound Bars */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "flex-end",
-                gap: "3px",
-                height: "16px",
-              }}
-            >
-              <div
-                style={{
-                  width: "3px",
-                  height: isMuted ? "4px" : "14px",
-                  backgroundColor: isMuted ? "#888" : "#cafcc4",
-                  borderRadius: "1px",
-                  transition: "height 0.2s ease",
-                }}
-              />
-              <div
-                style={{
-                  width: "3px",
-                  height: isMuted ? "4px" : "10px",
-                  backgroundColor: isMuted ? "#888" : "#cafcc4",
-                  borderRadius: "1px",
-                  transition: "height 0.2s ease",
-                }}
-              />
-              <div
-                style={{
-                  width: "3px",
-                  height: isMuted ? "4px" : "16px",
-                  backgroundColor: isMuted ? "#888" : "#cafcc4",
-                  borderRadius: "1px",
-                  transition: "height 0.2s ease",
-                }}
-              />
-              <div
-                style={{
-                  width: "3px",
-                  height: isMuted ? "4px" : "8px",
-                  backgroundColor: isMuted ? "#888" : "#cafcc4",
-                  borderRadius: "1px",
-                  transition: "height 0.2s ease",
-                }}
-              />
-            </div>
-
-            <span
-              style={{
-                fontFamily: "Suisseintl, sans-serif",
-                fontSize: "12px",
-                fontWeight: 600,
-                letterSpacing: "0.08em",
-                color: isMuted ? "rgba(255, 255, 255, 0.8)" : "#cafcc4",
-              }}
-            >
-              {isMuted ? "AUDIO OFF" : "AUDIO ON"}
-            </span>
+            {isMuted ? (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            ) : (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+            )}
           </button>
-        </div>
-
-        {/* Bottom Scroll Prompt (Fades Out as Video Expands) */}
-        <div
-          ref={headlineBottomRef}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            marginTop: "24px",
-            zIndex: 5,
-            pointerEvents: "none",
-            willChange: "transform, opacity",
-          }}
-        >
-          {/* Animated Scroll Indicator SVG */}
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#cafcc4"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="animate-bounce"
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <polyline points="19 12 12 19 5 12" />
-          </svg>
-          <span
-            style={{
-              fontFamily: "Suisseintl, sans-serif",
-              fontSize: "12px",
-              letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              color: "rgba(255, 255, 255, 0.6)",
-              fontWeight: 500,
-            }}
-          >
-            Scroll to Expand Viewport
-          </span>
         </div>
       </div>
     </div>

@@ -185,9 +185,96 @@ export default function LandingPageEffects() {
           }, 10);
         });
 
-        // 5. ScrollTrigger triggers
+        // 5. ScrollTrigger Video Reveal Expand Animation & Color triggers
         if (window.ScrollTrigger && window.gsap) {
-          window.ScrollTrigger.refresh();
+          const card = document.querySelector(".video-reveal-card");
+          const wrapper = document.querySelector(".video-reveal-wrapper");
+          const clipPathElem = document.querySelector("#video-flag-path");
+          const borderPathElem = document.querySelector("#video-flag-border-path");
+          const seamElem = document.querySelector(".video-reveal-seam");
+          const glowElem = document.querySelector(".video-reveal-crease-glow");
+          const borderSvg = document.querySelector(".video-reveal-border");
+
+          const pathRect =
+            "M 0.57148 0.0 C 0.28571 0.0, 0.0 0.0, 0.0 0.0 V 1.0 C 0.22794 1.0, 0.4285 1.0, 0.4285 1.0 V 1.0 C 0.71427 1.0, 1.0 1.0, 1.0 1.0 V 0.0 C 0.77204 0.0, 0.57148 0.0, 0.57148 0.0 V 0.0 Z";
+
+          if (card && wrapper) {
+            const tl = window.gsap.timeline({
+              scrollTrigger: {
+                trigger: wrapper,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1,
+              },
+            });
+
+            tl.to(
+              card,
+              {
+                width: "100vw",
+                maxWidth: "100vw",
+                height: "100vh",
+                aspectRatio: "auto",
+                ease: "power2.inOut",
+              },
+              0
+            );
+
+            if (clipPathElem) {
+              tl.to(
+                clipPathElem,
+                {
+                  attr: { d: pathRect },
+                  ease: "power2.inOut",
+                },
+                0
+              );
+            }
+
+            if (borderPathElem) {
+              tl.to(
+                borderPathElem,
+                {
+                  attr: { d: pathRect },
+                  ease: "power2.inOut",
+                },
+                0
+              );
+            }
+
+            if (borderSvg) {
+              tl.to(
+                borderSvg,
+                {
+                  opacity: 0,
+                  ease: "power2.inOut",
+                },
+                0
+              );
+            }
+
+            if (seamElem) {
+              tl.to(
+                seamElem,
+                {
+                  opacity: 0,
+                  ease: "power2.inOut",
+                },
+                0
+              );
+            }
+
+            if (glowElem) {
+              tl.to(
+                glowElem,
+                {
+                  opacity: 0,
+                  ease: "power2.inOut",
+                },
+                0
+              );
+            }
+          }
 
           $("[data-color='blue']").each(function (this: HTMLElement) {
             window.ScrollTrigger.create({

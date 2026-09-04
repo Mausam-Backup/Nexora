@@ -11,6 +11,7 @@ import TeacherTimetable from '@/pages/TeacherTimetable'
 import TeacherAssignments from '@/pages/TeacherAssignments'
 import Announcements from '@/pages/Announcements'
 import TeacherAttendance from '@/pages/TeacherAttendance'
+import TeacherDashboardOverview from '@/pages/TeacherDashboardOverview'
 import Index from '@/pages/Index.tsx'
 
 export const TeacherRoutes: React.FC = () => {
@@ -19,7 +20,12 @@ export const TeacherRoutes: React.FC = () => {
       {/* Default teacher dashboard */}
       <Route path="/" element={
         <RoleRoute allowedRoles={['teacher']}>
-          <TeacherAttendance />
+          <TeacherDashboardOverview />
+        </RoleRoute>
+      } />
+      <Route path="/overview" element={
+        <RoleRoute allowedRoles={['teacher']}>
+          <TeacherDashboardOverview />
         </RoleRoute>
       } />
       <Route path="/profile" element={

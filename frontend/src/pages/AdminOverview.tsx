@@ -12,6 +12,7 @@ import {
   ChevronRight, 
   Plus,
   TrendingUp,
+  TrendingDown,
   AlertCircle,
   CheckCircle,
   Clock,
@@ -26,13 +27,21 @@ import {
   FileSpreadsheet,
   RotateCcw,
   Sparkles,
-  ShieldAlert
+  ShieldAlert,
+  Download,
+  FileUp,
+  Database,
+  ArrowRight,
+  Printer,
+  DollarSign,
+  Activity,
+  Eye,
+  CheckCircle2
 } from 'lucide-react'
 import { useAdminData } from '@/hooks/useAdminData'
 import { useERPData } from '@/hooks/useERPData'
 import { useToast } from '@/hooks/use-toast'
 import { Link } from 'react-router-dom'
-
 import { exportToCSV, generatePrintableReport } from '@/utils/exportUtils'
 import {
   Dialog,
@@ -42,9 +51,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Download, FileUp, Database, ArrowRight, ShieldCheck as ShieldIcon } from 'lucide-react'
+import {
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts'
 
-const AdminOverview = () => {
+export const AdminOverview: React.FC = () => {
   const { 
     branches, 
     subjects, 
@@ -59,6 +81,7 @@ const AdminOverview = () => {
   const [isSimulatingLegacy, setIsSimulatingLegacy] = useState(false)
   const [isExcelModalOpen, setIsExcelModalOpen] = useState(false)
   const [lastAudited, setLastAudited] = useState<string>('Just now')
+  const [financialTab, setFinancialTab] = useState<'earned' | 'due' | 'expense'>('earned')
 
   const handleReaudit = () => {
     setIsAuditing(true)
@@ -85,7 +108,6 @@ const AdminOverview = () => {
       i.suggestedAction
     ])
 
-    // If zero issues, export clean ledger verification
     if (rows.length === 0) {
       rows.push(["SYS-CLEAN-01", "ALL", "ALL ENROLLED STUDENTS", "SYSTEM VERIFIED", "CLEAR", "All attendance quotas >=75%, fee invoices cleared, and admit card tokens cryptographically signed.", "No administrative action required."])
     }
@@ -105,663 +127,607 @@ const AdminOverview = () => {
     })
   }
 
-  const quickStats = [
-    {
-      title: "Total Enrolled Students",
-      value: stats.totalStudents,
-      subtext: "2 Departments (CSE, ECE)",
-      icon: Users,
-      change: "+8 Verified",
-      trend: "up",
-      color: "text-blue-600"
-    },
-    {
-      title: "Fee Collection Standing",
-      value: `₹${(stats.totalRevenue / 1000).toFixed(0)}k`,
-      subtext: `${stats.collectionRate}% Cleared • ₹${stats.totalOutstanding.toLocaleString()} Due`,
-      icon: CreditCard,
-      change: `${stats.collectionRate}%`,
-      trend: "up", 
-      color: "text-green-600"
-    },
-    {
-      title: "Average Attendance",
-      value: `${stats.averageAttendance}%`,
-      subtext: `${stats.debarredCount} Below 75% Gate`,
-      icon: Clock,
-      change: stats.debarredCount > 0 ? `${stats.debarredCount} Debarred` : "Good",
-      trend: stats.debarredCount > 0 ? "down" : "up",
-      color: "text-purple-600"
-    },
-    {
-      title: "Exam Eligibility Standing",
-      value: `${stats.totalStudents - stats.debarredCount} / ${stats.totalStudents}`,
-      subtext: "Statutory Hall Tickets Active",
-      icon: ShieldCheck,
-      change: `${stats.debarredCount} Locked`,
-      trend: stats.debarredCount > 0 ? "down" : "up",
-      color: "text-orange-600"
-    }
+  // Student growth chart data (Shikhaor Image 4)
+  const studentGrowthData = [
+    { month: 'Jan', total: 1200, newStudents: 450, dropped: 120 },
+    { month: 'Feb', total: 1320, newStudents: 520, dropped: 110 },
+    { month: 'Mar', total: 1400, newStudents: 580, dropped: 130 },
+    { month: 'Apr', total: 1650, newStudents: 700, dropped: 140 },
+    { month: 'May', total: 1580, newStudents: 620, dropped: 190 },
+    { month: 'Jun', total: 1620, newStudents: 640, dropped: 160 },
+    { month: 'Jul', total: 1680, newStudents: 680, dropped: 150 },
+    { month: 'Aug', total: 1720, newStudents: 720, dropped: 130 },
   ]
 
-  const reconciliationRecords = [
-    {
-      id: "DISC-2025-01",
-      category: "Attendance vs Exam Debarment",
-      source: "Offline Attendance Register vs Hall Ticket Portal",
-      discrepancy: "Student Rohan Verma (20CS003) had 62% attendance on paper; legacy portal issued hall ticket erroneously.",
-      resolution: "Dynamic 75% Gate applied: Hall ticket locked; statutory debarment notice issued automatically.",
-      impact: "Zero manual cross-checking required by exam controller.",
-      status: "RECONCILED",
-      time: "Live Auto-Reconciled"
-    },
-    {
-      id: "DISC-2025-02",
-      category: "Fee Accounts vs Exam Clearance",
-      source: "Accounts Dept Cash Receipt vs Admission Registry",
-      discrepancy: "Student Ananya Iyer (20CS004) pending tuition fee was omitted from offline finance spreadsheet.",
-      resolution: "Live Itemized Ledger linked: ₹78,000 outstanding tracked; registration hold placed automatically.",
-      impact: "Zero revenue leakage across academic semesters.",
-      status: "RECONCILED",
-      time: "Live Auto-Reconciled"
-    },
-    {
-      id: "DISC-2025-03",
-      category: "Continuous Assessment vs Final SGPA",
-      source: "Faculty Marks Sheet vs Registrar Grade Ledger",
-      discrepancy: "Weighting mismatch between internal (30), mid-sem (30), and end-sem (40) across Excel versions.",
-      resolution: "Unified Formula applied: Real-time calculation of credit grade points and SGPA across 5 courses.",
-      impact: "Eliminated grade discrepancy complaints by 100%.",
-      status: "RECONCILED",
-      time: "Live Auto-Reconciled"
-    },
-    {
-      id: "DISC-2025-04",
-      category: "Admissions Roster vs Subject Allocation",
-      source: "Admission Cell CSV vs Timetable Roster",
-      discrepancy: "New semester enrollments not synchronized with teacher lecture capacity.",
-      resolution: "Single-source primary key (20CS001-20CS008) mapped directly to CS301, CS302, CS303, CS304.",
-      impact: "100% faculty class roster integrity verified.",
-      status: "RECONCILED",
-      time: "Live Auto-Reconciled"
-    }
+  // Monthly financial overview (Shikhaor Image 4)
+  const financialData = [
+    { month: 'Jan', earned: 380, due: 60, expense: 120 },
+    { month: 'Feb', earned: 420, due: 50, expense: 140 },
+    { month: 'Mar', earned: 450, due: 45, expense: 135 },
+    { month: 'Apr', earned: 480, due: 70, expense: 160 },
+    { month: 'May', earned: 410, due: 85, expense: 130 },
+    { month: 'Jun', earned: 490, due: 40, expense: 145 },
+    { month: 'Jul', earned: 506, due: 85, expense: 150 },
   ]
 
-  const recentActivities = [
-    {
-      id: 1,
-      type: "subject_created",
-      title: "New subject 'Advanced Algorithms' created",
-      description: "Added to Computer Science - Semester 6",
-      time: "2 hours ago",
-      status: "completed"
-    },
-    {
-      id: 2,
-      type: "teacher_allocated",
-      title: "Dr. Sarah Johnson assigned to Data Structures",
-      description: "Allocation for Semester 2",
-      time: "4 hours ago", 
-      status: "completed"
-    },
-    {
-      id: 3,
-      type: "course_plan_updated",
-      title: "Course plan updated for CSE Semester 3",
-      description: "Added 2 new elective subjects",
-      time: "6 hours ago",
-      status: "completed"
-    },
-    {
-      id: 4,
-      type: "pending_allocation",
-      title: "5 subjects pending teacher allocation",
-      description: "Requires immediate attention",
-      time: "1 day ago",
-      status: "pending"
-    }
+  // Attendance donut breakdown (Shikhaor Image 4)
+  const attendanceBreakdown = [
+    { name: 'Present (94.6%)', value: 94.6, color: '#f97316' },
+    { name: 'Absent (4.6%)', value: 4.6, color: '#1e293b' },
+    { name: 'Late / Condoned (0.8%)', value: 0.8, color: '#cbd5e1' },
   ]
 
-  const systemHealth = {
-    subjects: {
-      total: statistics.totalSubjects,
-      allocated: statistics.allocatedSubjects,
-      unallocated: statistics.unassignedSubjects
-    },
-    teachers: {
-      total: statistics.totalTeachers,
-      active: statistics.activeTeachers,
-      atCapacity: teachers.filter(t => t.currentSubjects >= t.maxSubjects).length
-    },
-    coursePlans: {
-      total: coursePlans.length,
-      active: coursePlans.filter(p => p.status === 'Active').length,
-      draft: coursePlans.filter(p => p.status === 'Draft').length
-    }
-  }
+  // Department course performance (Edukors Image 2)
+  const departmentPerformance = [
+    { name: 'Computer Science Engineering', code: 'CSE', head: 'Prof. Rajesh Verma', students: 640, faculty: 18, attendance: '88.9%', collection: '96.2%', status: 'Optimal' },
+    { name: 'Electronics & Communication', code: 'ECE', head: 'Dr. Ananya Ray', students: 480, faculty: 14, attendance: '86.4%', collection: '94.0%', status: 'Good' },
+    { name: 'Mechanical Engineering', code: 'MECH', head: 'Prof. K. Sundaram', students: 320, faculty: 10, attendance: '82.1%', collection: '91.5%', status: 'Attention' },
+    { name: 'Information Technology', code: 'IT', head: 'Dr. Priya Nambiar', students: 210, faculty: 8, attendance: '89.5%', collection: '98.0%', status: 'Optimal' },
+  ]
 
-  const quickActions = [
-    {
-      title: "Add New Subject",
-      description: "Create and configure a new academic subject",
-      icon: BookOpen,
-      link: "/admin/subjects",
-      color: "bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary"
-    },
-    {
-      title: "Create Course Plan", 
-      description: "Plan semester curriculum and subject allocation",
-      icon: Calendar,
-      link: "/admin/course-planning",
-      color: "bg-success/10 hover:bg-success/20 border-success/20 text-success"
-    },
-    {
-      title: "Manage Allocations",
-      description: "Assign subjects to teachers and manage workload",
-      icon: UserCheck,
-      link: "/admin/subject-allocation", 
-      color: "bg-accent/10 hover:bg-accent/20 border-accent/20 text-accent"
-    },
-    {
-      title: "Academic Structure",
-      description: "Configure branches, semesters, and policies",
-      icon: Building,
-      link: "/admin/academic-structure",
-      color: "bg-warning/10 hover:bg-warning/20 border-warning/20 text-warning"
-    }
+  // Attention alerts (Shikhaor Image 4)
+  const attentionAlerts = [
+    { id: 1, title: 'Unpaid Semester Fees', count: 24, subtitle: 'Students with overdue balance', link: '/admin/billing', badgeVariant: 'destructive' as const },
+    { id: 2, title: 'Low Attendance Debarment', count: stats.debarredCount || 2, subtitle: 'Students < 75% threshold', link: '/admin/manage-students', badgeVariant: 'destructive' as const },
+    { id: 3, title: 'Attendance Not Submitted', count: 3, subtitle: 'Faculty rosters pending today', link: '/teacher/attendance', badgeVariant: 'secondary' as const },
+    { id: 4, title: 'Exam Hall Ticket Approvals', count: 18, subtitle: 'Ready for cryptographical issue', link: '/examination-controller/hall-ticket-gatekeeper', badgeVariant: 'default' as const },
   ]
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <SEO 
-        title="Admin Overview - Management Dashboard"
-        description="Comprehensive admin dashboard for academic management and course planning"
+        title="Executive Admin Dashboard | Nexora ERP"
+        description="Comprehensive collegiate ERP command center for anti-mismatch reconciliation, academic statistics, and financial ledgers."
       />
-      
-      <div className="container mx-auto p-4 md:p-6 lg:p-8 max-w-7xl">
-        {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <div>
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-                Admin Overview
-              </h1>
-              <Badge variant="outline" className={`gap-1.5 px-3 py-1 font-medium ${
-                serverConnected 
-                  ? 'border-emerald-500 text-emerald-600 bg-emerald-500/10' 
-                  : 'border-blue-500 text-blue-600 bg-blue-500/10'
-              }`}>
-                <span className={`w-2 h-2 rounded-full ${serverConnected ? 'bg-emerald-500 animate-pulse' : 'bg-blue-500'}`}></span>
-                {serverConnected ? 'Live REST Sync Server (Port 5001)' : 'Offline-First Client Bus'}
-              </Badge>
+
+      <div className="space-y-6 pb-12">
+        {/* ========================================================================= */}
+        {/* TOP ROW: Executive Welcome Banner + Quick Action Buttons (Shikhaor Image 4) */}
+        {/* ========================================================================= */}
+        <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-card via-card to-primary/5 border border-border/80 shadow-card">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2.5">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+                  Welcome back, Dr. R. K. Sharma! 👋
+                </h1>
+                <Badge className="bg-primary/10 text-primary border-primary/20 text-xs font-bold">
+                  Dean Academics
+                </Badge>
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+                Here's what's happening across your institution today • Autonomous Relational State Synchronized
+              </p>
+              <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold text-[11px]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                  Anti-Mismatch Engine: 0 Discrepancies
+                </span>
+                <span>•</span>
+                <span>Audit Verified: {lastAudited}</span>
+              </div>
             </div>
-            <p className="text-lg text-muted-foreground hidden md:block mt-1">
-              PS-6 Integrated Student Management • Automated Anti-Mismatch Reconciliation & Academic Control
-            </p>
-          </div>
-          
-          <div className="flex flex-wrap items-center gap-2.5">
-            <Button onClick={() => setIsExcelModalOpen(true)} variant="outline" size="sm" className="gap-1.5 text-xs border-primary/40 text-primary hover:bg-primary/10">
-              <FileUp className="h-3.5 w-3.5" />
-              <span>Simulate Excel Import</span>
-            </Button>
-            <Button onClick={handleExportAuditReport} variant="outline" size="sm" className="gap-1.5 text-xs">
-              <Download className="h-3.5 w-3.5 text-muted-foreground" />
-              <span>Export Audit CSV</span>
-            </Button>
-            <Button onClick={handleResetDemoData} variant="outline" size="sm" className="gap-1.5 text-xs">
-              <RotateCcw className="h-3.5 w-3.5 text-muted-foreground" />
-              <span>Reset Demo DB</span>
-            </Button>
-            <Button onClick={handleReaudit} disabled={isAuditing} variant="default" size="sm" className="gap-2 bg-primary text-primary-foreground">
-              <RefreshCw className={`h-3.5 w-3.5 ${isAuditing ? 'animate-spin' : ''}`} />
-              {isAuditing ? 'Auditing Cross-Module Data...' : 'Re-Run Discrepancy Audit'}
-            </Button>
+
+            {/* Quick Action Buttons (Shikhaor style) */}
+            <div className="flex flex-wrap items-center gap-2.5 self-start lg:self-auto w-full lg:w-auto">
+              <Button
+                onClick={handleReaudit}
+                disabled={isAuditing}
+                className="rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm font-semibold h-9 px-4 gap-1.5 shadow-sm"
+              >
+                <RefreshCw className={`h-4 w-4 ${isAuditing ? 'animate-spin' : ''}`} />
+                {isAuditing ? 'Re-Auditing...' : 'Re-Run Discrepancy Audit'}
+              </Button>
+              <Button
+                onClick={handleExportAuditReport}
+                variant="outline"
+                className="rounded-2xl border-border hover:bg-muted text-xs sm:text-sm font-semibold h-9 px-4 gap-1.5"
+              >
+                <Download className="h-4 w-4" /> Export Audit PDF
+              </Button>
+              <Button
+                onClick={handleResetDemoData}
+                variant="ghost"
+                size="icon"
+                title="Reset ERP demo state"
+                className="rounded-full h-9 w-9 text-muted-foreground hover:text-foreground"
+              >
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-          {quickStats.map((stat) => (
-            <Card key={stat.title}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="min-w-0 flex-1 pr-2">
-                    <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                    <p className="text-2xl font-bold text-foreground mt-0.5">{stat.value}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5 truncate">{stat.subtext}</p>
-                    <div className="flex items-center gap-1 mt-2">
-                      <span className={`text-xs font-semibold px-1.5 py-0.5 rounded ${
-                        stat.trend === 'up' ? 'text-green-700 bg-green-50' : 
-                        stat.trend === 'down' ? 'text-amber-700 bg-amber-50' : 'text-muted-foreground bg-muted'
-                      }`}>
-                        {stat.change}
-                      </span>
-                    </div>
+        {/* ========================================================================= */}
+        {/* 4 TOP KPI METRIC CARDS WITH SPARKLINES (Shikhaor Image 4 & Edukors Image 2) */}
+        {/* ========================================================================= */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {/* Card 1: Total Students */}
+          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
+            <CardContent className="p-6 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Students</span>
+                <div className="p-2.5 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                  <Users className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-3xl font-black tracking-tight text-foreground">1,650</div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">From Last Year</span>
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
+                    <TrendingUp className="h-3 w-3" /> +12.05%
+                  </span>
+                </div>
+              </div>
+              <Progress value={85} className="h-1.5 bg-blue-500/20" />
+            </CardContent>
+          </Card>
+
+          {/* Card 2: Total Teachers */}
+          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
+            <CardContent className="p-6 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Faculty</span>
+                <div className="p-2.5 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                  <GraduationCap className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-3xl font-black tracking-tight text-foreground">50 Professors</div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">All Departments</span>
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
+                    <TrendingUp className="h-3 w-3" /> +3.0%
+                  </span>
+                </div>
+              </div>
+              <Progress value={90} className="h-1.5 bg-indigo-500/20" />
+            </CardContent>
+          </Card>
+
+          {/* Card 3: Today's Attendance */}
+          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
+            <CardContent className="p-6 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Today's Attendance</span>
+                <div className="p-2.5 rounded-2xl bg-orange-500/10 text-orange-600 dark:text-orange-400">
+                  <Activity className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-3xl font-black tracking-tight text-foreground">94.6%</div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">Institution Average</span>
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
+                    <TrendingUp className="h-3 w-3" /> +1.4%
+                  </span>
+                </div>
+              </div>
+              <Progress value={94.6} className="h-1.5 bg-orange-500/20" />
+            </CardContent>
+          </Card>
+
+          {/* Card 4: Monthly Revenue */}
+          <Card className="rounded-3xl border-border/80 shadow-card shadow-card-hover bg-card">
+            <CardContent className="p-6 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Fee Collections</span>
+                <div className="p-2.5 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                  <CreditCard className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-3xl font-black tracking-tight text-foreground">₹5,06,500</div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">₹85,000 Pending</span>
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">92% Cleared</span>
+                </div>
+              </div>
+              <Progress value={92} className="h-1.5 bg-emerald-500/20" />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* MAIN SPLIT: Left (Growth Chart & Reconciliation) | Right (Attendance Donut & Alerts) */}
+        {/* ========================================================================= */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* LEFT COLUMN: 8 Columns */}
+          <div className="lg:col-span-8 space-y-6">
+            {/* Student Growth & Enrollment Trend (Shikhaor Image 4) */}
+            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
+              <CardHeader className="pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <CardTitle className="text-base sm:text-lg font-bold text-foreground">
+                    Student Growth & Admissions
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Monthly enrollment progression vs retention and course completion
+                  </CardDescription>
+                </div>
+                <Badge variant="outline" className="text-xs border-primary/30 text-primary self-start sm:self-auto">
+                  Academic Year 2024-2025
+                </Badge>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="h-[270px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={studentGrowthData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4}/>
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0}/>
+                        </linearGradient>
+                        <linearGradient id="colorNew" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0.0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} />
+                      <XAxis dataKey="month" stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--card))',
+                          borderColor: 'hsl(var(--border))',
+                          borderRadius: '16px',
+                          boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
+                          fontSize: '12px'
+                        }}
+                      />
+                      <Area type="monotone" dataKey="total" name="Total Students" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />
+                      <Area type="monotone" dataKey="newStudents" name="New Admissions" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorNew)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="mt-3 flex items-center justify-center gap-6 text-xs font-semibold">
+                  <div className="flex items-center gap-2">
+                    <span className="h-3 w-3 rounded-full bg-blue-500" />
+                    <span>Total Active Cohort</span>
                   </div>
-                  <div className="p-3 bg-muted/40 rounded-xl">
-                    <stat.icon className={`h-7 w-7 ${stat.color}`} />
+                  <div className="flex items-center gap-2">
+                    <span className="h-3 w-3 rounded-full bg-emerald-500" />
+                    <span>New Enrollments</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5" />
-                Quick Actions
-              </CardTitle>
-              <CardDescription>
-                Frequently used administrative functions
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {quickActions.map((action) => (
-                <Link key={action.title} to={action.link} className="block">
-                  <div className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${action.color}`}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-start gap-3">
-                        <action.icon className="h-5 w-5 mt-0.5 text-current" />
-                        <div>
-                          <h3 className="font-medium text-foreground">{action.title}</h3>
-                          <p className="text-sm text-muted-foreground">{action.description}</p>
-                        </div>
-                      </div>
-                      <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* System Health */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
-                System Health
-              </CardTitle>
-              <CardDescription>
-                Overview of academic system status
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Subject Allocation */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Subject Allocation</span>
-                  <span className="text-sm text-muted-foreground">
-                    {systemHealth.subjects.allocated}/{systemHealth.subjects.total}
-                  </span>
-                </div>
-                <Progress 
-                  value={(systemHealth.subjects.allocated / systemHealth.subjects.total) * 100} 
-                  className="h-2"
-                />
-                {systemHealth.subjects.unallocated > 0 && (
-                  <div className="flex items-center gap-2 mt-2">
-                    <AlertCircle className="h-4 w-4 text-orange-500" />
-                    <span className="text-sm text-orange-600">
-                      {systemHealth.subjects.unallocated} subjects need allocation
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Teacher Capacity */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Teacher Capacity</span>
-                  <span className="text-sm text-muted-foreground">
-                    {systemHealth.teachers.active} active
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-muted/50 rounded-lg">
-                    <div className="text-lg font-semibold text-green-600">
-                      {systemHealth.teachers.active - systemHealth.teachers.atCapacity}
-                    </div>
-                    <div className="text-xs text-muted-foreground">Available</div>
-                  </div>
-                  <div className="text-center p-3 bg-muted/50 rounded-lg">
-                    <div className="text-lg font-semibold text-red-600">
-                      {systemHealth.teachers.atCapacity}
-                    </div>
-                    <div className="text-xs text-muted-foreground">At Capacity</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Course Plans */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Course Plans</span>
-                  <span className="text-sm text-muted-foreground">
-                    {systemHealth.coursePlans.total} total
-                  </span>
-                </div>
-                <div className="flex gap-2">
-                  <Badge variant="default" className="flex-1 justify-center">
-                    {systemHealth.coursePlans.active} Active
-                  </Badge>
-                  <Badge variant="secondary" className="flex-1 justify-center">
-                    {systemHealth.coursePlans.draft} Draft
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Anti-Mismatch Spreadsheet Reconciliation Audit Ledger (PS-6 Core) */}
-        <Card className="mb-8 border-primary/20 bg-card/60 backdrop-blur-sm">
-          <CardHeader className="pb-3 border-b border-border/60">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 bg-emerald-500/10 text-emerald-600 rounded-lg">
-                  <FileSpreadsheet className="h-5 w-5" />
-                </div>
+            {/* Financial Overview (Shikhaor Image 4) */}
+            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
+              <CardHeader className="pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-2">
-                    Spreadsheet Reconciliation & Anti-Mismatch Audit Ledger
-                    <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs font-semibold">
-                      <CheckCheck className="h-3 w-3 mr-1" />
-                      PS-6 Core Engine
-                    </Badge>
+                  <CardTitle className="text-base sm:text-lg font-bold text-foreground">
+                    Financial Overview & Fee Streams
                   </CardTitle>
-                  <CardDescription className="text-xs md:text-sm mt-0.5">
-                    Automated resolution of legacy data mismatches across admissions, offline attendance sheets, fee registers, and examination halls
+                  <CardDescription className="text-xs">
+                    Current collections: ₹5,06,500.00 • Zero unrecorded receipts
                   </CardDescription>
                 </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  variant={isSimulatingLegacy ? "destructive" : "outline"}
-                  onClick={() => {
-                    const next = !isSimulatingLegacy
-                    setIsSimulatingLegacy(next)
-                    if (next) {
-                      toast({
-                        variant: "destructive",
-                        title: "Simulating Legacy Spreadsheet Mismatches",
-                        description: "Demonstrating disconnected Excel silos: 4 severe cross-module discrepancies active.",
-                      })
-                    } else {
-                      toast({
-                        title: "Auto-Reconciliation Applied",
-                        description: "Nexora Unified Engine resolved all 4 mismatches across all student entities.",
-                      })
-                    }
-                  }}
-                  className="gap-1.5 text-xs font-semibold"
-                >
-                  {isSimulatingLegacy ? (
-                    <>
-                      <ShieldAlert className="h-3.5 w-3.5" />
-                      <span>Viewing: Legacy Spreadsheets</span>
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-                      <span>Simulate Mismatches</span>
-                    </>
-                  )}
-                </Button>
-                <Badge variant="outline" className="text-xs font-mono">
-                  Audit: {lastAudited}
-                </Badge>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-4">
-            {isSimulatingLegacy && (
-              <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-700 dark:text-red-300 text-xs flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <ShieldAlert className="h-5 w-5 text-red-600 shrink-0" />
-                  <div>
-                    <strong>Legacy Disconnected Spreadsheets Active:</strong> 4 critical data mismatches across Faculty, Finance & Exam offices. Manual reconciliation required.
-                  </div>
+
+                <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-muted/60 border border-border/60">
+                  <button
+                    onClick={() => setFinancialTab('earned')}
+                    className={`px-3 py-1 text-xs font-bold rounded-xl transition-all ${
+                      financialTab === 'earned' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
+                    }`}
+                  >
+                    Total Earn
+                  </button>
+                  <button
+                    onClick={() => setFinancialTab('due')}
+                    className={`px-3 py-1 text-xs font-bold rounded-xl transition-all ${
+                      financialTab === 'due' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
+                    }`}
+                  >
+                    Total Due
+                  </button>
+                  <button
+                    onClick={() => setFinancialTab('expense')}
+                    className={`px-3 py-1 text-xs font-bold rounded-xl transition-all ${
+                      financialTab === 'expense' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
+                    }`}
+                  >
+                    Expenses
+                  </button>
                 </div>
-                <Button
-                  size="sm"
-                  onClick={() => {
-                    setIsSimulatingLegacy(false)
-                    toast({
-                      title: "✨ Nexora Auto-Reconciled",
-                      description: "Automated integrity gate resolved all data discrepancies in 0ms.",
-                    })
-                  }}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-7 px-3"
-                >
-                  Auto-Reconcile Now
-                </Button>
-              </div>
-            )}
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="h-[220px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={financialData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} />
+                      <XAxis dataKey="month" stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#888888" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}k`} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--card))',
+                          borderColor: 'hsl(var(--border))',
+                          borderRadius: '16px',
+                          fontSize: '12px'
+                        }}
+                      />
+                      <Bar dataKey={financialTab} fill="#f97316" radius={[6, 6, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border/60 text-muted-foreground text-xs font-semibold uppercase tracking-wider text-left">
-                    <th className="pb-3 pr-4">Ref Code & Domain</th>
-                    <th className="pb-3 px-4">Legacy Spreadsheet Mismatch (Problem)</th>
-                    <th className="pb-3 px-4">Nexora Unified Auto-Resolution</th>
-                    <th className="pb-3 pl-4 text-right">Audit Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/40">
-                  {reconciliationRecords.map((rec) => (
-                    <tr key={rec.id} className="hover:bg-muted/30 transition-colors">
-                      <td className="py-3.5 pr-4 align-top">
-                        <div className="font-mono text-xs font-semibold text-primary">{rec.id}</div>
-                        <div className="font-medium text-xs text-foreground mt-0.5">{rec.category}</div>
-                        <div className="text-[11px] text-muted-foreground mt-0.5 italic">{rec.source}</div>
-                      </td>
-                      <td className="py-3.5 px-4 align-top">
-                        <p className="text-xs text-foreground/90 font-medium">{rec.discrepancy}</p>
-                        <div className="flex items-center gap-1 mt-1 text-[11px] text-amber-600 font-medium">
-                          <AlertCircle className="h-3 w-3 flex-shrink-0" />
-                          <span>Historical manual reconciliation required</span>
-                        </div>
-                      </td>
-                      <td className="py-3.5 px-4 align-top">
-                        <p className="text-xs text-foreground/90">{isSimulatingLegacy ? '⚠️ Manual spreadsheet cross-checking pending by registrar staff.' : rec.resolution}</p>
-                        <div className={`flex items-center gap-1 mt-1 text-[11px] font-medium ${isSimulatingLegacy ? 'text-red-600' : 'text-emerald-600'}`}>
-                          {isSimulatingLegacy ? <AlertCircle className="h-3 w-3 flex-shrink-0" /> : <CheckCircle className="h-3 w-3 flex-shrink-0" />}
-                          <span>{isSimulatingLegacy ? 'Data mismatch active on spreadsheets' : rec.impact}</span>
-                        </div>
-                      </td>
-                      <td className="py-3.5 pl-4 align-top text-right">
-                        <Badge className={`${isSimulatingLegacy ? 'bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/30' : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'} text-[11px] font-bold`}>
-                          {isSimulatingLegacy ? 'MISMATCH ACTIVE' : rec.status}
-                        </Badge>
-                        <div className="text-[10px] text-muted-foreground mt-1 font-mono">{isSimulatingLegacy ? 'Requires Manual Fix' : rec.time}</div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="mt-4 pt-3 border-t border-border/40 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                <span>Zero orphaned records detected. All {students.length} enrolled student primary keys are strictly synchronized.</span>
-              </span>
-              <span className="font-mono text-[11px]">Primary Constraint: <code className="bg-muted px-1.5 py-0.5 rounded">student.id ➔ [attendance, marks, fees, exam_gate]</code></span>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Recent Activities & Branch Overview */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Recent Activities */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Clock className="h-5 w-5" />
-                Recent Activities
-              </CardTitle>
-              <CardDescription>
-                Latest administrative actions and updates
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivities.map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-3 pb-4 border-b border-border last:border-0 last:pb-0">
-                    <div className="mt-1">
-                      {activity.status === 'completed' ? (
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <AlertCircle className="h-4 w-4 text-orange-500" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground">
-                        {activity.title}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {activity.description}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {activity.time}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Button variant="outline" className="w-full mt-4">
-                View All Activities
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Branch Overview */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <GraduationCap className="h-5 w-5" />
-                Branch Overview
-              </CardTitle>
-              <CardDescription>
-                Academic branches and their current status
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {branches.map((branch) => (
-                  <div key={branch.id} className="p-4 border border-border rounded-lg">
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <h4 className="font-medium text-foreground">{branch.name}</h4>
-                        <p className="text-sm text-muted-foreground">{branch.code}</p>
-                      </div>
-                      <Badge variant="secondary">
-                        {branch.currentStudents} students
+            {/* Anti-Mismatch Reconciliation & Discrepancy Ledger (The Core PS-6 Value) */}
+            <Card className="rounded-3xl border-border/80 shadow-card bg-card overflow-hidden">
+              <CardHeader className="pb-3 border-b bg-muted/20">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <CardTitle className="text-base sm:text-lg font-bold text-foreground">
+                        Spreadsheet Reconciliation & Anti-Mismatch Audit Ledger
+                      </CardTitle>
+                      <Badge className="bg-emerald-600 text-white text-[10px] font-bold">
+                        100% RECONCILED ✅
                       </Badge>
                     </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Enrollment</span>
-                        <span>{branch.currentStudents}/{branch.capacity}</span>
-                      </div>
-                      <Progress 
-                        value={(branch.currentStudents / branch.capacity) * 100} 
-                        className="h-2"
-                      />
-                    </div>
+                    <CardDescription className="text-xs">
+                      Proves PS-6 compliance: replacing paper registers and isolated spreadsheets with single-ledger verification
+                    </CardDescription>
+                  </div>
+                  <Button
+                    onClick={handleReaudit}
+                    size="sm"
+                    className="rounded-xl bg-primary text-primary-foreground text-xs font-semibold gap-1.5 self-start sm:self-auto"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" /> Re-Run Audit
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-left">
+                    <thead className="bg-muted/40 border-b border-border/70 text-muted-foreground font-semibold">
+                      <tr>
+                        <th className="p-3.5 pl-5">Discrepancy Code</th>
+                        <th className="p-3.5">Institutional Domain</th>
+                        <th className="p-3.5">Legacy Spreadsheet Flaw (Problem)</th>
+                        <th className="p-3.5">Nexora Autonomous Resolution (Engine)</th>
+                        <th className="p-3.5 pr-5">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/60">
+                      <tr className="hover:bg-muted/20 transition-colors">
+                        <td className="p-3.5 pl-5 font-bold text-primary">DISC-2025-01</td>
+                        <td className="p-3.5 font-semibold text-foreground">Attendance vs Exam Debarment</td>
+                        <td className="p-3.5 text-muted-foreground">Rahul Gupta (20CS003) had 64.1% attendance; legacy portal issued hall ticket erroneously.</td>
+                        <td className="p-3.5 text-foreground font-medium">Dynamic 75% Gate applied: Hall ticket locked; statutory debarment notice issued automatically.</td>
+                        <td className="p-3.5 pr-5"><Badge className="bg-emerald-600 text-white text-[10px]">RECONCILED</Badge></td>
+                      </tr>
+                      <tr className="hover:bg-muted/20 transition-colors">
+                        <td className="p-3.5 pl-5 font-bold text-primary">DISC-2025-02</td>
+                        <td className="p-3.5 font-semibold text-foreground">Fee Accounts vs Hall Ticket Clearance</td>
+                        <td className="p-3.5 text-muted-foreground">Priya Singh (20CS004) pending tuition fee was omitted from offline finance spreadsheet.</td>
+                        <td className="p-3.5 text-foreground font-medium">Live Itemized Ledger linked: ₹37,000 outstanding tracked; registration hold placed automatically.</td>
+                        <td className="p-3.5 pr-5"><Badge className="bg-emerald-600 text-white text-[10px]">RECONCILED</Badge></td>
+                      </tr>
+                      <tr className="hover:bg-muted/20 transition-colors">
+                        <td className="p-3.5 pl-5 font-bold text-primary">DISC-2025-03</td>
+                        <td className="p-3.5 font-semibold text-foreground">Continuous Assessment vs SGPA</td>
+                        <td className="p-3.5 text-muted-foreground">Weighting mismatch between internal (30) and end-sem (70) across differing Excel versions.</td>
+                        <td className="p-3.5 text-foreground font-medium">Unified Grading Engine: Real-time calculation of credit grade points and SGPA across all courses.</td>
+                        <td className="p-3.5 pr-5"><Badge className="bg-emerald-600 text-white text-[10px]">RECONCILED</Badge></td>
+                      </tr>
+                      <tr className="hover:bg-muted/20 transition-colors">
+                        <td className="p-3.5 pl-5 font-bold text-primary">DISC-2025-04</td>
+                        <td className="p-3.5 font-semibold text-foreground">Admissions vs Faculty Allocation</td>
+                        <td className="p-3.5 text-muted-foreground">New semester enrollments not synchronized with teacher lecture capacity.</td>
+                        <td className="p-3.5 text-foreground font-medium">Single-source primary key mapped directly to course codes with zero orphaned records.</td>
+                        <td className="p-3.5 pr-5"><Badge className="bg-emerald-600 text-white text-[10px]">RECONCILED</Badge></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
 
-                    <div className="flex justify-between mt-3 text-sm">
-                      <span className="text-muted-foreground">Subjects:</span>
-                      <div className="flex gap-2">
-                        <span>{branch.subjects.core} Core</span>
-                        <span>{branch.subjects.elective} Elective</span>
-                        <span>{branch.subjects.general} General</span>
+            {/* Academic Department & Course Performance (Edukors Image 2) */}
+            <Card className="rounded-3xl border-border/80 shadow-card bg-card overflow-hidden">
+              <CardHeader className="pb-3 border-b bg-muted/20 flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-base font-bold text-foreground">
+                    Academic Department Performance
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Enrollment quotas, faculty staffing, and fee collection efficiency
+                  </CardDescription>
+                </div>
+                <Button variant="ghost" size="sm" asChild className="text-xs text-primary">
+                  <Link to="/admin/manage-students">View All Students <ArrowRight className="h-3.5 w-3.5 ml-1" /></Link>
+                </Button>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-left">
+                    <thead className="bg-muted/40 border-b border-border/70 text-muted-foreground font-semibold">
+                      <tr>
+                        <th className="p-3.5 pl-5">Department</th>
+                        <th className="p-3.5">HOD / Chair</th>
+                        <th className="p-3.5">Students</th>
+                        <th className="p-3.5">Avg Attendance</th>
+                        <th className="p-3.5">Fee Rate</th>
+                        <th className="p-3.5 pr-5">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/60">
+                      {departmentPerformance.map((dept) => (
+                        <tr key={dept.code} className="hover:bg-muted/20 transition-colors">
+                          <td className="p-3.5 pl-5">
+                            <span className="font-bold text-foreground block">{dept.name}</span>
+                            <span className="text-[10px] text-muted-foreground">{dept.code} • {dept.faculty} Faculty</span>
+                          </td>
+                          <td className="p-3.5 text-muted-foreground">{dept.head}</td>
+                          <td className="p-3.5 font-bold text-foreground">{dept.students}</td>
+                          <td className="p-3.5 font-semibold text-emerald-600 dark:text-emerald-400">{dept.attendance}</td>
+                          <td className="p-3.5 font-bold text-foreground">{dept.collection}</td>
+                          <td className="p-3.5 pr-5">
+                            <Button asChild variant="ghost" size="icon" className="h-7 w-7 rounded-lg">
+                              <Link to={`/admin/branch-students/${dept.code}`}>
+                                <Eye className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                              </Link>
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* RIGHT COLUMN: 4 Columns (Donut, Attention Alerts, Activities) */}
+          <div className="lg:col-span-4 space-y-6">
+            {/* Attendance Overview Donut (Shikhaor Image 4) */}
+            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
+              <CardHeader className="pb-1 flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-base font-bold text-foreground">
+                    Attendance Overview
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Institutional daily breakdown
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-2">
+                <div className="h-[200px] w-full flex items-center justify-center">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={attendanceBreakdown}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={55}
+                        outerRadius={75}
+                        paddingAngle={4}
+                        dataKey="value"
+                      >
+                        {attendanceBreakdown.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="text-center mt-[-90px] mb-8 space-y-0.5">
+                  <span className="text-2xl font-black text-foreground">94.6%</span>
+                  <span className="text-[10px] text-muted-foreground block font-semibold">Today's Present</span>
+                </div>
+                <div className="pt-4 border-t border-border/60 space-y-2 text-xs font-semibold">
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center gap-2 text-foreground">
+                      <span className="h-2.5 w-2.5 rounded-full bg-orange-500" /> Present (1,560)
+                    </span>
+                    <span className="text-muted-foreground">94.6%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center gap-2 text-foreground">
+                      <span className="h-2.5 w-2.5 rounded-full bg-slate-800 dark:bg-slate-300" /> Absent (75)
+                    </span>
+                    <span className="text-muted-foreground">4.6%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center gap-2 text-foreground">
+                      <span className="h-2.5 w-2.5 rounded-full bg-slate-300 dark:bg-slate-600" /> Condoned / Late (15)
+                    </span>
+                    <span className="text-muted-foreground">0.8%</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Attention Alert Sidebar (Shikhaor Image 4) */}
+            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
+              <CardHeader className="pb-3 flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-base font-bold text-foreground">
+                    Attention Alerts
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Institutional bottlenecks requiring action
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {attentionAlerts.map((alert) => (
+                  <div key={alert.id} className="p-3.5 rounded-2xl border border-border/60 bg-muted/20 hover:bg-muted/40 transition-colors flex items-center justify-between gap-3">
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-2">
+                        <h5 className="text-xs font-bold text-foreground">{alert.title}</h5>
+                        <Badge variant={alert.badgeVariant} className="text-[10px] px-1.5 py-0">
+                          {alert.count}
+                        </Badge>
                       </div>
+                      <p className="text-[11px] text-muted-foreground">{alert.subtitle}</p>
                     </div>
+                    <Button asChild size="sm" variant="ghost" className="h-7 text-xs px-2 text-primary font-semibold">
+                      <Link to={alert.link}>
+                        Resolve <ChevronRight className="h-3 w-3 ml-0.5" />
+                      </Link>
+                    </Button>
                   </div>
                 ))}
-              </div>
-              <Link to="/admin/academic-structure">
-                <Button variant="outline" className="w-full mt-4">
-                  Manage Branches
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            {/* Recent Institutional Activities Feed */}
+            <Card className="rounded-3xl border-border/80 shadow-card bg-card">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base font-bold text-foreground">
+                  Recent Activities
+                </CardTitle>
+                <CardDescription className="text-xs">
+                  Real-time audit log stream
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-xs">
+                <div className="flex items-start gap-3 p-2.5 rounded-xl bg-muted/20">
+                  <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 mt-0.5">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="font-semibold text-foreground">Fee Payment Reconciled</p>
+                    <p className="text-[11px] text-muted-foreground">Aarav Sharma (20CS001) settled ₹82,000 • Receipt #RCP-912</p>
+                    <p className="text-[10px] text-muted-foreground/70">12 mins ago</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-2.5 rounded-xl bg-muted/20">
+                  <div className="p-1.5 rounded-lg bg-rose-500/10 text-rose-600 mt-0.5">
+                    <ShieldAlert className="h-3.5 w-3.5" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="font-semibold text-foreground">Statutory Debarment Triggered</p>
+                    <p className="text-[11px] text-muted-foreground">Rahul Gupta (20CS003) attendance dropped to 64.1% • Admit Card locked</p>
+                    <p className="text-[10px] text-muted-foreground/70">1 hour ago</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-2.5 rounded-xl bg-muted/20">
+                  <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-600 mt-0.5">
+                    <GraduationCap className="h-3.5 w-3.5" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="font-semibold text-foreground">Marks Moderation Published</p>
+                    <p className="text-[11px] text-muted-foreground">CS301 Database Systems End-Sem marks approved by CoE</p>
+                    <p className="text-[10px] text-muted-foreground/70">3 hours ago</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-
-        {/* Interactive Excel Import & Mismatch Simulation Dialog */}
-        <Dialog open={isExcelModalOpen} onOpenChange={setIsExcelModalOpen}>
-          <DialogContent className="sm:max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <FileSpreadsheet className="h-5 w-5 text-emerald-600" />
-                <span>Simulate Legacy Excel Spreadsheet Import (.xlsx / .csv)</span>
-              </DialogTitle>
-              <DialogDescription className="text-xs">
-                Demonstrates how Nexora ingests legacy Excel spreadsheets, catches manual reconciliation errors, and resolves data mismatches across attendance, dues, and exam eligibility in 0ms.
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-4 py-2">
-              <div className="p-3.5 rounded-lg border-2 border-dashed bg-muted/30 text-center space-y-2">
-                <FileSpreadsheet className="h-8 w-8 text-muted-foreground mx-auto" />
-                <div>
-                  <p className="text-xs font-semibold">Simulated File: <code className="bg-muted px-1.5 py-0.5 rounded text-primary">AY2024-25_EndSem_Attendance_Fees_Registry.xlsx</code></p>
-                  <p className="text-[11px] text-muted-foreground">Source: Legacy Department Excel Ledger (Containing 4 Discrepancies)</p>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-xs font-bold text-foreground">Detected Legacy Spreadsheet Inconsistencies:</p>
-                <div className="space-y-1.5 text-xs">
-                  <div className="p-2.5 rounded-md bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-400 flex items-start gap-2">
-                    <span className="font-bold shrink-0">1.</span>
-                    <span><strong>Attendance Mismatch:</strong> Candidate Rahul Gupta (20CS003) has 64.1% attendance on paper records, but offline pass list erroneously issued Hall Ticket.</span>
-                  </div>
-                  <div className="p-2.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 flex items-start gap-2">
-                    <span className="font-bold shrink-0">2.</span>
-                    <span><strong>Unrecorded Fee Defaulter:</strong> Candidate Priya Singh (20CS004) has ₹37,000 overdue tuition omitted from offline accounts spreadsheet.</span>
-                  </div>
-                  <div className="p-2.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 flex items-start gap-2">
-                    <span className="font-bold shrink-0">3.</span>
-                    <span><strong>Grade Weighting Drift:</strong> Internal 30 / External 70 marksheet weighted sum calculated inconsistently across Excel versions.</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <DialogFooter className="gap-2">
-              <Button variant="outline" onClick={() => setIsExcelModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button 
-                onClick={() => {
-                  setIsExcelModalOpen(false)
-                  setIsSimulatingLegacy(false)
-                  toast({
-                    title: "✨ Nexora Ingestion & Auto-Reconciliation Complete",
-                    description: "Imported 8 records from spreadsheet. Applied 75% attendance gate, locked delinquent hall tickets, and re-balanced fee ledgers."
-                  })
-                }}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
-              >
-                <CheckCheck className="h-4 w-4" />
-                <span>Auto-Reconcile & Ingest to Nexora</span>
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </div>
-    </div>
+    </>
   )
 }
 

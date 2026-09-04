@@ -1074,6 +1074,7 @@
     }
   ],
   "clientVersion": 1,
-  "lastSyncedAt": "2026-09-04T18:29:07.610Z",
-  "recordCount": 8
+  "lastSyncedAt": "2026-09-04T19:02:47.415Z",
+  "recordCount": 8,
+  "authenticatedUser": "Dean Academics"
 }

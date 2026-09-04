@@ -70,7 +70,7 @@ export const DemoRoleSwitcher: React.FC = () => {
       subjects: ['CS301', 'CS302', 'CS304']
     })
     toast.success("Switched to Faculty Persona (Prof. Rajesh Verma)")
-    navigate('/teacher/attendance')
+    navigate('/teacher')
   }
 
   const handleSwitchToStudent = (studentId: string, label: string) => {

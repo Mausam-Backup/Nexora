@@ -4409,7 +4409,6 @@ a {
 }
 
 .hero-slide__oval-container {
-  display: none !important;
   z-index: 0;
   height: 30vh;
   max-height: 30vw;
@@ -4677,7 +4676,6 @@ a {
 }
 
 .hero-slide__fill-side-1 {
-  display: none !important;
   width: 100vw;
   height: 190.764vw;
   background-color: transparent;
@@ -4689,7 +4687,6 @@ a {
 }
 
 .hero-slide__fill-side-2 {
-  display: none !important;
   width: 100vw;
   height: 190.764vw;
   background-color: transparent;
@@ -4703,7 +4700,7 @@ a {
 .hero-slide__fill-bg {
   z-index: 2;
   opacity: 0;
-  background-color: transparent;
+  background-color: #5162ff;
   position: absolute;
   top: 0%;
   bottom: 0%;

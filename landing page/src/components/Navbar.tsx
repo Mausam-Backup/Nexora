@@ -31,8 +31,8 @@ export default function Navbar() {
         <a href="#about" className="menu-item nav-3 w-inline-block" suppressHydrationWarning>
           <div className="menu-text">About</div>
         </a>
-        <a href="#explore-university" className="menu-item nav-4 w-inline-block" suppressHydrationWarning>
-          <div className="menu-text" style={{ color: '#fbbf24' }}>Explore 360°</div>
+        <a href="#investors" className="menu-item nav-4 w-inline-block" suppressHydrationWarning>
+          <div className="menu-text">Investors</div>
         </a>
         <a href="#news" className="menu-item nav-5 w-inline-block" suppressHydrationWarning>
           <div className="menu-text">News</div>

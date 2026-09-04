@@ -377,13 +377,37 @@
           pointer-events: none;
         }
 
-        /* -------- Hero Background Mask & Text Removal -------- */
+        /* -------- Hero Initial State & Visibility Fix -------- */
         .hero-slide__head {
           display: none !important;
+        }
+
+        /* Ensure the oval container and background image are always visible */
+        .hero-slide__oval-container,
+        html.w-mod-js [data-w-id='37d13c98-9f01-0610-030e-fefc97e35e90'],
+        html.w-mod-js:not(.w-mod-ix) [data-w-id='37d13c98-9f01-0610-030e-fefc97e35e90'] {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+
+        /* Ensure links (Read documentation & Share) are visible */
+        .hero-slide__link-container,
+        .hero-slide__links-container,
+        html.w-mod-js [data-w-id='9785e6ca-a1df-1993-03dd-7d11ee2ddcb2'],
+        html.w-mod-js:not(.w-mod-ix) [data-w-id='9785e6ca-a1df-1993-03dd-7d11ee2ddcb2'] {
+          opacity: 1 !important;
+        }
+
+        /* Completely prevent the solid blue curtain from hiding the hero & WebGL */
+        .hero-slide__fill-bg,
+        html.w-mod-js [data-w-id='9ba60a25-a01d-fe95-dca5-f459e87e9d18'],
+        html.w-mod-js:not(.w-mod-ix) [data-w-id='9ba60a25-a01d-fe95-dca5-f459e87e9d18'] {
+          display: none !important;
+          opacity: 0 !important;
         }
 
         .hero-slide__fill-side-1,
         .hero-slide__fill-side-2 {
           background-color: #101a55 !important;
         }
-        /* -------- >Hero Background Mask & Text Removal -------- */
+        /* -------- >Hero Initial State & Visibility Fix -------- */

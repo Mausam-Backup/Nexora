@@ -28,6 +28,9 @@ export default function LandingPageEffects() {
     const initAll = () => {
       const $ = window.$;
 
+      // Ensure Webflow interactions flag is marked active
+      document.documentElement.classList.add("w-mod-ix");
+
       // 1. WebGL Initialization with retry polling and fallback
       let webglAttempts = 0;
       const tryInitWebgl = () => {
@@ -164,16 +167,16 @@ export default function LandingPageEffects() {
 
         $(".nav-4").off("click").on("click", function (e: any) {
           e.preventDefault();
-          const anchor = document.querySelector("#explore-university");
+          const anchor = document.querySelector("#investors");
           if (anchor) {
             if (lenisInstance) {
-              lenisInstance.scrollTo(anchor, { immediate: false });
+              lenisInstance.scrollTo(anchor, { immediate: true });
             } else {
               anchor.scrollIntoView({ behavior: "smooth" });
             }
           }
           setTimeout(() => {
-            $(".container-menu__light").removeClass("blue");
+            $(".container-menu__light").addClass("blue");
           }, 10);
         });
 

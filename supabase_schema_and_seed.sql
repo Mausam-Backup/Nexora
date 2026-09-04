@@ -218,7 +218,7 @@ CREATE TABLE subject_slots (
 
 CREATE TABLE attendance_records (
     id VARCHAR(100) PRIMARY KEY,
-    student_id TEXT REFERENCES profiles(id) ON DELETE CASCADE,
+    student_id TEXT,
     student_name VARCHAR(255),
     subject_id VARCHAR(100) REFERENCES teacher_subjects(id) ON DELETE CASCADE,
     subject_name VARCHAR(255),
@@ -234,7 +234,7 @@ CREATE TABLE attendance_records (
 -- ==============================================================================
 CREATE TABLE student_bills (
     id VARCHAR(100) PRIMARY KEY,
-    student_id TEXT REFERENCES profiles(id) ON DELETE CASCADE,
+    student_id TEXT,
     description VARCHAR(255) NOT NULL,
     category VARCHAR(100) DEFAULT 'tuition',
     amount NUMERIC(12, 2) NOT NULL,
@@ -338,7 +338,7 @@ CREATE TABLE exam_slots (
 
 CREATE TABLE student_marks (
     id SERIAL PRIMARY KEY,
-    student_id TEXT REFERENCES profiles(id) ON DELETE CASCADE,
+    student_id TEXT,
     student_name VARCHAR(255) NOT NULL,
     semester VARCHAR(50) NOT NULL,
     course_code VARCHAR(50) NOT NULL,
@@ -699,6 +699,7 @@ INSERT INTO profiles (id, name, email, phone, role, department, branch, semester
 VALUES
 -- Students
 ('20CS001', 'Aarav Sharma', 'aarav.sharma@college.edu', '+91 9876543210', 'student', 'Computer Science', 'Computer Science', 6, '20CS001', NULL, '2020', NULL, NULL, NULL, NULL, NULL, NULL, 8.50, 'active', '123 Main Street, New Delhi, India', 'Rajesh Sharma', '+91 9876543211'),
+('20CS014', 'Neha Patel', 'neha@college.edu', '+91 9876543212', 'student', 'Computer Science', 'Computer Science', 6, '20CS014', NULL, '2020', NULL, NULL, NULL, NULL, NULL, NULL, 9.10, 'active', '456 Park Avenue, Mumbai, India', 'Amit Patel', '+91 9876543213'),
 ('20EC014', 'Neha Patel', 'neha.patel@college.edu', '+91 9876543212', 'student', 'Electronics & Communication', 'Electronics & Communication', 4, '20EC014', NULL, '2020', NULL, NULL, NULL, NULL, NULL, NULL, 9.10, 'active', '456 Park Avenue, Mumbai, India', 'Amit Patel', '+91 9876543213'),
 ('20ME023', 'Rahul Gupta', 'rahul.gupta@college.edu', '+91 9876543214', 'student', 'Mechanical Engineering', 'Mechanical Engineering', 8, '20ME023', NULL, '2020', NULL, NULL, NULL, NULL, NULL, NULL, 7.80, 'active', '789 Tech Hub, Bangalore, India', 'Suresh Gupta', '+91 9876543215'),
 ('21CS045', 'Priya Singh', 'priya.singh@college.edu', '+91 9876543216', 'student', 'Computer Science', 'Computer Science', 4, '21CS045', NULL, '2021', NULL, NULL, NULL, NULL, NULL, NULL, 8.90, 'active', '321 Innovation Drive, Pune, India', 'Vikash Singh', '+91 9876543217'),

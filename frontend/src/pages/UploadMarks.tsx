@@ -62,6 +62,7 @@ export default function UploadMarks() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [detailedDialogOpen, setDetailedDialogOpen] = useState(false)
   const [bulkUploadOpen, setBulkUploadOpen] = useState(false)
+  const [markFilter, setMarkFilter] = useState<'all' | 'eligible' | 'debarred'>('all')
   const [form, setForm] = useState({ internal: '', external: '' })
 
   const { students: erpStudents, updateStudentMarks } = useERPData()
@@ -495,13 +496,46 @@ export default function UploadMarks() {
           {/* Students List */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Users className="h-5 w-5" />
-                Students ({currentStudents.length})
-              </CardTitle>
-              <CardDescription className="text-sm">
-                Click on any student to update their marks
-              </CardDescription>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Users className="h-5 w-5" />
+                    Enrolled Students ({currentStudents.length})
+                  </CardTitle>
+                  <CardDescription className="text-sm">
+                    Enter internal (max 30) and external (max 70) marks. Debarred students are locked from external entry.
+                  </CardDescription>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={markFilter === 'all' ? 'default' : 'outline'}
+                    className="h-8 text-xs"
+                    onClick={() => setMarkFilter('all')}
+                  >
+                    All ({currentStudents.length})
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={markFilter === 'eligible' ? 'default' : 'outline'}
+                    className="h-8 text-xs text-emerald-700 dark:text-emerald-400 border-emerald-300"
+                    onClick={() => setMarkFilter('eligible')}
+                  >
+                    Cleared for Exam
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={markFilter === 'debarred' ? 'default' : 'outline'}
+                    className="h-8 text-xs text-red-700 dark:text-red-400 border-red-300"
+                    onClick={() => setMarkFilter('debarred')}
+                  >
+                    Debarred
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
               {/* Desktop Table View */}
@@ -511,64 +545,92 @@ export default function UploadMarks() {
                     <TableRow>
                       <TableHead>Student ID</TableHead>
                       <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Section</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Grade</TableHead>
+                      <TableHead>Attendance Status</TableHead>
+                      <TableHead>Evaluation</TableHead>
+                      <TableHead>Total / Grade</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {currentStudents.map((student) => {
-                      const studentMark = getStudentMark(student.id)
-                      return (
-                        <TableRow key={student.id} className="cursor-pointer hover:bg-muted/50" onClick={() => handleStudentClick(student)}>
-                          <TableCell className="font-mono font-semibold">{student.id}</TableCell>
-                          <TableCell>{student.name}</TableCell>
-                          <TableCell className="text-muted-foreground">{student.email}</TableCell>
-                          <TableCell>{student.section}</TableCell>
-                          <TableCell>
-                            <Badge variant={studentMark ? "default" : "outline"}>
-                              {studentMark ? "Graded" : "Pending"}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {studentMark ? (
-                              <Badge variant={studentMark.grade.includes('+') ? "default" : "secondary"}>
-                                {studentMark.grade}
+                    {currentStudents
+                      .filter(student => {
+                        const erpObj = erpStudents.find(s => s.id === student.id || s.rollNumber === student.id)
+                        const isDebarred = erpObj ? !erpObj.clearances.attendanceClearance : false
+                        if (markFilter === 'eligible') return !isDebarred
+                        if (markFilter === 'debarred') return isDebarred
+                        return true
+                      })
+                      .map((student) => {
+                        const studentMark = getStudentMark(student.id)
+                        const erpObj = erpStudents.find(s => s.id === student.id || s.rollNumber === student.id)
+                        const isDebarred = erpObj ? !erpObj.clearances.attendanceClearance : false
+
+                        return (
+                          <TableRow key={student.id} className="cursor-pointer hover:bg-muted/50" onClick={() => handleStudentClick(student)}>
+                            <TableCell className="font-mono font-semibold">{student.id}</TableCell>
+                            <TableCell>
+                              <div className="font-medium">{student.name}</div>
+                              <div className="text-xs text-muted-foreground font-mono">{student.email}</div>
+                            </TableCell>
+                            <TableCell>
+                              {isDebarred ? (
+                                <Badge variant="destructive" className="text-[11px] gap-1">
+                                  <AlertTriangle className="h-3 w-3" />
+                                  <span>Debarred (&lt;75%)</span>
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline" className="text-[11px] border-emerald-400 text-emerald-700 dark:text-emerald-400">
+                                  Cleared (≥75%)
+                                </Badge>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={studentMark ? "default" : "outline"}>
+                                {studentMark ? "Graded" : "Pending"}
                               </Badge>
-                            ) : (
-                              <span className="text-muted-foreground">-</span>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1">
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleStudentClick(student);
-                                }}
-                                title="Quick Entry"
-                              >
-                                <Edit3 className="h-4 w-4" />
-                              </Button>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDetailedMarksClick(student);
-                                }}
-                                title="Detailed Entry"
-                              >
-                                <Settings className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      )
+                            </TableCell>
+                            <TableCell>
+                              {studentMark ? (
+                                <div className="space-y-0.5">
+                                  <span className="font-bold text-sm">{studentMark.total}/100</span>
+                                  <div>
+                                    <Badge variant={studentMark.grade.includes('+') ? "default" : "secondary"} className="text-xs">
+                                      Grade: {studentMark.grade}
+                                    </Badge>
+                                  </div>
+                                </div>
+                              ) : (
+                                <span className="text-muted-foreground text-xs">Not Evaluated</span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-1">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleStudentClick(student);
+                                  }}
+                                  title="Quick Entry"
+                                >
+                                  <Edit3 className="h-4 w-4" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDetailedMarksClick(student);
+                                  }}
+                                  title="Detailed Entry"
+                                >
+                                  <Settings className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )
                     })}
                   </TableBody>
                 </Table>

@@ -74,7 +74,29 @@ export function generatePrintableReport(options: PrintableReportOptions) {
         <title>${options.title}</title>
         <style>
           * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-          body { padding: 40px; color: #1e293b; line-height: 1.5; font-size: 14px; }
+          body { 
+            padding: 40px; 
+            color: #1e293b; 
+            line-height: 1.5; 
+            font-size: 13px; 
+            position: relative;
+            background: #ffffff;
+          }
+          .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-35deg);
+            font-size: 56px;
+            font-weight: 900;
+            color: rgba(2, 132, 199, 0.04);
+            letter-spacing: 0.25em;
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+            text-transform: uppercase;
+          }
+          .content-layer { position: relative; z-index: 1; }
           .header { border-bottom: 2px solid #0284c7; padding-bottom: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-start; }
           .institution { display: flex; align-items: center; gap: 15px; }
           .logo { width: 50px; height: 50px; background: #0284c7; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; }
@@ -96,14 +118,18 @@ export function generatePrintableReport(options: PrintableReportOptions) {
           .stat-val { font-size: 18px; font-weight: 800; color: #14532d; }
           .badge { display: inline-block; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: bold; color: white; background: ${badgeColor}; }
           .footer { margin-top: 50px; border-top: 1px solid #e2e8f0; padding-top: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
-          .sig-line { width: 180px; border-top: 1px solid #94a3b8; text-align: center; padding-top: 5px; font-size: 12px; color: #64748b; }
+          .verification-stamp { display: flex; align-items: center; gap: 10px; }
+          .qr-placeholder { width: 44px; height: 44px; background: #0f172a; color: white; font-size: 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 4px; font-family: monospace; }
+          .sig-line { width: 180px; border-top: 1px solid #94a3b8; text-align: center; padding-top: 5px; font-size: 12px; color: #64748b; font-weight: 600; }
           @media print {
-            body { padding: 0; }
+            body { padding: 15px; }
             .no-print { display: none; }
           }
         </style>
       </head>
       <body>
+        <div class="watermark">CAMPUSSYNC UNIVERSITY • OFFICIAL</div>
+        <div class="content-layer">
         <div class="header">
           <div class="institution">
             <div class="logo">CS</div>
@@ -116,6 +142,7 @@ export function generatePrintableReport(options: PrintableReportOptions) {
           <div style="text-align: right;">
             <p style="font-size: 12px; color: #64748b; margin: 0;">Date of Issue:</p>
             <p style="font-weight: 600; margin: 0;">${currentDate}</p>
+            <p style="font-size: 10px; color: #94a3b8; font-family: monospace; margin: 2px 0 0 0;">CS-AUTH-${Date.now().toString().slice(-6)}</p>
             ${options.statusBadge ? `<div style="margin-top: 8px;"><span class="badge">${options.statusBadge.text}</span></div>` : ''}
           </div>
         </div>
@@ -169,13 +196,17 @@ export function generatePrintableReport(options: PrintableReportOptions) {
         </table>
 
         <div class="footer">
-          <div>
-            <p style="font-size: 11px; color: #94a3b8; margin: 0;">System Verified Document • ID: CS-SYS-${Date.now().toString().slice(-8)}</p>
-            <p style="font-size: 11px; color: #94a3b8; margin: 0;">Generated via CampusSync ERP Anti-Spreadsheet System</p>
+          <div class="verification-stamp">
+            <div class="qr-placeholder">[QR PASS]<br/>VERIFIED</div>
+            <div>
+              <p style="font-size: 11px; font-weight: 700; color: #0f172a; margin: 0;">Institutional Verified Document</p>
+              <p style="font-size: 10px; color: #64748b; margin: 0;">Anti-Spreadsheet Unified Ledger</p>
+            </div>
           </div>
           <div class="sig-line">
             Controller of Examinations / Registrar
           </div>
+        </div>
         </div>
 
         <script>

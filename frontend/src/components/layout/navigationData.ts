@@ -1,11 +1,9 @@
-import {
+﻿import {
   LayoutDashboard,
   Timer,
   Calculator,
   CheckSquare,
   FileText,
-  Music,
-  Dumbbell,
   DollarSign,
   Users,
   BookOpen,
@@ -20,10 +18,16 @@ import {
   Building2,
   TrendingUp,
   ShieldAlert,
+  FileSpreadsheet,
+  FileUp,
+  CreditCard,
+  History,
   Scale,
   Globe,
+  Music,
+  Dumbbell,
   type LucideIcon,
-} from "lucide-react"
+} from 'lucide-react'
 
 export interface NavItem {
   title: string
@@ -44,502 +48,367 @@ export interface SecondaryNavItem {
   icon: LucideIcon
 }
 
-// Student: High-Impact Core ERP Modules on Top
-export const studentPrimaryNav: NavItem[] = [
-  {
-    title: "Dashboard",
-    url: "/",
-    icon: LayoutDashboard,
-    isActive: true,
-  },
-  {
-    title: "Attendance Tracker",
-    url: "/attendance/student",
-    icon: CheckSquare,
-    badge: "Live 88.9%",
-  },
-  {
-    title: "Academic Performance",
-    url: "/view-marks",
-    icon: BarChart3,
-    badge: "Grades",
-    items: [
-      {
-        title: "View Marks & SGPA",
-        url: "/view-marks",
-        badge: "Grades",
-      },
-      {
-        title: "Academic Trajectory",
-        url: "/academic-progress",
-      },
-    ],
-  },
-  {
-    title: "Fees & Billing Ledger",
-    url: "/billing-payments",
-    icon: DollarSign,
-    badge: "Ledger",
-  },
-  {
-    title: "Examinations & Admit Card",
-    url: "/schedule/exams",
-    icon: Award,
-    badge: "Hall Ticket",
-  },
-  {
-    title: "Courses & Academics",
-    url: "/courses/my-courses",
-    icon: BookOpen,
-    items: [
-      {
-        title: "My Enrolled Courses",
-        url: "/courses/my-courses",
-      },
-      {
-        title: "Course Assignments",
-        url: "/courses/assignments",
-      },
-      {
-        title: "Course Catalog",
-        url: "/courses/catalog",
-      },
-    ],
-  },
-  {
-    title: "Schedule & Timetable",
-    url: "/timetable",
-    icon: CalendarDays,
-    items: [
-      {
-        title: "Smart Timetable",
-        url: "/timetable",
-      },
-      {
-        title: "Daily Class Schedule",
-        url: "/schedule/classes",
-      },
-      {
-        title: "Exam Timetable",
-        url: "/schedule/exams",
-      },
-      {
-        title: "Campus Events",
-        url: "/schedule/events",
-      },
-    ],
-  },
-  {
-    title: "Digital Student ID",
-    url: "/student-id",
-    icon: QrCode,
-    badge: "QR Pass",
-  },
-  {
-    title: "Campus Network & Notices",
-    url: "/announcements",
-    icon: Users,
-    items: [
-      {
-        title: "Official Notices",
-        url: "/announcements",
-      },
-      {
-        title: "Student Community",
-        url: "/community",
-      },
-    ],
-  },
-]
-
-export const studentSecondaryNav: SecondaryNavItem[] = [
-  // Academic & Productivity Tools on Top
-  {
-    name: "Ask AI Academic Assistant",
-    url: "/ask-ai",
-    icon: Bot,
-  },
-  {
-    name: "Notes & Materials",
-    url: "/notes",
-    icon: FileText,
-  },
-  {
-    name: "Tasks & Todos",
-    url: "/tasks",
-    icon: CheckSquare,
-  },
-  {
-    name: "Academic Calculators",
-    url: "/calculators",
-    icon: Calculator,
-  },
-  {
-    name: "Pomodoro Focus",
-    url: "/pomodoro",
-    icon: Timer,
-  },
-  {
-    name: "Daily Motivation",
-    url: "/motivation",
-    icon: Zap,
-  },
-
-  // Non-ERP Utilities moved to the bottom
-  {
-    name: "Personal Expenses",
-    url: "/expenses",
-    icon: TrendingUp,
-  },
-  {
-    name: "Study Music Player",
-    url: "/music",
-    icon: Music,
-  },
-  {
-    name: "Mind & Meditation",
-    url: "/meditation",
-    icon: Brain,
-  },
-  {
-    name: "Fitness Tracker",
-    url: "/fitness",
-    icon: Dumbbell,
-  },
-  {
-    name: "Wikipedia Reader",
-    url: "/wikipedia",
-    icon: Globe,
-  },
-]
-
-// Teacher: High-Impact Faculty Intelligence on Top
-export const teacherPrimaryNav: NavItem[] = [
-  {
-    title: "Faculty Dashboard",
-    url: "/teacher/attendance",
-    icon: LayoutDashboard,
-    isActive: true,
-  },
-  {
-    title: "Attendance & At-Risk",
-    url: "/teacher/attendance",
-    icon: CheckSquare,
-    badge: "Risk AI",
-  },
-  {
-    title: "Marks & Evaluation",
-    url: "/teacher/upload-marks",
-    icon: Award,
-    badge: "Grading",
-  },
-  {
-    title: "Classes & Students",
-    url: "/teacher/my-classes",
-    icon: BookOpen,
-    items: [
-      {
-        title: "My Classes",
-        url: "/teacher/my-classes",
-      },
-      {
-        title: "Student Roster Details",
-        url: "/teacher/students-details",
-      },
-      {
-        title: "Course Assignments",
-        url: "/teacher/assignments",
-      },
-    ],
-  },
-  {
-    title: "Schedule & Timetable",
-    url: "/teacher/timetable",
-    icon: CalendarDays,
-    items: [
-      {
-        title: "Teaching Timetable",
-        url: "/teacher/timetable",
-      },
-      {
-        title: "Campus Events",
-        url: "/schedule/events",
-      },
-    ],
-  },
-  {
-    title: "Payroll & Compensation",
-    url: "/teacher/billing",
-    icon: DollarSign,
-  },
-  {
-    title: "Digital Faculty ID",
-    url: "/teacher/id",
-    icon: QrCode,
-    badge: "QR Pass",
-  },
-  {
-    title: "Notices & Community",
-    url: "/teacher/announcements",
-    icon: Newspaper,
-    items: [
-      {
-        title: "Faculty Announcements",
-        url: "/teacher/announcements",
-      },
-      {
-        title: "Campus Community",
-        url: "/community",
-      },
-    ],
-  },
-]
-
-export const teacherSecondaryNav: SecondaryNavItem[] = [
-  {
-    name: "Course Notes & Docs",
-    url: "/notes",
-    icon: FileText,
-  },
-  {
-    name: "AI Teaching Assistant",
-    url: "/ask-ai",
-    icon: Bot,
-  },
-]
-
-// Admin: Institutional Control & Business Intelligence on Top
+// ==============================================================================
+// 1. ADMIN NAVIGATION: Prioritizes PS-6 Core ERP & Audit Functions on Top
+// ==============================================================================
 export const adminPrimaryNav: NavItem[] = [
   {
-    title: "Admin Overview",
-    url: "/admin/overview",
-    icon: LayoutDashboard,
+    title: 'Spreadsheet Audit Ledger',
+    url: '/admin/overview',
+    icon: FileSpreadsheet,
+    badge: 'PS-6 Core',
     isActive: true,
   },
   {
-    title: "Financial Intelligence",
-    url: "/admin/billing",
+    title: 'Manage Students (Master)',
+    url: '/admin/manage-students',
+    icon: Users,
+    badge: 'Registry',
+  },
+  {
+    title: 'Manage Faculty Roster',
+    url: '/admin/manage-teachers',
+    icon: Users,
+  },
+  {
+    title: 'Institutional Fees & Billing',
+    url: '/admin/billing',
     icon: DollarSign,
-    badge: "₹45.2L",
+    badge: 'Accounts',
     items: [
       {
-        title: "Institutional Revenue & Payroll",
-        url: "/admin/billing",
-        badge: "Analytics",
+        title: 'Revenue & Billing Overview',
+        url: '/admin/billing',
       },
       {
-        title: "Student Fee Management",
-        url: "/admin/student-billing",
+        title: 'Student Fee Management',
+        url: '/admin/student-billing',
       },
     ],
   },
   {
-    title: "Campus Directory",
-    url: "/admin/branch-students-overview",
-    icon: Building2,
-    badge: "1,248 Students",
-    items: [
-      {
-        title: "Branch Students Directory",
-        url: "/admin/branch-students-overview",
-      },
-      {
-        title: "Branch Faculty Directory",
-        url: "/admin/branch-teachers-overview",
-      },
-      {
-        title: "Manage All Students",
-        url: "/admin/manage-students",
-      },
-      {
-        title: "Manage All Faculty",
-        url: "/admin/manage-teachers",
-      },
-    ],
-  },
-  {
-    title: "Academic Operations",
-    url: "/admin/subject-allocation",
+    title: 'Academic Operations',
+    url: '/admin/subject-allocation',
     icon: BookOpen,
     items: [
       {
-        title: "Faculty Subject Allocation",
-        url: "/admin/subject-allocation",
+        title: 'Faculty Subject Allocation',
+        url: '/admin/subject-allocation',
       },
       {
-        title: "Curriculum Planning",
-        url: "/admin/course-planning",
+        title: 'Curriculum Planning',
+        url: '/admin/course-planning',
       },
       {
-        title: "Subject Catalog",
-        url: "/admin/subjects",
+        title: 'Subject Catalog',
+        url: '/admin/subjects',
       },
       {
-        title: "Academic Structure",
-        url: "/admin/academic-structure",
+        title: 'Academic Structure',
+        url: '/admin/academic-structure',
       },
     ],
   },
   {
-    title: "Digital Admin ID",
-    url: "/admin/id",
-    icon: QrCode,
-    badge: "QR Pass",
+    title: 'Branch Directories',
+    url: '/admin/branch-students-overview',
+    icon: Building2,
+    items: [
+      {
+        title: 'Branch Students Directory',
+        url: '/admin/branch-students-overview',
+      },
+      {
+        title: 'Branch Faculty Directory',
+        url: '/admin/branch-teachers-overview',
+      },
+    ],
   },
   {
-    title: "Campus Broadcasts",
-    url: "/admin/announcements",
+    title: 'Digital Admin ID Pass',
+    url: '/admin/id',
+    icon: QrCode,
+    badge: 'QR ID',
+  },
+  {
+    title: 'Campus Broadcasts',
+    url: '/admin/announcements',
     icon: Newspaper,
   },
 ]
 
 export const adminSecondaryNav: SecondaryNavItem[] = [
   {
-    name: "Admin AI Assistant",
-    url: "/ask-ai",
+    name: 'AI ERP Copilot',
+    url: '/ask-ai',
     icon: Bot,
   },
 ]
 
-// Examination Controller (CoE) Primary Navigation
-export const coePrimaryNav: NavItem[] = [
+// ==============================================================================
+// 2. FACULTY NAVIGATION: Prioritizes Roll Call & Grade Upload on Top
+// ==============================================================================
+export const teacherPrimaryNav: NavItem[] = [
   {
-    title: "CoE Dashboard",
-    url: "/examination-controller",
+    title: 'Take Class Attendance',
+    url: '/teacher/attendance',
+    icon: CheckSquare,
+    badge: '75% Gate',
+    isActive: true,
+  },
+  {
+    title: 'Upload & Moderate Marks',
+    url: '/teacher/upload-marks',
+    icon: Award,
+    badge: 'Grading',
+  },
+  {
+    title: 'Classes & Student Roster',
+    url: '/teacher/my-classes',
+    icon: BookOpen,
+    items: [
+      {
+        title: 'My Teaching Classes',
+        url: '/teacher/my-classes',
+      },
+      {
+        title: 'Enrolled Student Details',
+        url: '/teacher/students-details',
+      },
+      {
+        title: 'Course Assignments',
+        url: '/teacher/assignments',
+      },
+    ],
+  },
+  {
+    title: 'Teaching Schedule',
+    url: '/teacher/timetable',
+    icon: CalendarDays,
+  },
+  {
+    title: 'Faculty Payroll & Dues',
+    url: '/teacher/billing',
+    icon: DollarSign,
+  },
+  {
+    title: 'Digital Faculty ID',
+    url: '/teacher/id',
+    icon: QrCode,
+    badge: 'QR Pass',
+  },
+  {
+    title: 'Faculty Announcements',
+    url: '/teacher/announcements',
+    icon: Newspaper,
+  },
+]
+
+export const teacherSecondaryNav: SecondaryNavItem[] = [
+  {
+    name: 'AI Teaching Assistant',
+    url: '/ask-ai',
+    icon: Bot,
+  },
+  {
+    name: 'Course Notes & Docs',
+    url: '/notes',
+    icon: FileText,
+  },
+]
+
+// ==============================================================================
+// 3. STUDENT NAVIGATION: Prioritizes Attendance, Grades, Fees & Hall Ticket
+// ==============================================================================
+export const studentPrimaryNav: NavItem[] = [
+  {
+    title: 'Student Overview',
+    url: '/',
     icon: LayoutDashboard,
     isActive: true,
   },
   {
-    title: "Exam Cycles & Timetable",
-    url: "/examination-controller/cycles",
-    icon: CalendarDays,
-    badge: "Master",
-    items: [
-      {
-        title: "Active Exam Cycles",
-        url: "/examination-controller/cycles",
-      },
-      {
-        title: "Conflict Detection Engine",
-        url: "/examination-controller/cycles",
-      },
-    ],
+    title: 'Attendance & Cutoff Gate',
+    url: '/attendance/student',
+    icon: CheckSquare,
+    badge: 'Min 75%',
   },
   {
-    title: "Seating Allocation Engine",
-    url: "/examination-controller/seating",
-    icon: Building2,
-    badge: "Anti-Cheating",
-    items: [
-      {
-        title: "Interleaved Hall Layout",
-        url: "/examination-controller/seating",
-      },
-      {
-        title: "Door Charts & Nominal Rolls",
-        url: "/examination-controller/seating",
-      },
-    ],
-  },
-  {
-    title: "Invigilation Roster",
-    url: "/examination-controller/invigilation",
-    icon: Users,
-    items: [
-      {
-        title: "Faculty Duty Allocations",
-        url: "/examination-controller/invigilation",
-      },
-      {
-        title: "Duty Swap Workflow",
-        url: "/examination-controller/invigilation",
-      },
-    ],
-  },
-  {
-    title: "Hall Ticket Gatekeeper",
-    url: "/examination-controller/hall-tickets",
-    icon: QrCode,
-    badge: "Eligibility",
-    items: [
-      {
-        title: "75% Attendance & Fee Filter",
-        url: "/examination-controller/hall-tickets",
-      },
-      {
-        title: "Debar & Bulk Release Pass",
-        url: "/examination-controller/hall-tickets",
-      },
-    ],
-  },
-  {
-    title: "Marks & Moderation",
-    url: "/examination-controller/moderation",
+    title: 'Academic Transcript & Marks',
+    url: '/view-marks',
     icon: BarChart3,
-    badge: "Grace Tool",
+    badge: 'Grades',
+  },
+  {
+    title: 'Fees & Payment Ledger',
+    url: '/billing-payments',
+    icon: DollarSign,
+    badge: 'Clearance',
+  },
+  {
+    title: 'Exam Timetable & Admit Card',
+    url: '/schedule/exams',
+    icon: Award,
+    badge: 'Hall Ticket',
+  },
+  {
+    title: 'Courses & Assignments',
+    url: '/courses/my-courses',
+    icon: BookOpen,
     items: [
       {
-        title: "Faculty Submission Tracker",
-        url: "/examination-controller/moderation",
+        title: 'My Enrolled Courses',
+        url: '/courses/my-courses',
       },
       {
-        title: "Grace Marks Moderation",
-        url: "/examination-controller/moderation",
+        title: 'Course Assignments',
+        url: '/courses/assignments',
+      },
+      {
+        title: 'Course Catalog',
+        url: '/courses/catalog',
       },
     ],
   },
   {
-    title: "1-Click Result Publishing",
-    url: "/examination-controller/publish",
-    icon: Award,
-    badge: "Sovereign",
+    title: 'Class Timetable & Schedule',
+    url: '/timetable',
+    icon: CalendarDays,
+    items: [
+      {
+        title: 'Smart Timetable',
+        url: '/timetable',
+      },
+      {
+        title: 'Daily Class Schedule',
+        url: '/schedule/classes',
+      },
+      {
+        title: 'Campus Events',
+        url: '/schedule/events',
+      },
+    ],
   },
   {
-    title: "Malpractice (UFM) Desk",
-    url: "/examination-controller/malpractice",
+    title: 'Digital Student ID Pass',
+    url: '/student-id',
+    icon: QrCode,
+    badge: 'QR ID',
+  },
+  {
+    title: 'Official Announcements',
+    url: '/announcements',
+    icon: Users,
+  },
+]
+
+export const studentSecondaryNav: SecondaryNavItem[] = [
+  {
+    name: 'Ask AI ERP Copilot',
+    url: '/ask-ai',
+    icon: Bot,
+  },
+  {
+    name: 'Academic Calculators',
+    url: '/calculators',
+    icon: Calculator,
+  },
+  {
+    name: 'Study Tasks & Notes',
+    url: '/tasks',
+    icon: CheckSquare,
+  },
+]
+
+// ==============================================================================
+// 4. EXAMINATION CONTROLLER (COE) NAVIGATION
+// ==============================================================================
+export const coePrimaryNav: NavItem[] = [
+  {
+    title: 'CoE Dashboard Overview',
+    url: '/examination-controller',
+    icon: LayoutDashboard,
+    isActive: true,
+  },
+  {
+    title: 'Hall Ticket & Eligibility Gate',
+    url: '/examination-controller/hall-tickets',
+    icon: QrCode,
+    badge: '75% Gate',
+  },
+  {
+    title: 'Marks & Grace Moderation',
+    url: '/examination-controller/moderation',
+    icon: BarChart3,
+    badge: 'Grace Tool',
+  },
+  {
+    title: '1-Click Result Publishing',
+    url: '/examination-controller/publish',
+    icon: Award,
+    badge: 'Sovereign',
+  },
+  {
+    title: 'Seating Allocation Engine',
+    url: '/examination-controller/seating',
+    icon: Building2,
+    badge: 'Anti-Cheat',
+  },
+  {
+    title: 'Exam Cycles & Schedule',
+    url: '/examination-controller/cycles',
+    icon: CalendarDays,
+  },
+  {
+    title: 'Faculty Invigilation Roster',
+    url: '/examination-controller/invigilation',
+    icon: Users,
+  },
+  {
+    title: 'Malpractice (UFM) Desk',
+    url: '/examination-controller/malpractice',
     icon: ShieldAlert,
-    badge: "Disciplinary",
   },
 ]
 
 export const coeSecondaryNav: SecondaryNavItem[] = [
   {
-    name: "CoE Regulation Guide",
-    url: "/ask-ai",
+    name: 'CoE AI Regulations Assistant',
+    url: '/ask-ai',
     icon: Bot,
   },
 ]
 
 export function getRoleNavigation(role: string) {
   switch (role) {
-    case "examination_controller":
+    case 'examination_controller':
       return {
         primary: coePrimaryNav,
         secondary: coeSecondaryNav,
-        portalTitle: "Examination Controller (CoE)",
-        groupLabel: "Office of the Controller of Examinations",
+        portalTitle: 'Examination Controller (CoE)',
+        groupLabel: 'Controller of Examinations Suite',
       }
-    case "admin":
+    case 'admin':
       return {
         primary: adminPrimaryNav,
         secondary: adminSecondaryNav,
-        portalTitle: "Administrative Suite",
-        groupLabel: "Executive Operations",
+        portalTitle: 'Executive Admin Suite',
+        groupLabel: 'PS-6 ERP Core Operations',
       }
-    case "teacher":
+    case 'teacher':
       return {
         primary: teacherPrimaryNav,
         secondary: teacherSecondaryNav,
-        portalTitle: "Faculty Portal",
-        groupLabel: "Faculty Operations",
+        portalTitle: 'Faculty Portal',
+        groupLabel: 'Faculty & Attendance Hub',
       }
-    case "student":
+    case 'student':
     default:
       return {
         primary: studentPrimaryNav,
         secondary: studentSecondaryNav,
-        portalTitle: "Student Portal",
-        groupLabel: "Academic Hub",
+        portalTitle: 'Student ERP Portal',
+        groupLabel: 'Academic & Clearance Hub',
       }
   }
 }

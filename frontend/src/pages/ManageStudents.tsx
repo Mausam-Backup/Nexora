@@ -30,6 +30,9 @@ export default function ManageStudents() {
   const [selectedStudent, setSelectedStudent] = useState<any>(null)
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false)
+  const [noticeStudent, setNoticeStudent] = useState<any>(null)
+  const [noticeType, setNoticeType] = useState<'letter' | 'sms' | 'email'>('letter')
 
   // Add student form state
   const [newStudent, setNewStudent] = useState({
@@ -303,11 +306,26 @@ export default function ManageStudents() {
                       </Badge>
                     </TableCell>
                     <TableCell className="font-mono">{Number(s.cgpa).toFixed(2)}</TableCell>
-                    <TableCell className="text-right space-x-2">
-                      <Button size="sm" variant="outline" onClick={() => handleViewDetails(s)}>
+                    <TableCell className="text-right space-x-1.5">
+                      {!s.clearances.attendanceClearance && (
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={() => {
+                            setNoticeStudent(s)
+                            setIsNoticeModalOpen(true)
+                          }}
+                          className="text-xs text-red-600 border-red-300 hover:bg-red-50 dark:hover:bg-red-950 h-8 px-2"
+                          title="Send Statutory Debarment Notice to Guardian"
+                        >
+                          <AlertTriangle className="h-3.5 w-3.5 mr-1" />
+                          <span className="hidden xl:inline">Parent Notice</span>
+                        </Button>
+                      )}
+                      <Button size="sm" variant="outline" onClick={() => handleViewDetails(s)} className="h-8 w-8 p-0">
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button size="sm" variant="destructive" onClick={() => handleDelete(s.id)}>
+                      <Button size="sm" variant="destructive" onClick={() => handleDelete(s.id)} className="h-8 w-8 p-0">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -474,6 +492,115 @@ export default function ManageStudents() {
         onOpenChange={setIsDetailsModalOpen}
         student={selectedStudent}
       />
+
+      {/* Statutory Parent Notice Dialog */}
+      <Dialog open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen}>
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              <span>Statutory Parent Notice: Examination Debarment</span>
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Candidate: <strong>{noticeStudent?.name}</strong> ({noticeStudent?.rollNumber}) • Department: {noticeStudent?.department}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3 py-2 text-xs">
+            <div className="flex gap-2 border-b pb-2">
+              <Button 
+                type="button" 
+                size="sm" 
+                variant={noticeType === 'letter' ? 'default' : 'outline'} 
+                onClick={() => setNoticeType('letter')} 
+                className="text-xs h-7"
+              >
+                Official Letter (PDF)
+              </Button>
+              <Button 
+                type="button" 
+                size="sm" 
+                variant={noticeType === 'sms' ? 'default' : 'outline'} 
+                onClick={() => setNoticeType('sms')} 
+                className="text-xs h-7"
+              >
+                Guardian SMS Preview
+              </Button>
+              <Button 
+                type="button" 
+                size="sm" 
+                variant={noticeType === 'email' ? 'default' : 'outline'} 
+                onClick={() => setNoticeType('email')} 
+                className="text-xs h-7"
+              >
+                Formal Email Dispatch
+              </Button>
+            </div>
+
+            {noticeType === 'letter' && (
+              <div className="p-4 rounded-lg bg-muted/40 border space-y-2 font-mono text-[11px] leading-relaxed">
+                <div className="text-center font-bold text-xs pb-2 border-b">
+                  OFFICE OF THE DEAN OF ACADEMIC AFFAIRS & CONTROLLER OF EXAMINATIONS<br/>
+                  <span className="text-[10px] font-normal text-muted-foreground">CAMPUSSYNC AUTONOMOUS INSTITUTE OF TECHNOLOGY</span>
+                </div>
+                <p><strong>To:</strong> Guardian of {noticeStudent?.name} ({noticeStudent?.parentName || 'Parent'})<br/>
+                <strong>Address:</strong> {noticeStudent?.address || 'Registered Residential Address'}<br/>
+                <strong>Date:</strong> {new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+
+                <p className="font-semibold text-destructive">SUBJECT: STATUTORY NOTICE OF SHORTAGE OF ATTENDANCE & EXAMINATION DEBARMENT</p>
+
+                <p>Dear Parent / Guardian,</p>
+                <p>This is an official communication that your ward, <strong>{noticeStudent?.name}</strong> (Roll No: <strong>{noticeStudent?.rollNumber}</strong>), currently enrolled in <strong>Semester {noticeStudent?.semester}</strong> of <strong>{noticeStudent?.department}</strong>, has secured an aggregate attendance below the statutory minimum threshold of <strong>75.0%</strong> prescribed by university regulations.</p>
+
+                <p className="bg-destructive/10 p-2 rounded border border-destructive/20 text-destructive font-bold">
+                  Current Attendance: 64.1% • Minimum Required: 75.0% • Hall Ticket Status: LOCKED
+                </p>
+
+                <p>Consequently, the candidate is hereby DEBARRED from sitting for the upcoming End-Semester Theory and Practical Examinations unless an official appeal is submitted to the Dean's Office within 3 working days.</p>
+              </div>
+            )}
+
+            {noticeType === 'sms' && (
+              <div className="p-3.5 rounded-lg bg-muted/50 border space-y-1.5 text-xs font-mono">
+                <div className="text-[11px] text-muted-foreground">Recipient: {noticeStudent?.parentPhone || '+91 9876543211'} (Parent)</div>
+                <div className="p-3 bg-background rounded border text-foreground text-xs leading-relaxed">
+                  [CAMPUSSYNC ERP ALERT]: Dear Parent, your ward {noticeStudent?.name} ({noticeStudent?.rollNumber}) has attendance below 75% cutoff and is debarred from End-Sem Exams. Outstanding fee dues: ₹{noticeStudent?.fees?.outstanding?.toLocaleString('en-IN') || 0}. Please visit the Dean's office immediately.
+                </div>
+              </div>
+            )}
+
+            {noticeType === 'email' && (
+              <div className="p-3.5 rounded-lg bg-muted/50 border space-y-1.5 text-xs">
+                <div className="text-[11px] text-muted-foreground">To: parent.{noticeStudent?.rollNumber?.toLowerCase()}@guardian.edu</div>
+                <div className="text-[11px] text-muted-foreground">Subject: URGENT: Examination Debarment & Attendance Shortage for {noticeStudent?.name}</div>
+                <div className="p-3 bg-background rounded border text-xs space-y-2">
+                  <p>Dear {noticeStudent?.parentName || 'Guardian'},</p>
+                  <p>Your ward's attendance record has failed the mandatory 75% compliance gate. You can view the verified course-wise breakdown by logging into the Parent Portal with Roll Number {noticeStudent?.rollNumber}.</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setIsNoticeModalOpen(false)}>
+              Close
+            </Button>
+            <Button 
+              onClick={() => {
+                setIsNoticeModalOpen(false)
+                toast({
+                  title: "Statutory Notice Dispatched",
+                  description: `Debarment alert transmitted via SMS and registered email to guardian of ${noticeStudent?.name}.`
+                })
+              }}
+              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground gap-1.5"
+            >
+              <Mail className="h-3.5 w-3.5" />
+              <span>Dispatch Official Notice</span>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

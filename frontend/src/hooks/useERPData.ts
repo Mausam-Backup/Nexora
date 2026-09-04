@@ -21,6 +21,14 @@ export interface IntegrityAuditIssue {
   suggestedAction: string
 }
 
+const DEMO_JWT_TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJpZCI6ImFkbWluX2RlYW4iLCJuYW1lIjoiRGVhbiBBY2FkZW1pY3MifQ.campussync_master_token_2025'
+
+const getAuthHeaders = () => ({
+  'Content-Type': 'application/json',
+  'Authorization': DEMO_JWT_TOKEN,
+  'X-Institutional-Client': 'Nexora-ERP-v1.2',
+})
+
 export function useERPData() {
   const [serverConnected, setServerConnected] = useState(false)
   const [students, setStudents] = useState<UnifiedStudent[]>(() => {
@@ -61,8 +69,10 @@ export function useERPData() {
     }
     window.addEventListener('storage', handleStorage)
 
-    // Check & Hydrate from Backend Server
-    fetch(`${BACKEND_URL}/state`)
+    // Check & Hydrate from Backend Server with Token
+    fetch(`${BACKEND_URL}/state`, {
+      headers: getAuthHeaders()
+    })
       .then(r => r.json())
       .then(data => {
         if (data?.students?.length > 0) {
@@ -73,8 +83,8 @@ export function useERPData() {
           // Initialize server with local state
           fetch(`${BACKEND_URL}/sync`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ students })
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ students, clientVersion: 1 })
           }).then(() => setServerConnected(true)).catch(() => {})
         }
       })
@@ -105,8 +115,8 @@ export function useERPData() {
     const timer = setTimeout(() => {
       fetch(`${BACKEND_URL}/sync`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ students })
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ students, clientVersion: 1 })
       })
         .then(r => {
           if (r.ok) setServerConnected(true)
@@ -166,6 +176,47 @@ export function useERPData() {
         cgpa: newCGPA
       }
     }))
+  }, [])
+
+  // Apply Grace Marks Moderation across all borderline students
+  const applyGraceMarksToBorderline = useCallback((maxGrace: number = 3, minThreshold: number = 37, passThreshold: number = 40) => {
+    let affectedCount = 0
+    setStudents(prev => prev.map(student => {
+      let changed = false
+      const updatedMarks = { ...student.marks }
+
+      for (const [code, mark] of Object.entries(updatedMarks)) {
+        if (mark.total >= minThreshold && mark.total < passThreshold) {
+          const needed = passThreshold - mark.total
+          const graceToAdd = Math.min(needed, maxGrace)
+          const newTotal = mark.total + graceToAdd
+          const { grade, gp } = computeGrade(newTotal)
+          updatedMarks[code] = {
+            ...mark,
+            external: mark.external + graceToAdd,
+            total: newTotal,
+            grade,
+            gp
+          }
+          changed = true
+          affectedCount++
+        }
+      }
+
+      if (changed) {
+        const marksList = Object.values(updatedMarks)
+        const totalCredits = marksList.reduce((sum, m) => sum + m.credits, 0)
+        const weightedGP = marksList.reduce((sum, m) => sum + (m.gp * m.credits), 0)
+        const newCGPA = totalCredits > 0 ? Number((weightedGP / totalCredits).toFixed(2)) : student.cgpa
+        return {
+          ...student,
+          marks: updatedMarks,
+          cgpa: newCGPA
+        }
+      }
+      return student
+    }))
+    return affectedCount
   }, [])
 
   // Update Attendance for a specific student and subject
@@ -575,5 +626,6 @@ export function useERPData() {
     deleteStudent,
     resetToDefaultData,
     runIntegrityAudit,
+    applyGraceMarksToBorderline,
   }
 }

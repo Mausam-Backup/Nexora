@@ -32,10 +32,44 @@ export default function HallTicketGatekeeper() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'eligible' | 'debarred'>('all');
   
-  // Debar modal state
-  const [isDebarModalOpen, setIsDebarModalOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<ExamHallTicket | null>(null);
   const [debarReason, setDebarReason] = useState('');
+
+  // Hardware Scanner Simulation State
+  const [scannedRollNumber, setScannedRollNumber] = useState('');
+  const [scanResult, setScanResult] = useState<{
+    status: 'granted' | 'denied' | 'idle';
+    student?: ExamHallTicket;
+    reason?: string;
+  }>({ status: 'idle' });
+
+  const handleSimulateScan = (roll: string) => {
+    setScannedRollNumber(roll);
+    const candidate = tickets.find(t => t.rollNumber.toLowerCase() === roll.toLowerCase() || t.id.toLowerCase() === roll.toLowerCase());
+    
+    if (!candidate) {
+      setScanResult({
+        status: 'denied',
+        reason: 'UNREGISTERED CANDIDATE: Roll Number not found in institutional exam cycle.'
+      });
+      return;
+    }
+
+    if (!candidate.isEligible) {
+      setScanResult({
+        status: 'denied',
+        student: candidate,
+        reason: candidate.debarReason || 'STATUTORY DEBARMENT: Attendance shortage (<75%) or unpaid fee hold.'
+      });
+    } else {
+      setScanResult({
+        status: 'granted',
+        student: candidate
+      });
+    }
+  };
+
+  const [isDebarModalOpen, setIsDebarModalOpen] = useState(false);
 
   const eligibleCount = tickets.filter((t) => t.isEligible).length;
   const debarredCount = tickets.filter((t) => !t.isEligible).length;
@@ -159,6 +193,77 @@ export default function HallTicketGatekeeper() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Interactive Physical Exam Hall Entry Scanner Console */}
+        <Card className="border-primary/30 bg-card/70 backdrop-blur-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-bold flex items-center gap-2">
+              <QrCode className="h-5 w-5 text-primary" />
+              <span>Physical Exam Hall Entry Gate Scanner (Real-Time QR Verification)</span>
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Simulates door security scanner at examination hall. Verifies dynamic eligibility tokens and halts debarred entries on the spot.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <div className="relative flex-1">
+                <Input
+                  placeholder="Scan or enter Candidate Roll Number (e.g. 20CS001, 20CS003, 20CS004)..."
+                  value={scannedRollNumber}
+                  onChange={(e) => handleSimulateScan(e.target.value)}
+                  className="text-xs h-9 font-mono"
+                />
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Button 
+                  type="button" 
+                  size="sm" 
+                  variant="outline" 
+                  onClick={() => handleSimulateScan('20CS001')} 
+                  className="text-xs h-9 border-emerald-300 text-emerald-700 dark:text-emerald-400"
+                >
+                  Test: 20CS001 (Eligible)
+                </Button>
+                <Button 
+                  type="button" 
+                  size="sm" 
+                  variant="outline" 
+                  onClick={() => handleSimulateScan('20CS003')} 
+                  className="text-xs h-9 border-red-300 text-red-700 dark:text-red-400"
+                >
+                  Test: 20CS003 (Debarred)
+                </Button>
+              </div>
+            </div>
+
+            {scanResult.status !== 'idle' && (
+              <div className={`p-3.5 rounded-lg border flex items-start gap-3 transition-all ${
+                scanResult.status === 'granted' 
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-300' 
+                  : 'bg-red-500/10 border-red-500/30 text-red-800 dark:text-red-300'
+              }`}>
+                {scanResult.status === 'granted' ? (
+                  <CheckCircle2 className="h-6 w-6 text-emerald-600 shrink-0 mt-0.5" />
+                ) : (
+                  <ShieldAlert className="h-6 w-6 text-red-600 shrink-0 mt-0.5" />
+                )}
+                <div className="space-y-0.5 text-xs">
+                  <div className="font-bold text-sm">
+                    {scanResult.status === 'granted' 
+                      ? `✅ ENTRY PERMITTED: ${scanResult.student?.studentName} (${scanResult.student?.rollNumber})` 
+                      : `❌ ENTRY DENIED: EXAMINATION ACCESS BLOCKED`}
+                  </div>
+                  {scanResult.status === 'granted' ? (
+                    <p>Verified QR Token: <code className="bg-emerald-500/20 px-1 py-0.5 rounded font-mono">{scanResult.student?.qrToken}</code> • Assigned Desk: <strong>Hall A - Bench 12</strong></p>
+                  ) : (
+                    <p className="font-medium text-destructive">{scanResult.reason}</p>
+                  )}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Candidate Clearance Table */}
         <Card>

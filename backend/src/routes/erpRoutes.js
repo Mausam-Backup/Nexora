@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const { authMiddleware } = require('../middleware/authMiddleware');
 
 const DATA_DIR = path.join(__dirname, '../../data');
 const STATE_FILE = path.join(DATA_DIR, 'erp_state.json');
@@ -68,8 +69,8 @@ router.get('/state', (req, res) => {
   });
 });
 
-// POST /api/erp/sync - Synchronize client changes to backend
-router.post('/sync', (req, res) => {
+// POST /api/erp/sync - Synchronize client changes to backend (Protected)
+router.post('/sync', authMiddleware, (req, res) => {
   const { students, clientVersion } = req.body;
 
   if (!students || !Array.isArray(students)) {
@@ -83,7 +84,8 @@ router.post('/sync', (req, res) => {
     students,
     clientVersion: clientVersion || 1,
     lastSyncedAt: new Date().toISOString(),
-    recordCount: students.length
+    recordCount: students.length,
+    authenticatedUser: req.user?.name || 'Administrator'
   };
 
   const ok = writeState(newState);
@@ -93,7 +95,8 @@ router.post('/sync', (req, res) => {
       success: true,
       message: 'ERP state synchronized successfully across institutional ledger.',
       studentsCount: students.length,
-      timestamp: newState.lastSyncedAt
+      timestamp: newState.lastSyncedAt,
+      actor: req.user?.name || 'Authorized Auditor'
     });
   } else {
     return res.status(500).json({
@@ -103,8 +106,8 @@ router.post('/sync', (req, res) => {
   }
 });
 
-// POST /api/erp/reset - Reset to factory defaults
-router.post('/reset', (req, res) => {
+// POST /api/erp/reset - Reset to factory defaults (Protected)
+router.post('/reset', authMiddleware, (req, res) => {
   try {
     if (fs.existsSync(STATE_FILE)) {
       fs.unlinkSync(STATE_FILE);

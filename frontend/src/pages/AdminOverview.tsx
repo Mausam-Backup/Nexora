@@ -33,6 +33,17 @@ import { useERPData } from '@/hooks/useERPData'
 import { useToast } from '@/hooks/use-toast'
 import { Link } from 'react-router-dom'
 
+import { exportToCSV, generatePrintableReport } from '@/utils/exportUtils'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Download, FileUp, Database, ArrowRight, ShieldCheck as ShieldIcon } from 'lucide-react'
+
 const AdminOverview = () => {
   const { 
     branches, 
@@ -46,6 +57,7 @@ const AdminOverview = () => {
   const { toast } = useToast()
   const [isAuditing, setIsAuditing] = useState(false)
   const [isSimulatingLegacy, setIsSimulatingLegacy] = useState(false)
+  const [isExcelModalOpen, setIsExcelModalOpen] = useState(false)
   const [lastAudited, setLastAudited] = useState<string>('Just now')
 
   const handleReaudit = () => {
@@ -58,6 +70,31 @@ const AdminOverview = () => {
         description: `Verified ${students.length} student records across Admissions, Attendance, Fees, and Exams. All entities unified with 0 mismatches.`,
       })
     }, 600)
+  }
+
+  const handleExportAuditReport = () => {
+    const issues = runIntegrityAudit()
+    const headers = ["Issue ID", "Roll Number", "Student Name", "Category", "Severity", "Detected Discrepancy", "Automated Resolution Action"]
+    const rows = issues.map(i => [
+      i.id,
+      i.studentId,
+      i.studentName,
+      i.type.toUpperCase(),
+      i.severity.toUpperCase(),
+      i.description,
+      i.suggestedAction
+    ])
+
+    // If zero issues, export clean ledger verification
+    if (rows.length === 0) {
+      rows.push(["SYS-CLEAN-01", "ALL", "ALL ENROLLED STUDENTS", "SYSTEM VERIFIED", "CLEAR", "All attendance quotas >=75%, fee invoices cleared, and admit card tokens cryptographically signed.", "No administrative action required."])
+    }
+
+    exportToCSV("Institutional_Anti_Mismatch_Audit_Ledger", headers, rows)
+    toast({
+      title: "Audit Ledger Exported",
+      description: "Downloaded complete Institutional Anti-Mismatch Compliance report as CSV."
+    })
   }
 
   const handleResetDemoData = () => {
@@ -264,9 +301,17 @@ const AdminOverview = () => {
           </div>
           
           <div className="flex flex-wrap items-center gap-2.5">
+            <Button onClick={() => setIsExcelModalOpen(true)} variant="outline" size="sm" className="gap-1.5 text-xs border-primary/40 text-primary hover:bg-primary/10">
+              <FileUp className="h-3.5 w-3.5" />
+              <span>Simulate Excel Import</span>
+            </Button>
+            <Button onClick={handleExportAuditReport} variant="outline" size="sm" className="gap-1.5 text-xs">
+              <Download className="h-3.5 w-3.5 text-muted-foreground" />
+              <span>Export Audit CSV</span>
+            </Button>
             <Button onClick={handleResetDemoData} variant="outline" size="sm" className="gap-1.5 text-xs">
               <RotateCcw className="h-3.5 w-3.5 text-muted-foreground" />
-              Reset Demo DB
+              <span>Reset Demo DB</span>
             </Button>
             <Button onClick={handleReaudit} disabled={isAuditing} variant="default" size="sm" className="gap-2 bg-primary text-primary-foreground">
               <RefreshCw className={`h-3.5 w-3.5 ${isAuditing ? 'animate-spin' : ''}`} />
@@ -652,6 +697,69 @@ const AdminOverview = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Interactive Excel Import & Mismatch Simulation Dialog */}
+        <Dialog open={isExcelModalOpen} onOpenChange={setIsExcelModalOpen}>
+          <DialogContent className="sm:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <FileSpreadsheet className="h-5 w-5 text-emerald-600" />
+                <span>Simulate Legacy Excel Spreadsheet Import (.xlsx / .csv)</span>
+              </DialogTitle>
+              <DialogDescription className="text-xs">
+                Demonstrates how Nexora ingests legacy Excel spreadsheets, catches manual reconciliation errors, and resolves data mismatches across attendance, dues, and exam eligibility in 0ms.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4 py-2">
+              <div className="p-3.5 rounded-lg border-2 border-dashed bg-muted/30 text-center space-y-2">
+                <FileSpreadsheet className="h-8 w-8 text-muted-foreground mx-auto" />
+                <div>
+                  <p className="text-xs font-semibold">Simulated File: <code className="bg-muted px-1.5 py-0.5 rounded text-primary">AY2024-25_EndSem_Attendance_Fees_Registry.xlsx</code></p>
+                  <p className="text-[11px] text-muted-foreground">Source: Legacy Department Excel Ledger (Containing 4 Discrepancies)</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-xs font-bold text-foreground">Detected Legacy Spreadsheet Inconsistencies:</p>
+                <div className="space-y-1.5 text-xs">
+                  <div className="p-2.5 rounded-md bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-400 flex items-start gap-2">
+                    <span className="font-bold shrink-0">1.</span>
+                    <span><strong>Attendance Mismatch:</strong> Candidate Rahul Gupta (20CS003) has 64.1% attendance on paper records, but offline pass list erroneously issued Hall Ticket.</span>
+                  </div>
+                  <div className="p-2.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 flex items-start gap-2">
+                    <span className="font-bold shrink-0">2.</span>
+                    <span><strong>Unrecorded Fee Defaulter:</strong> Candidate Priya Singh (20CS004) has ₹37,000 overdue tuition omitted from offline accounts spreadsheet.</span>
+                  </div>
+                  <div className="p-2.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 flex items-start gap-2">
+                    <span className="font-bold shrink-0">3.</span>
+                    <span><strong>Grade Weighting Drift:</strong> Internal 30 / External 70 marksheet weighted sum calculated inconsistently across Excel versions.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={() => setIsExcelModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={() => {
+                  setIsExcelModalOpen(false)
+                  setIsSimulatingLegacy(false)
+                  toast({
+                    title: "✨ Nexora Ingestion & Auto-Reconciliation Complete",
+                    description: "Imported 8 records from spreadsheet. Applied 75% attendance gate, locked delinquent hall tickets, and re-balanced fee ledgers."
+                  })
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
+              >
+                <CheckCheck className="h-4 w-4" />
+                <span>Auto-Reconcile & Ingest to Nexora</span>
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )

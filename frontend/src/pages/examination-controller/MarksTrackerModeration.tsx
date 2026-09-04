@@ -11,6 +11,7 @@ import { SEO } from '@/components/SEO';
 import { useToast } from '@/hooks/use-toast';
 import { coeService } from '@/services/coeService';
 import type { SubjectMarksSubmissionStatus, ModerationRule } from '@/types/examination-controller';
+import { useERPData } from '@/hooks/useERPData';
 import {
   BarChart3,
   Send,
@@ -28,6 +29,7 @@ import { format } from 'date-fns';
 
 export default function MarksTrackerModeration() {
   const { toast } = useToast();
+  const { applyGraceMarksToBorderline } = useERPData();
   const [submissions, setSubmissions] = useState<SubjectMarksSubmissionStatus[]>(coeService.getMarksSubmissions());
   const [moderationLogs, setModerationLogs] = useState<ModerationRule[]>(coeService.getModerationLogs());
   const [isModerationModalOpen, setIsModerationModalOpen] = useState(false);
@@ -65,13 +67,16 @@ export default function MarksTrackerModeration() {
       approvedBy: 'Dr. K. R. Ramanathan (CoE)',
     });
 
+    // Also update live Unified ERP student ledger
+    const studentsElevated = applyGraceMarksToBorderline(graceNum, minNum, passNum);
+
     setModerationLogs(coeService.getModerationLogs());
     setSubmissions(coeService.getMarksSubmissions());
     setIsModerationModalOpen(false);
 
     toast({
       title: 'Moderation Policy Applied',
-      description: `Successfully awarded grace marks up to +${graceNum} to ${res.count} borderline passing candidates. Audit entry registered.`,
+      description: `Successfully awarded grace marks up to +${graceNum} to borderline candidates (${res.count} CoE records & ${studentsElevated} ERP students updated). Audit entry registered.`,
     });
   };
 

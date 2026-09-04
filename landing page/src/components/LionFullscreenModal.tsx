@@ -372,22 +372,44 @@ export default function LionFullscreenModal({
           transform: scale(1.1);
           background: rgba(255, 255, 255, 0.25) !important;
         }
-        .contact-channel-row {
+        .contact-channel-row-light {
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding: 12px 16px;
           border-radius: 12px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #ffffff;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          color: #0f172a;
           text-decoration: none;
           transition: all 0.2s ease;
         }
-        .contact-channel-row:hover {
-          background: rgba(255, 255, 255, 0.12);
-          border-color: rgba(255, 255, 255, 0.25);
-          transform: translateX(4px);
+        .contact-channel-row-light:hover {
+          background: #f1f5f9;
+          border-color: #cbd5e1;
+          transform: translateX(3px);
+        }
+        .panel-cta-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          width: 100%;
+          padding: 15px 24px;
+          border-radius: 9999px;
+          background: #08090d;
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 600;
+          text-decoration: none;
+          box-sizing: border-box;
+          transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+        .panel-cta-btn:hover {
+          background: #1916b0;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(25, 22, 176, 0.25);
         }
       `}</style>
 
@@ -566,11 +588,9 @@ export default function LionFullscreenModal({
           right: 0,
           width: "min(460px, 92vw)",
           height: "100vh",
-          backgroundColor: "rgba(10, 11, 16, 0.92)",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
-          borderLeft: "1px solid rgba(255, 255, 255, 0.15)",
-          color: "#ffffff",
+          backgroundColor: "#ffffff",
+          borderLeft: "1px solid #e5e7eb",
+          color: "#08090d",
           padding: "clamp(30px, 6vh, 50px) clamp(24px, 4vw, 40px)",
           boxSizing: "border-box",
           display: "flex",
@@ -580,24 +600,24 @@ export default function LionFullscreenModal({
           transition: "transform 0.15s ease-out",
           pointerEvents: op4 > 0.1 ? "auto" : "none",
           zIndex: 50,
-          boxShadow: "-10px 0 40px rgba(0, 0, 0, 0.6)",
+          boxShadow: "-16px 0 50px rgba(0, 0, 0, 0.25)",
         }}
       >
-        {/* Panel Header */}
+        {/* Panel Header & Body */}
         <div>
           <div
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: "8px",
-              padding: "4px 12px",
+              padding: "5px 13px",
               borderRadius: "999px",
-              background: "rgba(16, 185, 129, 0.15)",
-              border: "1px solid rgba(16, 185, 129, 0.3)",
-              color: "#34d399",
+              background: "#ecfdf5",
+              border: "1px solid #a7f3d0",
+              color: "#065f46",
               fontSize: "12px",
               fontWeight: 600,
-              marginBottom: "16px",
+              marginBottom: "18px",
             }}
           >
             <span
@@ -606,7 +626,7 @@ export default function LionFullscreenModal({
                 height: "6px",
                 borderRadius: "50%",
                 background: "#10b981",
-                boxShadow: "0 0 8px #10b981",
+                boxShadow: "0 0 6px #10b981",
               }}
             />
             Available for Select Projects
@@ -619,6 +639,7 @@ export default function LionFullscreenModal({
               letterSpacing: "-1px",
               margin: "0 0 10px",
               lineHeight: 1.1,
+              color: "#08090d",
             }}
           >
             Nexora Studio
@@ -628,7 +649,7 @@ export default function LionFullscreenModal({
             style={{
               fontSize: "14px",
               lineHeight: 1.6,
-              color: "rgba(255, 255, 255, 0.75)",
+              color: "#4b5563",
               margin: "0 0 24px",
             }}
           >
@@ -639,52 +660,51 @@ export default function LionFullscreenModal({
           <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "24px" }}>
             <a
               href={`mailto:${CONTACT_EMAIL}?subject=Project%20Inquiry%20-%20Nexora`}
-              className="contact-channel-row"
+              className="contact-channel-row-light"
             >
               <div>
-                <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.5)", textTransform: "uppercase", letterSpacing: "1px" }}>Email</div>
-                <div style={{ fontSize: "14px", fontWeight: 600, marginTop: "2px" }}>{CONTACT_EMAIL}</div>
+                <div style={{ fontSize: "10px", color: "#6b7280", textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>Email</div>
+                <div style={{ fontSize: "14px", fontWeight: 600, marginTop: "2px", color: "#0f172a" }}>{CONTACT_EMAIL}</div>
               </div>
-              <span style={{ fontSize: "16px", opacity: 0.7 }}>↗</span>
+              <span style={{ fontSize: "16px", color: "#2563eb", fontWeight: 700 }}>↗</span>
             </a>
 
             <div
               onClick={handleCopyEmail}
-              className="contact-channel-row"
+              className="contact-channel-row-light"
               style={{ cursor: "pointer" }}
             >
               <div>
-                <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.5)", textTransform: "uppercase", letterSpacing: "1px" }}>Quick Action</div>
-                <div style={{ fontSize: "14px", fontWeight: 600, marginTop: "2px" }}>
+                <div style={{ fontSize: "10px", color: "#6b7280", textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>Quick Action</div>
+                <div style={{ fontSize: "14px", fontWeight: 600, marginTop: "2px", color: copied ? "#059669" : "#0f172a" }}>
                   {copied ? "Copied to Clipboard!" : "Copy Email Address"}
                 </div>
               </div>
-              <span style={{ fontSize: "14px", opacity: 0.7 }}>{copied ? "✓" : "📋"}</span>
+              <span style={{ fontSize: "14px", opacity: 0.85 }}>{copied ? "✓" : "📋"}</span>
             </div>
 
-            <div className="contact-channel-row">
+            <div className="contact-channel-row-light">
               <div>
-                <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.5)", textTransform: "uppercase", letterSpacing: "1px" }}>Studio Location</div>
-                <div style={{ fontSize: "14px", fontWeight: 600, marginTop: "2px" }}>Global • Remote Worldwide</div>
+                <div style={{ fontSize: "10px", color: "#6b7280", textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>Studio Location</div>
+                <div style={{ fontSize: "14px", fontWeight: 600, marginTop: "2px", color: "#0f172a" }}>Global • Remote Worldwide</div>
               </div>
-              <span style={{ fontSize: "14px", opacity: 0.7 }}>🌐</span>
+              <span style={{ fontSize: "14px", opacity: 0.75 }}>🌐</span>
             </div>
           </div>
 
           {/* Direct CTA */}
           <a
             href={`mailto:${CONTACT_EMAIL}?subject=New%20Project%20Inquiry`}
-            className="modal-cta-primary"
-            style={{ width: "100%", justifyContent: "center", boxSizing: "border-box" }}
+            className="panel-cta-btn"
           >
             <span>Start a Conversation →</span>
           </a>
         </div>
 
         {/* Panel Footer */}
-        <div style={{ borderTop: "1px solid rgba(255, 255, 255, 0.1)", paddingTop: "18px" }}>
+        <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "18px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.5)" }}>
+            <span style={{ fontSize: "12px", color: "#6b7280" }}>
               &copy; 2025 Nexora
             </span>
             <div style={{ display: "flex", gap: "16px", fontSize: "12px" }}>
@@ -692,13 +712,13 @@ export default function LionFullscreenModal({
                 href="https://github.com/Mausam5055/Nexora"
                 target="_blank"
                 rel="noreferrer"
-                style={{ color: "rgba(255, 255, 255, 0.7)", textDecoration: "none" }}
+                style={{ color: "#374151", textDecoration: "none", fontWeight: 500 }}
               >
                 GitHub
               </a>
               <a
-                href="mailto:contact@tryresponse.com"
-                style={{ color: "rgba(255, 255, 255, 0.7)", textDecoration: "none" }}
+                href={`mailto:${CONTACT_EMAIL}`}
+                style={{ color: "#374151", textDecoration: "none", fontWeight: 500 }}
               >
                 Inquiries
               </a>
@@ -706,58 +726,7 @@ export default function LionFullscreenModal({
           </div>
         </div>
       </div>
-
-      {/* Minimalist Bottom Navigation / Progress Pill */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "24px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 100,
-          pointerEvents: "none",
-        }}
-      >
-        <div
-          style={{
-            pointerEvents: "auto",
-            display: "flex",
-            alignItems: "center",
-            gap: "14px",
-            padding: "8px 18px",
-            borderRadius: "9999px",
-            background: "rgba(0, 0, 0, 0.65)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            border: "1px solid rgba(255, 255, 255, 0.18)",
-            color: "rgba(255, 255, 255, 0.8)",
-            fontSize: "12px",
-            boxShadow: "0 8px 30px rgba(0, 0, 0, 0.5)",
-          }}
-        >
-          {/* Stage breadcrumb indicator */}
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ color: scrollProgress < 0.35 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress < 0.35 ? 700 : 400 }}>
-              01 Intro
-            </span>
-            <span style={{ opacity: 0.3 }}>•</span>
-            <span style={{ color: scrollProgress >= 0.35 && scrollProgress < 0.72 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress >= 0.35 && scrollProgress < 0.72 ? 700 : 400 }}>
-              02 Vision
-            </span>
-            <span style={{ opacity: 0.3 }}>•</span>
-            <span style={{ color: scrollProgress >= 0.72 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress >= 0.72 ? 700 : 400 }}>
-              03 Contact
-            </span>
-          </div>
-
-          <div style={{ width: "1px", height: "14px", background: "rgba(255, 255, 255, 0.2)" }} />
-
-          {/* Frame counter */}
-          <div style={{ fontVariantNumeric: "tabular-nums", fontSize: "11px", color: "rgba(255, 255, 255, 0.6)" }}>
-            {activeFrame.toString().padStart(3, "0")} / {totalFrames}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
+

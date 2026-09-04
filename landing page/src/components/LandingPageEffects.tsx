@@ -28,15 +28,24 @@ export default function LandingPageEffects() {
     const initAll = () => {
       const $ = window.$;
 
-      // 1. WebGL Initialization
-      const videoParent = document.querySelector(".scroll-anim__2s-video");
-      if (videoParent && typeof window.setupWebgl === "function" && videoParent.children.length === 0) {
-        try {
-          window.setupWebgl({ parent: videoParent });
-        } catch (e) {
-          console.warn("WebGL setup note:", e);
+      // 1. WebGL Initialization with retry polling
+      let webglAttempts = 0;
+      const tryInitWebgl = () => {
+        const videoParent = document.querySelector(".scroll-anim__2s-video");
+        if (videoParent && typeof window.setupWebgl === "function") {
+          if (!videoParent.querySelector("canvas")) {
+            try {
+              window.setupWebgl({ parent: videoParent });
+            } catch (e) {
+              console.warn("WebGL setup note:", e);
+            }
+          }
+        } else if (webglAttempts < 50) {
+          webglAttempts++;
+          setTimeout(tryInitWebgl, 100);
         }
-      }
+      };
+      tryInitWebgl();
 
       // 2. Scroll tracking for WebGL animation progress (window.prTg)
       const ui = {
@@ -53,10 +62,10 @@ export default function LandingPageEffects() {
 
       const onScroll = () => {
         const height = (ui.header?.offsetHeight || 0) + (ui.animArea?.offsetHeight || 0) + (ui.intro?.offsetHeight || 0);
-        if (height > window.innerHeight) {
-          const top = window.scrollY / (height - window.innerHeight);
-          window.prTg = Math.max(0, Math.min(5, top * 5));
-        }
+        const denom = height > window.innerHeight ? height - window.innerHeight : window.innerHeight * 2;
+        const currentScroll = lenisInstance?.scroll !== undefined ? lenisInstance.scroll : window.scrollY;
+        const top = currentScroll / denom;
+        window.prTg = Math.max(0, Math.min(5, top * 5));
       };
 
       window.addEventListener("scroll", onScroll, { passive: true });
@@ -74,9 +83,10 @@ export default function LandingPageEffects() {
           touchMultiplier: 2,
         });
 
-        if (window.ScrollTrigger) {
-          lenisInstance.on("scroll", () => window.ScrollTrigger?.update());
-        }
+        lenisInstance.on("scroll", () => {
+          onScroll();
+          window.ScrollTrigger?.update();
+        });
 
         const raf = (time: number) => {
           lenisInstance?.raf(time);
@@ -84,6 +94,7 @@ export default function LandingPageEffects() {
         };
         rafId = requestAnimationFrame(raf);
       }
+      onScroll();
 
       // 4. Anchor Link Handlers
       if ($) {
@@ -185,95 +196,12 @@ export default function LandingPageEffects() {
           }, 10);
         });
 
-        // 5. ScrollTrigger Video Reveal Expand Animation & Color triggers
+        // 5. ScrollTrigger and Color Triggers
         if (window.ScrollTrigger && window.gsap) {
-          const card = document.querySelector(".video-reveal-card");
-          const wrapper = document.querySelector(".video-reveal-wrapper");
-          const clipPathElem = document.querySelector("#video-flag-path");
-          const borderPathElem = document.querySelector("#video-flag-border-path");
-          const seamElem = document.querySelector(".video-reveal-seam");
-          const glowElem = document.querySelector(".video-reveal-crease-glow");
-          const borderSvg = document.querySelector(".video-reveal-border");
-
-          const pathRect =
-            "M 0.57148 0.0 C 0.28571 0.0, 0.0 0.0, 0.0 0.0 V 1.0 C 0.22794 1.0, 0.4285 1.0, 0.4285 1.0 V 1.0 C 0.71427 1.0, 1.0 1.0, 1.0 1.0 V 0.0 C 0.77204 0.0, 0.57148 0.0, 0.57148 0.0 V 0.0 Z";
-
-          if (card && wrapper) {
-            const tl = window.gsap.timeline({
-              scrollTrigger: {
-                trigger: wrapper,
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1,
-              },
-            });
-
-            tl.to(
-              card,
-              {
-                width: "100vw",
-                maxWidth: "100vw",
-                height: "100vh",
-                aspectRatio: "auto",
-                ease: "power2.inOut",
-              },
-              0
-            );
-
-            if (clipPathElem) {
-              tl.to(
-                clipPathElem,
-                {
-                  attr: { d: pathRect },
-                  ease: "power2.inOut",
-                },
-                0
-              );
-            }
-
-            if (borderPathElem) {
-              tl.to(
-                borderPathElem,
-                {
-                  attr: { d: pathRect },
-                  ease: "power2.inOut",
-                },
-                0
-              );
-            }
-
-            if (borderSvg) {
-              tl.to(
-                borderSvg,
-                {
-                  opacity: 0,
-                  ease: "power2.inOut",
-                },
-                0
-              );
-            }
-
-            if (seamElem) {
-              tl.to(
-                seamElem,
-                {
-                  opacity: 0,
-                  ease: "power2.inOut",
-                },
-                0
-              );
-            }
-
-            if (glowElem) {
-              tl.to(
-                glowElem,
-                {
-                  opacity: 0,
-                  ease: "power2.inOut",
-                },
-                0
-              );
-            }
+          try {
+            window.gsap.registerPlugin(window.ScrollTrigger);
+          } catch (e) {
+            console.warn("GSAP register error:", e);
           }
 
           $("[data-color='blue']").each(function (this: HTMLElement) {
@@ -380,7 +308,8 @@ export default function LandingPageEffects() {
     let attempts = 0;
     checkScriptsInterval = setInterval(() => {
       attempts++;
-      if (window.$ && (window.setupWebgl || window.Lenis || attempts > 20)) {
+      const scriptsReady = window.$ && (window.Lenis || attempts > 30);
+      if (scriptsReady) {
         if (checkScriptsInterval) clearInterval(checkScriptsInterval);
         initAll();
       }

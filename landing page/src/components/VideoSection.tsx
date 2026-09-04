@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { StructureFlowCollection } from "@/shaders/neuform-isolated/NeuformIsolatedEffects";
 
 interface VideoSectionProps {
   localVideoSrc?: string;
@@ -12,43 +13,143 @@ export default function VideoSection({
   youtubeId = "cFEyuG6Q3og",
 }: VideoSectionProps) {
   const [source, setSource] = useState<"local" | "youtube">("local");
-  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const clipPathRef = useRef<SVGPathElement>(null);
+  const borderPathRef = useRef<SVGPathElement>(null);
+  const borderSvgRef = useRef<SVGSVGElement>(null);
+
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.muted = isMuted;
+      videoRef.current.muted = true;
     }
-  }, [isMuted]);
-
-  const toggleMute = () => {
-    const nextMuted = !isMuted;
-    setIsMuted(nextMuted);
-
-    if (source === "local" && videoRef.current) {
-      videoRef.current.muted = nextMuted;
-    } else if (source === "youtube" && iframeRef.current?.contentWindow) {
-      const command = nextMuted ? "mute" : "unMute";
-      iframeRef.current.contentWindow.postMessage(
-        JSON.stringify({ event: "command", func: command, args: [] }),
-        "*"
-      );
-    }
-  };
+  }, []);
 
   const PATH_FLAG =
     "M 0.57148 0.0 C 0.28571 0.0, 0.28571 0.28043, 0.0 0.28043 V 1.0 C 0.22794 1.0, 0.27404 0.82154, 0.4285 0.74941 V 1.0 C 0.71427 1.0, 0.71427 0.71958, 1.0 0.71958 V 0.0 C 0.77204 0.0, 0.72594 0.17846, 0.57148 0.25059 V 0.0 Z";
 
+  useEffect(() => {
+    const FLAG_NUMS = [
+      0.57148, 0.0, 0.28571, 0.0, 0.28571, 0.28043, 0.0, 0.28043, 1.0, 0.22794,
+      1.0, 0.27404, 0.82154, 0.4285, 0.74941, 1.0, 0.71427, 1.0, 0.71427, 0.71958,
+      1.0, 0.71958, 0.0, 0.77204, 0.0, 0.72594, 0.17846, 0.57148, 0.25059, 0.0,
+    ];
+
+    const RECT_NUMS = [
+      0.57148, 0.0, 0.28571, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.22794,
+      1.0, 0.4285, 1.0, 0.4285, 1.0, 1.0, 0.71427, 1.0, 1.0, 1.0,
+      1.0, 1.0, 0.0, 0.77204, 0.0, 0.57148, 0.0, 0.57148, 0.0, 0.0,
+    ];
+
+    function interpolatePath(p: number) {
+      const n = FLAG_NUMS.map((f, i) => (f + (RECT_NUMS[i] - f) * p).toFixed(5));
+      return `M ${n[0]} ${n[1]} C ${n[2]} ${n[3]}, ${n[4]} ${n[5]}, ${n[6]} ${n[7]} V ${n[8]} C ${n[9]} ${n[10]}, ${n[11]} ${n[12]}, ${n[13]} ${n[14]} V ${n[15]} C ${n[16]} ${n[17]}, ${n[18]} ${n[19]}, ${n[20]} ${n[21]} V ${n[22]} C ${n[23]} ${n[24]}, ${n[25]} ${n[26]}, ${n[27]} ${n[28]} V ${n[29]} Z`;
+    }
+
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const wrapper = wrapperRef.current;
+      const card = cardRef.current;
+      const clipPath = clipPathRef.current;
+      const borderPath = borderPathRef.current;
+      const borderSvg = borderSvgRef.current;
+
+      if (!wrapper || !card) return;
+
+      const rect = wrapper.getBoundingClientRect();
+      const totalDist = wrapper.offsetHeight - window.innerHeight;
+      if (totalDist <= 0) return;
+
+      const scrolled = -rect.top;
+      const rawProgress = scrolled / totalDist;
+      const progress = Math.max(0, Math.min(1, rawProgress));
+
+      // Ease progress for natural acceleration & deceleration
+      const p =
+        progress < 0.5
+          ? 2 * progress * progress
+          : -1 + (4 - 2 * progress) * progress;
+
+      // Card scale & dimensions
+      if (progress <= 0.001) {
+        card.style.width = "70vw";
+        card.style.maxWidth = "1160px";
+        card.style.height = "auto";
+        card.style.aspectRatio = "24.57 / 13.85";
+        card.style.borderRadius = "0px";
+        card.style.clipPath = "url(#video-flag-clip)";
+        card.style.webkitClipPath = "url(#video-flag-clip)";
+        if (clipPath) clipPath.setAttribute("d", PATH_FLAG);
+        if (borderPath) borderPath.setAttribute("d", PATH_FLAG);
+        if (borderSvg) borderSvg.style.opacity = "1";
+      } else if (progress >= 0.99) {
+        card.style.width = "100vw";
+        card.style.maxWidth = "100vw";
+        card.style.height = "100vh";
+        card.style.aspectRatio = "unset";
+        card.style.borderRadius = "0px";
+        card.style.clipPath = "none";
+        card.style.webkitClipPath = "none";
+        const pathRect = interpolatePath(1);
+        if (clipPath) clipPath.setAttribute("d", pathRect);
+        if (borderPath) borderPath.setAttribute("d", pathRect);
+        if (borderSvg) borderSvg.style.opacity = "0";
+      } else {
+        const pClamped = Math.min(1, Math.max(0, p));
+        const wVw = (70 + 30 * pClamped).toFixed(3);
+        const maxPx = (1160 * (1 - pClamped)).toFixed(1);
+        const maxVw = (100 * pClamped).toFixed(3);
+        const hVw = (((70 * 13.85) / 24.57) * (1 - pClamped)).toFixed(3);
+        const hVh = (100 * pClamped).toFixed(3);
+
+        card.style.width = `${wVw}vw`;
+        card.style.maxWidth = `calc(${maxPx}px + ${maxVw}vw)`;
+        card.style.height = `calc(${hVw}vw + ${hVh}vh)`;
+        card.style.aspectRatio = "unset";
+        card.style.clipPath = "url(#video-flag-clip)";
+        card.style.webkitClipPath = "url(#video-flag-clip)";
+
+        const currentD = interpolatePath(pClamped);
+        if (clipPath) clipPath.setAttribute("d", currentD);
+        if (borderPath) borderPath.setAttribute("d", currentD);
+        if (borderSvg) borderSvg.style.opacity = String(Math.max(0, 1 - pClamped * 1.5));
+      }
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    update();
+
+    const pollInterval = setInterval(update, 200);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      clearInterval(pollInterval);
+    };
+  }, []);
+
   return (
     <div
+      ref={wrapperRef}
       id="investors"
       className="video-reveal-wrapper"
       style={{
         position: "relative",
         width: "100%",
         height: "230vh", // Provides scroll space for the GSAP scrub reveal
-        backgroundColor: "#000",
+        backgroundColor: "#07080b",
         zIndex: 2,
       }}
     >
@@ -61,7 +162,7 @@ export default function VideoSection({
       >
         <defs>
           <clipPath id="video-flag-clip" clipPathUnits="objectBoundingBox">
-            <path id="video-flag-path" d={PATH_FLAG} />
+            <path ref={clipPathRef} id="video-flag-path" d={PATH_FLAG} />
           </clipPath>
         </defs>
       </svg>
@@ -78,9 +179,17 @@ export default function VideoSection({
           alignItems: "center",
           justifyContent: "center",
           overflow: "hidden",
-          backgroundColor: "#000",
+          backgroundColor: "#07080b",
         }}
       >
+        {/* Expanse Field Shader Background */}
+        <StructureFlowCollection
+          variant="expanse-field"
+          hue={0}
+          saturation={1.0}
+          brightness={1.0}
+        />
+
         {/* Relative Positioning Anchor for Card + Overlaid Controls */}
         <div
           className="video-reveal-anchor"
@@ -93,6 +202,7 @@ export default function VideoSection({
         >
           {/* Expanding Video Card Container (GSAP animates width, height, clipPath) */}
           <div
+            ref={cardRef}
             className="video-reveal-card"
             style={{
               position: "relative",
@@ -106,6 +216,8 @@ export default function VideoSection({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              filter:
+                "drop-shadow(0 25px 60px rgba(0, 0, 0, 0.75)) drop-shadow(0 4px 16px rgba(0, 0, 0, 0.45))",
               willChange: "transform, width, height",
               transition: "none",
             }}
@@ -116,7 +228,7 @@ export default function VideoSection({
                 ref={videoRef}
                 autoPlay
                 loop
-                muted={isMuted}
+                muted
                 playsInline
                 src={localVideoSrc}
                 onError={() => setSource("youtube")}
@@ -190,41 +302,9 @@ export default function VideoSection({
               }}
             />
 
-            {/* 3D Central Fold Highlight Seam (Matching Reference Image) */}
-            <div
-              className="video-reveal-seam"
-              style={{
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                left: "50%",
-                width: "1.5px",
-                transform: "translateX(-50%)",
-                background:
-                  "linear-gradient(to bottom, transparent 2%, rgba(240, 255, 61, 0.95) 15%, rgba(240, 255, 61, 0.95) 85%, transparent 98%)",
-                boxShadow:
-                  "0 0 12px 2px rgba(240, 255, 61, 0.7), 0 0 4px rgba(255, 255, 255, 0.9)",
-                pointerEvents: "none",
-                zIndex: 4,
-              }}
-            />
-            <div
-              className="video-reveal-crease-glow"
-              style={{
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                left: "calc(50% - 30px)",
-                width: "30px",
-                background:
-                  "linear-gradient(to right, transparent, rgba(240, 255, 61, 0.15))",
-                pointerEvents: "none",
-                zIndex: 3,
-              }}
-            />
-
             {/* Outer SVG Border Contour */}
             <svg
+              ref={borderSvgRef}
               className="video-reveal-border"
               viewBox="0 0 1 1"
               preserveAspectRatio="none"
@@ -239,82 +319,16 @@ export default function VideoSection({
               }}
             >
               <path
+                ref={borderPathRef}
                 id="video-flag-border-path"
                 d={PATH_FLAG}
                 fill="none"
-                stroke="rgba(255, 255, 255, 0.25)"
+                stroke="rgba(255, 255, 255, 0.22)"
                 strokeWidth="0.002"
                 vectorEffect="non-scaling-stroke"
               />
             </svg>
           </div>
-
-          {/* Floating Unmute/Mute Toggle placed on anchor to prevent clip cutoff */}
-          <button
-            onClick={toggleMute}
-            type="button"
-            aria-label={isMuted ? "Unmute audio" : "Mute audio"}
-            style={{
-              position: "absolute",
-              bottom: "28px",
-              right: "28px",
-              width: "46px",
-              height: "46px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "rgba(0, 0, 0, 0.65)",
-              backdropFilter: "blur(16px)",
-              WebkitBackdropFilter: "blur(16px)",
-              border: "1px solid rgba(255, 255, 255, 0.25)",
-              borderRadius: "50%",
-              color: "#fff",
-              cursor: "pointer",
-              transition: "all 0.25s ease",
-              zIndex: 10,
-              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.6)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor =
-                "rgba(255, 255, 255, 0.25)";
-              e.currentTarget.style.transform = "scale(1.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.65)";
-              e.currentTarget.style.transform = "scale(1)";
-            }}
-          >
-            {isMuted ? (
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <line x1="23" y1="9" x2="17" y2="15"></line>
-                <line x1="17" y1="9" x2="23" y2="15"></line>
-              </svg>
-            ) : (
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              </svg>
-            )}
-          </button>
         </div>
       </div>
     </div>

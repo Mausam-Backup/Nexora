@@ -1,4 +1,5 @@
 import VideoSection from "./VideoSection";
+import ResponseFooter from "./ResponseFooter";
 
 export default function MainContent() {
   return (
@@ -691,130 +692,7 @@ export default function MainContent() {
         </div>
         <div id="platform" className="_5s-anchor"></div>
       </div>
-      <div className="footer-container">
-        <div className="footer">
-          <div className="footer__top-container">
-            <div className="footer-top-wrapper-1">
-              <h4 className="h3 light">
-                Let us understand your business targets and show you how Secured Finance platform can help
-              </h4>
-              <div className="footer__form-block w-form">
-                <form id="wf-form-form" name="wf-form-form" data-name="form" method="get" className="footer__form">
-                  <div className="footer__field">
-                    <input type="text" className="footer__input w-input" maxLength={256} name="name" data-name="name" placeholder="First name" id="name-2" />
-                  </div>
-                  <div className="footer__field">
-                    <input type="text" className="footer__input w-input" maxLength={256} name="last_name" data-name="last_name" placeholder="Last name" id="last_name-3" />
-                  </div>
-                  <div className="footer__field">
-                    <input type="email" className="footer__input w-input" maxLength={256} name="email" data-name="email" placeholder="Work email" id="email" />
-                  </div>
-                  <div className="footer__field">
-                    <input type="text" className="footer__input w-input" maxLength={256} name="name-2" data-name="Name 2" placeholder="Organization Name" id="organization-name" />
-                  </div>
-                  <div className="footer__field">
-                    <input type="text" className="footer__input w-input" maxLength={256} name="name-2" data-name="Name 2" placeholder="Tell a bit more what you&#x27;re looking for" id="what-looking-for" />
-                  </div>
-                  <div data-w-id="71d9dd82-1edf-83f9-5767-63955f19a658" className="footer__form-button-wrapper">
-                    <input type="submit" value="Send now" data-wait="Please wait..." className="footer__button w-button" />
-                    <div className="menu-button__bg"></div>
-                  </div>
-                </form>
-                <div className="w-form-done">
-                  <div>Thank you! Your submission has been received!</div>
-                </div>
-                <div className="w-form-fail">
-                  <div>Oops! Something went wrong while submitting the form.</div>
-                </div>
-              </div>
-            </div>
-            <div id="w-node-_9744b2db-3a46-531c-052d-d17ba749272f-51c2b876" className="footer-top-wrapper-2">
-              <div className="footer__contacts-container">
-                <div id="w-node-af097bbe-adeb-b7be-7c9b-6528084d0225-51c2b876" className="footer__contacts-block">
-                  <div id="w-node-_88c4aec0-98de-f343-e825-1f65887863c6-51c2b876" className="sign green">sections</div>
-                  <a href="#" data-w-id="acb56ca7-5ac9-eed4-9a53-02151bc8c415" className="social-link top-margin nav-1 w-inline-block">
-                    <div className="sign">Intro</div>
-                    <div className="footer__link-line-wrapper">
-                      <div className="footer__link-line line-2"></div>
-                      <div className="footer__link-line line-1"></div>
-                    </div>
-                  </a>
-                  <a href="#" data-w-id="ec2e6bda-9509-3242-53aa-47f1cfbb0565" className="social-link nav-2 w-inline-block">
-                    <div className="sign">Platform</div>
-                    <div className="footer__link-line-wrapper">
-                      <div className="footer__link-line line-2"></div>
-                      <div className="footer__link-line line-1"></div>
-                    </div>
-                  </a>
-                  <a href="#" data-w-id="e47f062c-92d2-0a9c-3e75-fae8c2a598a4" className="social-link nav-3 w-inline-block">
-                    <div className="sign">About us</div>
-                    <div className="footer__link-line-wrapper">
-                      <div className="footer__link-line line-2"></div>
-                      <div className="footer__link-line line-1"></div>
-                    </div>
-                  </a>
-                  <a href="#" data-w-id="9244ec50-3cc1-a1eb-ac1c-210689d33cb5" className="social-link nav-4 w-inline-block">
-                    <div className="sign">Investors</div>
-                    <div className="footer__link-line-wrapper">
-                      <div className="footer__link-line line-2"></div>
-                      <div className="footer__link-line line-1"></div>
-                    </div>
-                  </a>
-                  <a href="#" data-w-id="a8f39b7e-adba-6f88-091c-929b83f90b8e" className="social-link nav-5 w-inline-block">
-                    <div className="sign">NEWS</div>
-                    <div className="footer__link-line-wrapper">
-                      <div className="footer__link-line line-2"></div>
-                      <div className="footer__link-line line-1"></div>
-                    </div>
-                  </a>
-                </div>
-                <div id="w-node-_1c0e4307-dbcc-6c32-0d75-48664b17f42c-51c2b876" className="footer__contacts-block">
-                  <div id="w-node-_1c0e4307-dbcc-6c32-0d75-48664b17f42d-51c2b876" className="sign green">social</div>
-                  <a data-w-id="ea8dd25c-dfb9-81a1-0a70-bce689a714ea" href="https://twitter.com/Secured_Fi" target="_blank" className="social-link top-margin w-inline-block">
-                    <div className="sign">twitter</div>
-                    <div className="footer__link-line-wrapper">
-                      <div className="footer__link-line line-2"></div>
-                      <div className="footer__link-line line-1"></div>
-                    </div>
-                  </a>
-                  <a data-w-id="7734f6ee-da71-2eee-5bdb-d9b955692310" href="https://discord.gg/aHJSjj3xMg" target="_blank" className="social-link w-inline-block">
-                    <div className="sign">Discord</div>
-                    <div className="footer__link-line-wrapper">
-                      <div className="footer__link-line line-2"></div>
-                      <div className="footer__link-line line-1"></div>
-                    </div>
-                  </a>
-                  <a data-w-id="c502e2c8-42a2-ca09-5753-032f3c4973db" href="https://t.me/securedfinance" target="_blank" className="social-link w-inline-block">
-                    <div className="sign">Telegram</div>
-                    <div className="footer__link-line-wrapper">
-                      <div className="footer__link-line line-2"></div>
-                      <div className="footer__link-line line-1"></div>
-                    </div>
-                  </a>
-                  <a data-w-id="88837b50-8083-7c8b-8f21-4acf37865f55" href="https://medium.com/secured-finance" target="_blank" className="social-link w-inline-block">
-                    <div className="sign">Medium</div>
-                    <div className="footer__link-line-wrapper">
-                      <div className="footer__link-line line-2"></div>
-                      <div className="footer__link-line line-1"></div>
-                    </div>
-                  </a>
-                  <a data-w-id="b485b6a1-e0e2-930d-236e-932d6f5316e3" href="https://github.com/secured-finance/" target="_blank" className="social-link w-inline-block">
-                    <div className="sign">GITHUB</div>
-                    <div className="footer__link-line-wrapper">
-                      <div className="footer__link-line line-2"></div>
-                      <div className="footer__link-line line-1"></div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="w-node-db1574ab-2ecb-cc75-c8aa-dbc5b6866639-51c2b876" className="footer__bottom-container">
-            <div className="body-text gray">2022 © SecuredFinance</div>
-          </div>
-        </div>
-        <div id="footer" className="sticky-space"></div>
-      </div>
+      <ResponseFooter />
     </div>
     <div className="trigger-wrapper">
       <div data-w-id="a0a19611-fad6-0650-6e84-d5b36d992f45" className="trigger-video-bt"></div>

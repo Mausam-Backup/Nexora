@@ -2,9 +2,11 @@
 
 import React, { useState } from "react";
 import LionFullscreenModal from "./LionFullscreenModal";
+import VrFullscreenModal from "./VrFullscreenModal";
 
 export default function Navbar() {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [isVrModalOpen, setIsVrModalOpen] = useState(false);
 
   return (
   <div className="fixed-items">
@@ -31,14 +33,37 @@ export default function Navbar() {
         <a href="#about" className="menu-item nav-3 w-inline-block" suppressHydrationWarning>
           <div className="menu-text">About</div>
         </a>
+        <a
+          href="#tour"
+          role="button"
+          onClick={(e) => {
+            e.preventDefault();
+            setIsVrModalOpen(true);
+          }}
+          className="menu-item nav-vr w-inline-block"
+          suppressHydrationWarning
+          style={{ cursor: "pointer" }}
+        >
+          <div className="menu-text">3D Tour</div>
+        </a>
         <a href="#investors" className="menu-item nav-4 w-inline-block" suppressHydrationWarning>
           <div className="menu-text">Investors</div>
         </a>
         <a href="#news" className="menu-item nav-5 w-inline-block" suppressHydrationWarning>
           <div className="menu-text">News</div>
         </a>
-        <a href="#" className="menu-button to-footer w-inline-block" suppressHydrationWarning>
-          <div className="menu-text-non-hover">Sign up</div>
+        <a
+          href="#contact"
+          role="button"
+          onClick={(e) => {
+            e.preventDefault();
+            setIsVideoModalOpen(true);
+          }}
+          className="menu-button to-footer w-inline-block"
+          suppressHydrationWarning
+          style={{ cursor: "pointer" }}
+        >
+          <div className="menu-text-non-hover">Contact us</div>
           <div data-w-id="8312a1a5-dae7-16a1-8cec-e79ee9e966df" suppressHydrationWarning style={{ transform: "translate3d(0, 0, 0) scale3d(1, 1, 1)" }} className="menu-button__bg"></div>
         </a>
       </div>
@@ -49,69 +74,6 @@ export default function Navbar() {
           <img src="/images/secured.svg" loading="lazy" alt="" className="link-logo__image" />
         </div>
       </div>
-    </div>
-    <div suppressHydrationWarning style={{ opacity: 1, transform: "translate3d(0, 0, 0) scale3d(1, 1, 1)" }} className="bt-video">
-      <a
-        data-w-id="ac0bb96c-bfad-8e8c-2867-bddf34b7315b"
-        href="#video"
-        role="button"
-        onClick={(e) => {
-          e.preventDefault();
-          setIsVideoModalOpen(true);
-        }}
-        className="bt-video__wrapper w-inline-block"
-        suppressHydrationWarning
-        style={{
-          cursor: "pointer",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textDecoration: "none",
-        }}
-      >
-        <div style={{ position: "relative", width: "100%", height: "100%" }}>
-          <div data-w-id="181c0878-0e5c-bb24-d98e-b9028a1ae5b0" suppressHydrationWarning style={{ color: "rgb(81, 98, 255)", backgroundColor: "rgb(255, 255, 255)", opacity: 1 }} className="bt-video__bt">
-            <div className="html-embed-2 w-embed">
-              <svg width="100%" height="100%" viewBox="0 0 9 12" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 11.25V0L8.65385 5.625L0 11.25Z" fill="currentColor"></path>
-              </svg>
-            </div>
-          </div>
-          <div data-w-id="181c0878-0e5c-bb24-d98e-b9028a1ae5b1" suppressHydrationWarning style={{ transform: "translate3d(0, 0, 0) scale3d(1, 1, 1)" }} className="bt-video__container">
-            <div data-w-id="1fc59aad-fbca-f7c1-170b-17193e350b37" suppressHydrationWarning className="bt-video__img-container">
-              <img
-                src="/lion_frames/frame_0001.jpg"
-                loading="eager"
-                alt="About Us"
-                suppressHydrationWarning
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center",
-                }}
-                className="bt-video__img"
-              />
-            </div>
-          </div>
-        </div>
-        <span
-          style={{
-            marginTop: "8px",
-            color: "#ffffff",
-            fontSize: "13px",
-            fontFamily: '"Times New Roman", Times, Georgia, serif',
-            letterSpacing: "0.5px",
-            textShadow: "0 2px 8px rgba(0, 0, 0, 0.6)",
-            opacity: 0.9,
-            display: "inline-block",
-            textAlign: "center",
-            whiteSpace: "nowrap",
-          }}
-        >
-          About us
-        </span>
-      </a>
     </div>
     <div data-w-id="7f96e916-c5c0-f2e1-200b-a96fac32cef1" className="m-close-menu">
       <img src="/images/Frame-137919.png" loading="lazy" alt="" className="m-close-menu__logo" />
@@ -140,8 +102,32 @@ export default function Navbar() {
       <a href="#news" className="m-open-menu__link nav-5 w-inline-block" suppressHydrationWarning>
         <div className="menu-text">News</div>
       </a>
+      <a
+        href="#tour"
+        role="button"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsVrModalOpen(true);
+        }}
+        className="m-open-menu__link nav-vr w-inline-block"
+        suppressHydrationWarning
+        style={{ cursor: "pointer" }}
+      >
+        <div className="menu-text">3D Tour</div>
+      </a>
       <div className="m-open-menu__button-container">
-        <a href="#" data-w-id="418bead1-2a16-fae5-81f3-d14489478f36" className="m-open-menu__button to-footer w-inline-block" suppressHydrationWarning>
+        <a
+          href="#contact"
+          role="button"
+          onClick={(e) => {
+            e.preventDefault();
+            setIsVideoModalOpen(true);
+          }}
+          data-w-id="418bead1-2a16-fae5-81f3-d14489478f36"
+          className="m-open-menu__button to-footer w-inline-block"
+          suppressHydrationWarning
+          style={{ cursor: "pointer" }}
+        >
           <div className="button-text-t black">Contact us</div>
           <img src="/images/Vector-18.svg" loading="lazy" alt="" className="m-open-menu__ic" />
         </a>
@@ -150,6 +136,10 @@ export default function Navbar() {
     <LionFullscreenModal
       isOpen={isVideoModalOpen}
       onClose={() => setIsVideoModalOpen(false)}
+    />
+    <VrFullscreenModal
+      isOpen={isVrModalOpen}
+      onClose={() => setIsVrModalOpen(false)}
     />
   </div>
   );

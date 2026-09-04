@@ -4,8 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LOCATION_CATEGORIES, getAllLocations } from '@/data/locations';
-import { LocationMeta } from '@/types';
-import { ChevronDown, ChevronUp, MapPin, Compass } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface SceneDrawerProps {
   currentSceneId: string;
@@ -28,18 +27,40 @@ export default function SceneDrawer({
       : allLocations.filter((l) => l.category === selectedCategory);
 
   return (
-    <div className="absolute bottom-4 left-4 right-4 sm:left-6 sm:right-6 z-40 flex flex-col items-center">
+    <div
+      className="absolute bottom-4 left-4 right-4 sm:left-6 sm:right-6 z-40 flex flex-col items-center"
+      style={{ fontFamily: '"Times New Roman", Times, Georgia, serif' }}
+    >
       {/* Drawer Container */}
-      <div className="w-full max-w-5xl bg-stone-950/85 backdrop-blur-2xl border border-stone-800/80 rounded-3xl overflow-hidden shadow-2xl shadow-black/80 transition-all duration-300">
+      <div
+        className="w-full max-w-5xl rounded-3xl overflow-hidden transition-all duration-300"
+        style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.96)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
+          boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.04)',
+        }}
+      >
         {/* Header Bar */}
-        <div className="px-5 py-3 flex items-center justify-between border-b border-stone-800/40">
+        <div
+          className="px-5 py-3 flex items-center justify-between"
+          style={{ borderBottom: '1px solid #e2e8f0' }}
+        >
           <div className="flex items-center gap-3">
-            <div className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+            <div
+              style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: '#0f172a',
+              }}
+            />
             <div className="flex items-baseline gap-2">
-              <span className="text-sm font-bold text-stone-100 truncate">
+              <span style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a' }} className="truncate">
                 {currentLoc?.displayName || 'Campus Panorama'}
               </span>
-              <span className="text-[11px] text-stone-400 font-mono hidden sm:inline">
+              <span style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic' }} className="hidden sm:inline">
                 ({currentLoc?.category})
               </span>
             </div>
@@ -50,11 +71,18 @@ export default function SceneDrawer({
             <div className="hidden md:flex items-center gap-1.5">
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`px-3 py-1 rounded-xl text-[11px] font-semibold transition-all ${
-                  selectedCategory === 'all'
-                    ? 'bg-amber-400 text-stone-950'
-                    : 'bg-stone-900/60 hover:bg-stone-800 text-stone-400 hover:text-stone-200'
-                }`}
+                style={{
+                  padding: '4px 14px',
+                  borderRadius: '9999px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  border: 'none',
+                  backgroundColor: selectedCategory === 'all' ? '#0f172a' : '#f1f5f9',
+                  color: selectedCategory === 'all' ? '#ffffff' : '#334155',
+                  transition: 'all 0.2s ease',
+                  boxShadow: selectedCategory === 'all' ? '0 2px 6px rgba(0,0,0,0.15)' : 'none',
+                }}
               >
                 All
               </button>
@@ -62,11 +90,18 @@ export default function SceneDrawer({
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 py-1 rounded-xl text-[11px] font-semibold transition-all ${
-                    selectedCategory === cat.id
-                      ? 'bg-amber-400 text-stone-950'
-                      : 'bg-stone-900/60 hover:bg-stone-800 text-stone-400 hover:text-stone-200'
-                  }`}
+                  style={{
+                    padding: '4px 14px',
+                    borderRadius: '9999px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    border: 'none',
+                    backgroundColor: selectedCategory === cat.id ? '#0f172a' : '#f1f5f9',
+                    color: selectedCategory === cat.id ? '#ffffff' : '#334155',
+                    transition: 'all 0.2s ease',
+                    boxShadow: selectedCategory === cat.id ? '0 2px 6px rgba(0,0,0,0.15)' : 'none',
+                  }}
                 >
                   {cat.name}
                 </button>
@@ -76,7 +111,17 @@ export default function SceneDrawer({
             {/* Toggle Drawer */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700/60 text-stone-400 hover:text-stone-100 transition-colors"
+              style={{
+                padding: '6px',
+                borderRadius: '50%',
+                backgroundColor: '#f1f5f9',
+                border: '1px solid #e2e8f0',
+                color: '#334155',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
               aria-label={isOpen ? 'Collapse scenes drawer' : 'Expand scenes drawer'}
             >
               {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
@@ -92,6 +137,7 @@ export default function SceneDrawer({
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               className="p-4 overflow-hidden"
+              style={{ backgroundColor: '#ffffff' }}
             >
               <div className="flex items-center gap-3 overflow-x-auto pb-2 pt-1 scrollbar-hide">
                 {filteredLocations.map((loc) => {
@@ -100,13 +146,17 @@ export default function SceneDrawer({
                     <button
                       key={loc.sceneId}
                       onClick={() => onSelectScene(loc.sceneId)}
-                      className={`relative flex-shrink-0 w-32 sm:w-36 rounded-2xl overflow-hidden text-left transition-all duration-300 group ${
-                        isActive
-                          ? 'ring-2 ring-amber-400 scale-105 shadow-lg shadow-amber-400/20'
-                          : 'opacity-70 hover:opacity-100 hover:scale-100'
-                      }`}
+                      className="relative flex-shrink-0 w-32 sm:w-36 rounded-2xl overflow-hidden text-left transition-all duration-300 group"
+                      style={{
+                        backgroundColor: '#ffffff',
+                        border: isActive ? '2px solid #0f172a' : '1px solid #e2e8f0',
+                        boxShadow: isActive ? '0 8px 20px rgba(0,0,0,0.15)' : '0 2px 6px rgba(0,0,0,0.04)',
+                        transform: isActive ? 'scale(1.04)' : 'scale(1)',
+                        cursor: 'pointer',
+                        padding: 0,
+                      }}
                     >
-                      <div className="relative aspect-[16/10] bg-stone-900">
+                      <div className="relative aspect-[16/10]" style={{ backgroundColor: '#f1f5f9' }}>
                         <Image
                           src={loc.thumbnail}
                           alt={loc.displayName}
@@ -114,13 +164,26 @@ export default function SceneDrawer({
                           sizes="140px"
                           className="object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent" />
                       </div>
-                      <div className="p-2 bg-stone-900/90 backdrop-blur-md">
-                        <div className="text-[11px] font-bold text-stone-200 truncate group-hover:text-amber-300 transition-colors">
+                      <div className="p-2.5" style={{ backgroundColor: '#ffffff' }}>
+                        <div
+                          style={{
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            color: '#0f172a',
+                          }}
+                          className="truncate"
+                        >
                           {loc.displayName}
                         </div>
-                        <div className="text-[9px] text-stone-400 truncate mt-0.5">
+                        <div
+                          style={{
+                            fontSize: '11px',
+                            color: '#64748b',
+                            marginTop: '2px',
+                          }}
+                          className="truncate"
+                        >
                           {loc.shortDescription}
                         </div>
                       </div>

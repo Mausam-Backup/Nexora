@@ -156,6 +156,22 @@
           color: inherit;
         }
 
+        .container-menu__light,
+        .menu-items,
+        .menu-item,
+        .menu-text,
+        .menu-button,
+        .menu-text-non-hover,
+        .m-open-menu,
+        .m-open-menu__link,
+        .button-text-t {
+          font-family: "Times New Roman", Times, Georgia, serif !important;
+        }
+
+        .bt-video {
+          display: none !important;
+        }
+
         /* ------ Nav color change ------ */
         .container-menu__light {
           --logo-color: #fff;

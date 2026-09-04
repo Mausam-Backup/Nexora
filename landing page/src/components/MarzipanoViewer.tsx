@@ -120,7 +120,7 @@ export default function MarzipanoViewer({
             el.className = 'link-hotspot';
             el.innerHTML = `
               <div class="link-hotspot-inner">
-                <svg class="link-hotspot-icon w-4 h-4 text-amber-300" style="transform: rotate(${h.rotation}rad);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="link-hotspot-icon w-4 h-4 text-stone-900" style="transform: rotate(${h.rotation}rad);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 19V5M5 12l7-7 7 7"/>
                 </svg>
               </div>
@@ -238,15 +238,18 @@ export default function MarzipanoViewer({
   const allLocations = getAllLocations();
 
   return (
-    <div className="relative w-full h-full bg-stone-950 overflow-hidden select-none">
+    <div
+      className="relative w-full h-full bg-stone-100 overflow-hidden select-none"
+      style={{ fontFamily: '"Times New Roman", Times, Georgia, serif' }}
+    >
       {/* 360 Viewport Container */}
       <div ref={containerRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
       {/* Loading Screen */}
       {!isLoaded && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-950 text-stone-400 gap-4 z-50">
-          <div className="w-10 h-10 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
-          <p className="text-xs uppercase tracking-widest font-mono text-stone-300">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-50 text-stone-700 gap-4 z-50">
+          <div className="w-10 h-10 border-2 border-stone-300 border-t-stone-800 rounded-full animate-spin" />
+          <p className="text-sm font-semibold tracking-wide text-stone-700">
             Initializing 360° Panorama…
           </p>
         </div>

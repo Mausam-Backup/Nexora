@@ -86,6 +86,30 @@ export const StudentAnnouncements: React.FC = () => {
       })
     }
 
+    if (student.cgpa < 5.50) {
+      list.push({
+        id: 'erp-alert-probation',
+        title: '📉 Academic Standing Advisory: Remedial Counseling Assigned',
+        content: `Notice for ${student.name}: Your Cumulative GPA (${student.cgpa.toFixed(2)}) is below the institutional threshold of 5.50. You have been scheduled for academic counseling and mandatory tutorial sessions.`,
+        author: 'Dean of Academic Affairs',
+        priority: 'high' as const,
+        category: 'Academic',
+        date: new Date(),
+        attachments: []
+      })
+    } else if (student.clearances.admitCardIssued) {
+      list.push({
+        id: 'erp-alert-cleared',
+        title: '✅ Examination Hall Ticket Issued & Certified',
+        content: `Institutional clearances verified for ${student.name}. Your Admit Card is active and ready for download with anti-cheating seat allocation.`,
+        author: 'Office of the Controller of Examinations',
+        priority: 'medium' as const,
+        category: 'Academic',
+        date: new Date(),
+        attachments: []
+      })
+    }
+
     return [...list, ...mockAnnouncements]
   }, [student])
 

@@ -1,5 +1,6 @@
 import VideoSection from "./VideoSection";
 import ResponseFooter from "./ResponseFooter";
+import LionScrollCanvas from "./LionScrollCanvas";
 
 export default function MainContent() {
   return (
@@ -92,8 +93,7 @@ export default function MainContent() {
         </div>
         <div className="scroll-anim__video-wrapper">
           <div id="child-iframe" className="scroll-anim__2s-video w-embed w-iframe">
-            
-            
+            <LionScrollCanvas />
           </div>
         </div>
         <div data-w-id="9ba60a25-a01d-fe95-dca5-f459e87e9d18" className="hero-slide__fill-bg"></div>

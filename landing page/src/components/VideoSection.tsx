@@ -82,7 +82,7 @@ export default function VideoSection({
         card.style.aspectRatio = "24.57 / 13.85";
         card.style.borderRadius = "0px";
         card.style.clipPath = "url(#video-flag-clip)";
-        card.style.webkitClipPath = "url(#video-flag-clip)";
+        card.style.setProperty("-webkit-clip-path", "url(#video-flag-clip)");
         if (clipPath) clipPath.setAttribute("d", PATH_FLAG);
         if (borderPath) borderPath.setAttribute("d", PATH_FLAG);
         if (borderSvg) borderSvg.style.opacity = "1";
@@ -93,7 +93,7 @@ export default function VideoSection({
         card.style.aspectRatio = "unset";
         card.style.borderRadius = "0px";
         card.style.clipPath = "none";
-        card.style.webkitClipPath = "none";
+        card.style.setProperty("-webkit-clip-path", "none");
         const pathRect = interpolatePath(1);
         if (clipPath) clipPath.setAttribute("d", pathRect);
         if (borderPath) borderPath.setAttribute("d", pathRect);
@@ -111,7 +111,7 @@ export default function VideoSection({
         card.style.height = `calc(${hVw}vw + ${hVh}vh)`;
         card.style.aspectRatio = "unset";
         card.style.clipPath = "url(#video-flag-clip)";
-        card.style.webkitClipPath = "url(#video-flag-clip)";
+        card.style.setProperty("-webkit-clip-path", "url(#video-flag-clip)");
 
         const currentD = interpolatePath(pClamped);
         if (clipPath) clipPath.setAttribute("d", currentD);

@@ -14,25 +14,25 @@ export default function ResponseFooter() {
         marginTop: "100vh",
         width: "100%",
         backgroundColor: "#f4f4f6",
-        paddingTop: "36px",
-        paddingBottom: "32px",
+        paddingTop: "40px",
+        paddingBottom: "40px",
         overflow: "hidden",
         fontFamily:
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
       }}
     >
-      {/* 3D Realistic Packing Tape Roll Standing in the Background */}
+      {/* 3D Realistic Standing Tape Roll in the Background */}
       <div
         style={{
           position: "absolute",
-          top: "-15px",
+          top: "0px",
           left: "50%",
           transform: "translateX(-20%)",
-          width: "240px",
-          height: "170px",
+          width: "230px",
+          height: "160px",
           pointerEvents: "none",
           opacity: 0.9,
-          zIndex: 0,
+          zIndex: 1,
         }}
         aria-hidden="true"
       >
@@ -42,7 +42,7 @@ export default function ResponseFooter() {
           xmlns="http://www.w3.org/2000/svg"
           style={{ width: "100%", height: "100%" }}
         >
-          {/* Main Tape Ring (Outer Cylinder) */}
+          {/* Main Tape Ring Outer Cylinder */}
           <ellipse
             cx="110"
             cy="85"
@@ -135,579 +135,510 @@ export default function ResponseFooter() {
         </svg>
       </div>
 
-      {/* Main Centered Width Container */}
+      {/* Main Container matching Footer__Wrapper-sc-12rbdn7-0 hOxoAS */}
       <div
         style={{
           position: "relative",
-          zIndex: 1,
-          maxWidth: "1180px",
-          width: "92%",
+          zIndex: 3,
+          maxWidth: "1360px",
+          width: "93%",
+          aspectRatio: "1360 / 613",
+          minHeight: "440px",
           margin: "0 auto",
+          padding: "40px 48px 36px",
+          boxSizing: "border-box",
+          display: "grid",
+          gridTemplate: `
+            ".       links   socials" auto
+            "smarter smarter smarter" 1fr
+            "copy    .       address" auto / 250px 1fr auto
+          `,
+          rowGap: "24px",
+          columnGap: "32px",
         }}
       >
-        {/* Top Section: Logo in cut-out pocket on the left, Upper blue tab on the right */}
-        <div
+        {/* Clickable Home MockButton overlaying the logo (Footer__MockButton-sc-12rbdn7-1 cvHGEp) */}
+        <a
+          aria-current="page"
+          aria-label="Response Home"
+          className="Footer__MockButton-sc-12rbdn7-1 cvHGEp"
+          href="/"
           style={{
-            display: "flex",
-            alignItems: "flex-end",
-            width: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "200px",
+            height: "200px",
+            borderRadius: "0 45px 45px",
+            zIndex: 10,
+            cursor: "pointer",
           }}
         >
-          {/* Response Iconic Stylized 'r' Logo in Cut-out Pocket */}
-          <div
-            style={{
-              flex: "0 0 160px",
-              paddingBottom: "16px",
-              paddingLeft: "4px",
-              display: "flex",
-              alignItems: "flex-start",
-            }}
-          >
-            <svg
-              width="118"
-              height="102"
-              viewBox="0 0 135 118"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-label="Response Logo"
+          {" "}
+        </a>
+
+        {/* Exact Vector Background Shape & Logo (Footer__Background-sc-12rbdn7-2 eejowd) */}
+        <svg
+          viewBox="0 0 1360 613"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            maxHeight: "unset",
+            maxWidth: "unset",
+            zIndex: -1,
+            pointerEvents: "none",
+          }}
+          aria-hidden="true"
+        >
+          {/* Asymmetrical Stepped Blue Container */}
+          <path
+            d="M226 246H20C8.9543 246 0 254.954 0 266V593C0 604.046 8.95432 613 20 613H1340C1351.05 613 1360 604.046 1360 593V20C1360 8.95431 1351.05 0 1340 0H266C254.954 0 246 8.9543 246 20V226C246 237.046 237.046 246 226 246Z"
+            fill="#1916B0"
+          />
+          {/* Logo Mark in Cutout */}
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M0 153.926V0L154.376 0.0138492C179.721 0.625211 200 21.3832 200 46.8037C200 72.2244 179.721 92.9823 154.376 93.5938L153.109 93.6268H93.548L93.534 154.505C92.918 179.862 72.175 200.149 46.7741 200.149C21.3731 200.149 0.630075 179.862 0 153.926ZM200 153.744C200 179.291 179.291 200 153.744 200C128.198 200 107.489 179.291 107.489 153.744C107.489 128.198 128.198 107.489 153.744 107.489C179.291 107.489 200 128.198 200 153.744Z"
+            fill="#1916B0"
+          />
+        </svg>
+
+        {/* 1. Navigation Links (grid-area: links) */}
+        <div
+          style={{
+            gridArea: "links",
+            display: "flex",
+            gap: "clamp(30px, 5.5vw, 85px)",
+            paddingTop: "6px",
+          }}
+        >
+          {/* Product Column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div
+              style={{
+                fontFamily: '"PP Telegraf", -apple-system, sans-serif',
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "#7CB1FF",
+                letterSpacing: "-0.3px",
+              }}
             >
-              {/* Main Stem & Hook: rounded bottom, curves right at top with rounded end */}
-              <path
-                d="M 42 110 C 18.8 110 0 91.2 0 68 L 0 42 C 0 18.8 18.8 0 42 0 L 92 0 C 115.2 0 134 18.8 134 42 C 134 65.2 115.2 84 92 84 L 56 84 C 52 84 48 88 48 92 L 48 104 C 48 107.3 45.3 110 42 110 Z"
-                fill="#1411b8"
-              />
-              {/* Detached Dot below the hook */}
-              <circle cx="95" cy="85" r="28" fill="#1411b8" />
-            </svg>
+              Product
+            </div>
+            {[
+              { label: "Sign In", href: "https://app.tryresponse.com/login/" },
+              { label: "Pricing", href: "/pricing" },
+              { label: "FAQ", href: "/pricing#faq" },
+              { label: "Contact", href: "mailto:contact@tryresponse.com" },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                style={{
+                  color: "#ffffff",
+                  fontSize: "13px",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "7px",
+                  transition: "opacity 0.2s ease, transform 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = "0.75";
+                  e.currentTarget.style.transform = "translateX(2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = "1";
+                  e.currentTarget.style.transform = "none";
+                }}
+              >
+                <span style={{ fontSize: "11px", opacity: 0.9 }}>→</span>
+                <span>{item.label}</span>
+              </a>
+            ))}
           </div>
 
-          {/* Stepped Upper Tab of Blue Container */}
-          <div
-            style={{
-              flex: 1,
-              position: "relative",
-              backgroundColor: "#1411b8",
-              borderTopLeftRadius: "22px",
-              borderTopRightRadius: "22px",
-              padding: "24px 34px 18px 36px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              flexWrap: "wrap",
-              gap: "24px",
-            }}
-          >
-            {/* Smooth Concave Fillet Curve connecting lower card to upper tab */}
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 22 22"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: "-22px",
-                pointerEvents: "none",
-              }}
-              aria-hidden="true"
-            >
-              <path d="M 22 0 A 22 22 0 0 0 0 22 L 22 22 Z" fill="#1411b8" />
-            </svg>
-
-            {/* Navigation Columns */}
+          {/* Industries Column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4, minmax(90px, 1fr))",
-                gap: "28px",
-                flex: 1,
+                fontFamily: '"PP Telegraf", -apple-system, sans-serif',
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "#7CB1FF",
+                letterSpacing: "-0.3px",
               }}
             >
-              {/* Column 1: Product */}
-              <div>
-                <h4
-                  style={{
-                    color: "#ffffff",
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    marginBottom: "12px",
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  Product
-                </h4>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  {["Sign In", "Pricing", "FAQ", "Contact"].map((item) => (
-                    <li key={item} style={{ marginBottom: "7px" }}>
-                      <a
-                        href="#"
-                        style={{
-                          color: "rgba(255, 255, 255, 0.85)",
-                          fontSize: "12px",
-                          textDecoration: "none",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          transition: "all 0.15s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = "#ffffff";
-                          e.currentTarget.style.transform = "translateX(3px)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = "rgba(255, 255, 255, 0.85)";
-                          e.currentTarget.style.transform = "translateX(0)";
-                        }}
-                      >
-                        <span style={{ fontSize: "11px", opacity: 0.8 }}>→</span>
-                        <span>{item}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Column 2: Industries */}
-              <div>
-                <h4
-                  style={{
-                    color: "#ffffff",
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    marginBottom: "12px",
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  Industries
-                </h4>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  {["Retailers", "Distributors", "3PLs"].map((item) => (
-                    <li key={item} style={{ marginBottom: "7px" }}>
-                      <a
-                        href="#"
-                        style={{
-                          color: "rgba(255, 255, 255, 0.85)",
-                          fontSize: "12px",
-                          textDecoration: "none",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          transition: "all 0.15s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = "#ffffff";
-                          e.currentTarget.style.transform = "translateX(3px)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = "rgba(255, 255, 255, 0.85)";
-                          e.currentTarget.style.transform = "translateX(0)";
-                        }}
-                      >
-                        <span style={{ fontSize: "11px", opacity: 0.8 }}>→</span>
-                        <span>{item}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Column 3: Company */}
-              <div>
-                <h4
-                  style={{
-                    color: "#ffffff",
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    marginBottom: "12px",
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  Company
-                </h4>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  {["About Us", "Careers", "Blog"].map((item) => (
-                    <li key={item} style={{ marginBottom: "7px" }}>
-                      <a
-                        href="#"
-                        style={{
-                          color: "rgba(255, 255, 255, 0.85)",
-                          fontSize: "12px",
-                          textDecoration: "none",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          transition: "all 0.15s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = "#ffffff";
-                          e.currentTarget.style.transform = "translateX(3px)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = "rgba(255, 255, 255, 0.85)";
-                          e.currentTarget.style.transform = "translateX(0)";
-                        }}
-                      >
-                        <span style={{ fontSize: "11px", opacity: 0.8 }}>→</span>
-                        <span>{item}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Column 4: Legal */}
-              <div>
-                <h4
-                  style={{
-                    color: "#ffffff",
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    marginBottom: "12px",
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  Legal
-                </h4>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  {["Privacy", "Terms"].map((item) => (
-                    <li key={item} style={{ marginBottom: "7px" }}>
-                      <a
-                        href="#"
-                        style={{
-                          color: "rgba(255, 255, 255, 0.85)",
-                          fontSize: "12px",
-                          textDecoration: "none",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          transition: "all 0.15s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = "#ffffff";
-                          e.currentTarget.style.transform = "translateX(3px)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = "rgba(255, 255, 255, 0.85)";
-                          e.currentTarget.style.transform = "translateX(0)";
-                        }}
-                      >
-                        <span style={{ fontSize: "11px", opacity: 0.8 }}>→</span>
-                        <span>{item}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              Industries
             </div>
+            {[
+              { label: "Retailers", href: "retailers" },
+              { label: "Distributors", href: "distributors" },
+              { label: "3PLs", href: "3pls" },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                style={{
+                  color: "#ffffff",
+                  fontSize: "13px",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "7px",
+                  transition: "opacity 0.2s ease, transform 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = "0.75";
+                  e.currentTarget.style.transform = "translateX(2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = "1";
+                  e.currentTarget.style.transform = "none";
+                }}
+              >
+                <span style={{ fontSize: "11px", opacity: 0.9 }}>→</span>
+                <span>{item.label}</span>
+              </a>
+            ))}
+          </div>
 
-            {/* Social Icons (Far Right) */}
+          {/* Company Column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "14px",
-                paddingTop: "1px",
+                fontFamily: '"PP Telegraf", -apple-system, sans-serif',
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "#7CB1FF",
+                letterSpacing: "-0.3px",
               }}
             >
-              {/* X / Twitter */}
-              <a
-                href="https://x.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="X"
-                style={{
-                  color: "#ffffff",
-                  opacity: hoveredSocial === "x" ? 1 : 0.85,
-                  transform: hoveredSocial === "x" ? "translateY(-1px)" : "none",
-                  transition: "all 0.15s ease",
-                  display: "inline-flex",
-                }}
-                onMouseEnter={() => setHoveredSocial("x")}
-                onMouseLeave={() => setHoveredSocial(null)}
-              >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-              </a>
-
-              {/* Instagram */}
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Instagram"
-                style={{
-                  color: "#ffffff",
-                  opacity: hoveredSocial === "insta" ? 1 : 0.85,
-                  transform: hoveredSocial === "insta" ? "translateY(-1px)" : "none",
-                  transition: "all 0.15s ease",
-                  display: "inline-flex",
-                }}
-                onMouseEnter={() => setHoveredSocial("insta")}
-                onMouseLeave={() => setHoveredSocial(null)}
-              >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-              </a>
-
-              {/* Facebook */}
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Facebook"
-                style={{
-                  color: "#ffffff",
-                  opacity: hoveredSocial === "fb" ? 1 : 0.85,
-                  transform: hoveredSocial === "fb" ? "translateY(-1px)" : "none",
-                  transition: "all 0.15s ease",
-                  display: "inline-flex",
-                }}
-                onMouseEnter={() => setHoveredSocial("fb")}
-                onMouseLeave={() => setHoveredSocial(null)}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                </svg>
-              </a>
-
-              {/* LinkedIn */}
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="LinkedIn"
-                style={{
-                  color: "#ffffff",
-                  opacity: hoveredSocial === "li" ? 1 : 0.85,
-                  transform: hoveredSocial === "li" ? "translateY(-1px)" : "none",
-                  transition: "all 0.15s ease",
-                  display: "inline-flex",
-                }}
-                onMouseEnter={() => setHoveredSocial("li")}
-                onMouseLeave={() => setHoveredSocial(null)}
-              >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                </svg>
-              </a>
+              Company
             </div>
+            {[
+              { label: "About Us", href: "/about" },
+              { label: "Careers", href: "https://jobs.ashbyhq.com/response" },
+              { label: "Blog", href: "/blog" },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                style={{
+                  color: "#ffffff",
+                  fontSize: "13px",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "7px",
+                  transition: "opacity 0.2s ease, transform 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = "0.75";
+                  e.currentTarget.style.transform = "translateX(2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = "1";
+                  e.currentTarget.style.transform = "none";
+                }}
+              >
+                <span style={{ fontSize: "11px", opacity: 0.9 }}>→</span>
+                <span>{item.label}</span>
+              </a>
+            ))}
+          </div>
+
+          {/* Legal Column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div
+              style={{
+                fontFamily: '"PP Telegraf", -apple-system, sans-serif',
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "#7CB1FF",
+                letterSpacing: "-0.3px",
+              }}
+            >
+              Legal
+            </div>
+            {[
+              { label: "Privacy", href: "/privacy" },
+              { label: "Terms", href: "/terms" },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                style={{
+                  color: "#ffffff",
+                  fontSize: "13px",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "7px",
+                  transition: "opacity 0.2s ease, transform 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = "0.75";
+                  e.currentTarget.style.transform = "translateX(2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = "1";
+                  e.currentTarget.style.transform = "none";
+                }}
+              >
+                <span style={{ fontSize: "11px", opacity: 0.9 }}>→</span>
+                <span>{item.label}</span>
+              </a>
+            ))}
           </div>
         </div>
 
-        {/* Lower Main Section of Blue Card */}
+        {/* 2. Socials (grid-area: socials) */}
         <div
           style={{
-            position: "relative",
-            backgroundColor: "#1411b8",
-            borderTopLeftRadius: "22px",
-            borderBottomLeftRadius: "22px",
-            borderBottomRightRadius: "22px",
-            padding: "36px 36px 24px 36px",
-            marginTop: "-1px", // seamless joining with the upper tab
+            gridArea: "socials",
+            display: "flex",
+            gap: "22px",
+            justifyContent: "flex-end",
+            alignItems: "flex-start",
+            paddingTop: "6px",
           }}
         >
-          {/* Headline & Book a Demo Row */}
+          {/* X / Twitter */}
+          <a
+            href="https://twitter.com/tryresponse"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Twitter"
+            style={{
+              color: "#ffffff",
+              opacity: hoveredSocial === "x" ? 0.75 : 1,
+              transition: "opacity 0.2s ease",
+              display: "inline-flex",
+            }}
+            onMouseEnter={() => setHoveredSocial("x")}
+            onMouseLeave={() => setHoveredSocial(null)}
+          >
+            <svg width="15" height="15" viewBox="0 0 32 32" fill="none">
+              <path
+                d="M21.5355 7.16602H24.4873L18.0385 14.5366L25.6251 24.5663H19.6849L15.0323 18.4833L9.70871 24.5663H6.75513L13.6528 16.6826L6.375 7.16602H12.466L16.6715 12.7261L21.5355 7.16602ZM20.4996 22.7995H22.1352L11.5772 8.84001H9.82204L20.4996 22.7995Z"
+                fill="white"
+              />
+            </svg>
+          </a>
+
+          {/* Instagram */}
+          <a
+            href="https://instagram.com/tryresponse"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Instagram"
+            style={{
+              color: "#ffffff",
+              opacity: hoveredSocial === "insta" ? 0.75 : 1,
+              transition: "opacity 0.2s ease",
+              display: "inline-flex",
+            }}
+            onMouseEnter={() => setHoveredSocial("insta")}
+            onMouseLeave={() => setHoveredSocial(null)}
+          >
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+              <path
+                d="M9 0C6.55575 0 6.24926 0.01036 5.28931 0.05416C4.33137 0.09789 3.67712 0.25 3.10462 0.4725C2.51279 0.7025 2.01088 1.01025 1.51055 1.51058C1.01021 2.01092 0.70247 2.51283 0.47247 3.10466C0.24997 3.67712 0.09785 4.33137 0.05412 5.28931C0.01032 6.24926 0 6.55575 0 9C0 11.4443 0.01032 11.7507 0.05412 12.7107C0.09785 13.6686 0.24997 14.3229 0.47247 14.8953C0.70247 15.4872 1.01021 15.9891 1.51055 16.4895C2.01088 16.9898 2.51279 17.2975 3.10462 17.5275C3.67712 17.75 4.33137 17.9021 5.28931 17.9458C6.24926 17.9896 6.55575 18 9 18C11.4443 18 11.7507 17.9896 12.7107 17.9458C13.6686 17.9021 14.3229 17.75 14.8953 17.5275C15.4872 17.2975 15.9891 16.9898 16.4895 16.4895C16.9898 15.9891 17.2975 15.4872 17.5275 14.8953C17.75 14.3229 17.9021 13.6686 17.9458 12.7107C17.9896 11.7507 18 11.4443 18 9C18 6.55575 17.9896 6.24926 17.9458 5.28931C17.9021 4.33137 17.75 3.67712 17.5275 3.10466C17.2975 2.51283 16.9898 2.01092 16.4895 1.51058C15.9891 1.01025 15.4872 0.7025 14.8953 0.4725C14.3229 0.25 13.6686 0.09789 12.7107 0.05416C11.7507 0.01036 11.4443 0 9 0ZM9 1.62165C11.4031 1.62165 11.6878 1.6308 12.6368 1.6741C13.5143 1.71415 13.9908 1.86077 14.3079 1.98398C14.728 2.14725 15.0278 2.34231 15.3428 2.65723C15.6577 2.97215 15.8528 3.272 16.016 3.69206C16.1393 4.00919 16.2859 4.48574 16.3259 5.36323C16.3692 6.31224 16.3784 6.5969 16.3784 9C16.3784 11.4031 16.3692 11.6878 16.3259 12.6368C16.2859 13.5143 16.1393 13.9908 16.016 14.3079C15.8528 14.728 15.6577 15.0278 15.3428 15.3428C15.0278 15.6577 14.728 15.8528 14.3079 16.016C13.9908 16.1393 13.5143 16.2859 12.6368 16.3259C11.6879 16.3692 11.4033 16.3784 9 16.3784C6.59672 16.3784 6.31213 16.3692 5.36323 16.3259C4.48574 16.2859 4.00919 16.1393 3.69206 16.016C3.27196 15.8528 2.97215 15.6577 2.6572 15.3428C2.34227 15.0278 2.14721 14.728 1.98398 14.3079C1.86073 13.9908 1.71411 13.5143 1.67406 12.6368C1.63076 11.6878 1.62162 11.4031 1.62162 9C1.62162 6.5969 1.63076 6.31224 1.67406 5.36323C1.71411 4.48574 1.86073 4.00919 1.98398 3.69206C2.14721 3.272 2.34227 2.97215 2.6572 2.65723C2.97215 2.34231 3.27196 2.14725 3.69206 1.98398C4.00919 1.86077 4.48574 1.71415 5.36323 1.6741C6.31224 1.6308 6.5969 1.62165 9 1.62165ZM9 12C7.34366 12 6.00052 10.6564 6.00052 9C6.00052 7.34269 7.34366 5.99955 9 5.99955C10.6574 5.99955 12 7.34269 12 9C12 10.6564 10.6574 12 9 12ZM9 4.37793C6.44806 4.37793 4.37891 6.44708 4.37891 9C4.37891 11.552 6.44806 13.6212 9 13.6212C11.553 13.6212 13.6221 11.552 13.6221 9C13.6221 6.44708 11.553 4.37793 9 4.37793ZM14.8846 4.19571C14.8846 4.79218 14.4011 5.27569 13.8046 5.27569C13.2082 5.27569 12.7246 4.79218 12.7246 4.19571C12.7246 3.59923 13.2082 3.11572 13.8046 3.11572C14.4011 3.11572 14.8846 3.59923 14.8846 4.19571Z"
+                fill="white"
+              />
+            </svg>
+          </a>
+
+          {/* Facebook */}
+          <a
+            href="https://www.facebook.com/tryresponse/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Facebook"
+            style={{
+              color: "#ffffff",
+              opacity: hoveredSocial === "fb" ? 0.75 : 1,
+              transition: "opacity 0.2s ease",
+              display: "inline-flex",
+            }}
+            onMouseEnter={() => setHoveredSocial("fb")}
+            onMouseLeave={() => setHoveredSocial(null)}
+          >
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+              <path
+                d="M12.5353 10.4903L13.0017 7.43689H10.0839V5.45543C10.0839 4.62007 10.4915 3.80583 11.7984 3.80583H13.125V1.20632C13.125 1.20632 11.921 1 10.77 1C8.36688 1 6.79625 2.46233 6.79625 5.10972V7.43689H4.125V10.4903H6.79625V17.8717C7.33187 17.956 7.88086 18 8.44009 18C8.99933 18 9.54828 17.956 10.0839 17.8717V10.4903H12.5353Z"
+                fill="white"
+              />
+            </svg>
+          </a>
+
+          {/* LinkedIn */}
+          <a
+            href="https://www.linkedin.com/company/responseinc"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="LinkedIn"
+            style={{
+              color: "#ffffff",
+              opacity: hoveredSocial === "li" ? 0.75 : 1,
+              transition: "opacity 0.2s ease",
+              display: "inline-flex",
+            }}
+            onMouseEnter={() => setHoveredSocial("li")}
+            onMouseLeave={() => setHoveredSocial(null)}
+          >
+            <svg width="15" height="15" viewBox="0 0 32 32" fill="none">
+              <path
+                d="M24.9456 5.5H7.0504C6.19317 5.5 5.5 6.17676 5.5 7.01348V24.9825C5.5 25.8192 6.19317 26.5001 7.0504 26.5001H24.9456C25.8028 26.5001 26.5001 25.8192 26.5001 24.9866V7.01348C26.5001 6.17676 25.8028 5.5 24.9456 5.5ZM11.7303 23.3952H8.6131V13.3709H11.7303V23.3952ZM10.1717 12.0051C9.17091 12.0051 8.3629 11.1971 8.3629 10.2004C8.3629 9.20372 9.17091 8.39571 10.1717 8.39571C11.1684 8.39571 11.9764 9.20372 11.9764 10.2004C11.9764 11.193 11.1684 12.0051 10.1717 12.0051ZM23.3952 23.3952H20.2821V18.5225C20.2821 17.3618 20.2616 15.8647 18.662 15.8647C17.0418 15.8647 16.7957 17.1321 16.7957 18.4405V23.3952H13.6867V13.3709H16.6727V14.7408H16.7137C17.128 13.9533 18.1452 13.1207 19.6586 13.1207C22.8127 13.1207 23.3952 15.1961 23.3952 17.895V23.3952Z"
+                fill="white"
+              />
+            </svg>
+          </a>
+        </div>
+
+        {/* 3. Call Section with Divider (grid-area: smarter) */}
+        <div
+          style={{
+            gridArea: "smarter",
+            borderBottom: "1px solid white",
+            paddingBottom: "28px",
+            marginBottom: "12px",
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "24px",
+          }}
+        >
+          {/* Headline matching Footer__CallText-sc-12rbdn7-9 cNWwyq */}
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
+              fontFamily: '"PP Telegraf", -apple-system, sans-serif',
+              fontSize: "clamp(30px, 3.8vw, 54px)",
+              fontWeight: 400,
+              lineHeight: "92%",
+              letterSpacing: "-1.5px",
+              color: "white",
+              maxWidth: "600px",
+            }}
+          >
+            Response helps
+            <br />
+            you spend smarter
+            <br />
+            without working harder
+          </div>
+
+          {/* PrimaryCTA Button matching PrimaryCTA__Wrapper-sc-1gsb7bo-2 bqwrjd */}
+          <button
+            type="button"
+            style={{
+              padding: "18px 36px",
+              borderRadius: "16px",
+              fontFamily: '"PP Telegraf", -apple-system, sans-serif',
+              fontSize: "15px",
+              fontWeight: 600,
+              lineHeight: "100%",
+              letterSpacing: "-0.5px",
+              position: "relative",
+              display: "inline-flex",
               alignItems: "center",
-              flexWrap: "wrap",
-              gap: "24px",
-              marginBottom: "32px",
+              justifyContent: "center",
+              color: "#1916B0",
+              background: "white",
+              border: "1px solid white",
+              cursor: "pointer",
+              transition:
+                "background 0.3s cubic-bezier(0.76, 0, 0.09, 1), transform 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#EAF0FD";
+              e.currentTarget.style.transform = "translateY(-2px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "white";
+              e.currentTarget.style.transform = "none";
             }}
           >
-            {/* 3-Line Headline matching reference */}
-            <h2
-              style={{
-                color: "#ffffff",
-                fontSize: "clamp(26px, 3.2vw, 40px)",
-                fontWeight: 500,
-                lineHeight: 1.12,
-                letterSpacing: "-0.025em",
-                margin: 0,
-                maxWidth: "600px",
-              }}
-            >
-              Response helps
-              <br />
-              you spend smarter
-              <br />
-              without working harder
-            </h2>
+            Book a Demo
+          </button>
+        </div>
 
-            {/* Rounded Rectangle "Book a Demo" Button */}
-            <div>
-              <a
-                href="#demo"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "#ffffff",
-                  color: "#1411b8",
-                  fontSize: "13px",
-                  fontWeight: 600,
-                  padding: "13px 24px",
-                  borderRadius: "12px",
-                  textDecoration: "none",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                  transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = "0 6px 18px rgba(0, 0, 0, 0.18)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "none";
-                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.1)";
-                }}
-              >
-                Book a Demo
-              </a>
-            </div>
-          </div>
-
-          {/* Thin Horizontal Hairline Divider */}
-          <div
-            style={{
-              width: "100%",
-              height: "1px",
-              backgroundColor: "rgba(255, 255, 255, 0.18)",
-              marginBottom: "16px",
-            }}
-          />
-
-          {/* Bottom Row: Copyright + Barcode & Address */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-end",
-              flexWrap: "wrap",
-              gap: "16px",
-            }}
+        {/* 4. Copyright and Barcode (grid-area: copy) */}
+        <div
+          style={{
+            gridArea: "copy",
+            fontFamily: '"PP Telegraf", -apple-system, sans-serif',
+            fontSize: "12px",
+            fontWeight: 400,
+            lineHeight: "150%",
+            letterSpacing: "0.2px",
+            color: "white",
+            alignSelf: "center",
+            display: "flex",
+            flexDirection: "column",
+            gap: "5px",
+          }}
+        >
+          <div>© 2026 Response Inc.</div>
+          {/* Exact Barcode Vector matching Footer__Barcode-sc-12rbdn7-11 kVuQSw */}
+          <svg
+            width="127"
+            height="20"
+            viewBox="0 0 129 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ width: "120px", height: "18px" }}
           >
-            {/* Left: Copyright and Barcode */}
-            <div>
-              <p
-                style={{
-                  color: "rgba(255, 255, 255, 0.75)",
-                  fontSize: "11px",
-                  margin: "0 0 8px 0",
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                © 2025 Response Inc.
-              </p>
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M2.52368 0H0V19.2559H2.52368V0ZM14.6377 0H16.1519V19.2559H14.6377V0ZM72.1773 0H70.6631V19.2559H72.1773V0ZM75.2055 0H73.6912V19.2559H75.2055V0ZM98.4238 0H99.938V19.2559H98.4238V0ZM103.976 0H101.452V19.2559H103.976V0ZM77.2244 0H81.767V19.2559H77.2244V0ZM86.3097 0H83.7861V19.2559H86.3097V0ZM87.8242 0H88.8337V19.2559H87.8242V0ZM91.3572 0H90.3477V19.2559H91.3572V0ZM92.8712 0H93.8806V19.2559H92.8712V0ZM96.404 0H95.3945V19.2559H96.404V0ZM20.1895 0H17.6659V19.2559H20.1895V0ZM41.3887 0H42.9029V19.2559H41.3887V0ZM45.931 0H44.4168V19.2559H45.931V0ZM47.95 0H52.4926V19.2559H47.95V0ZM4.03786 0H5.04733V19.2559H4.03786V0ZM7.57112 0H6.56165V19.2559H7.57112V0ZM9.08511 0H10.0946V19.2559H9.08511V0ZM25.237 0H24.2275V19.2559H25.237V0ZM26.751 0H27.7604V19.2559H26.751V0ZM29.78 0H28.7705V19.2559H29.78V0ZM31.2939 0H32.3034V19.2559H31.2939V0ZM34.3221 0H33.3126V19.2559H34.3221V0ZM35.8361 0H36.8456V19.2559H35.8361V0ZM56.531 0H55.5215V19.2559H56.531V0ZM58.0449 0H59.0544V19.2559H58.0449V0ZM61.0731 0H60.0636V19.2559H61.0731V0ZM62.587 0H63.5965V19.2559H62.587V0ZM65.6159 0H64.6064V19.2559H65.6159V0ZM67.1299 0H68.1394V19.2559H67.1299V0ZM12.6188 0H11.6094V19.2559H12.6188V0Z"
+              fill="white"
+            />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M110.597 13.5819V2.59705L121.622 2.59803C123.432 2.64166 124.88 4.12306 124.88 5.93718C124.88 7.75132 123.432 9.23271 121.622 9.27635L121.531 9.27871H117.278L117.277 13.6233C117.233 15.4329 115.751 16.8806 113.937 16.8806C112.123 16.8806 110.642 15.4329 110.597 13.5819ZM124.88 13.5404C124.88 15.3851 123.384 16.8805 121.539 16.8805C119.694 16.8805 118.199 15.3851 118.199 13.5404C118.199 11.6957 119.694 10.2003 121.539 10.2003C123.384 10.2003 124.88 11.6957 124.88 13.5404Z"
+              fill="white"
+            />
+            <rect
+              x="108.325"
+              y="0.324627"
+              width="18.8284"
+              height="18.8284"
+              stroke="white"
+              strokeWidth="0.649254"
+            />
+          </svg>
+        </div>
 
-              {/* Barcode Graphic + Badge */}
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "5px",
-                  opacity: 0.85,
-                }}
-              >
-                {/* Vector Barcode */}
-                <svg
-                  width="112"
-                  height="18"
-                  viewBox="0 0 130 22"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect x="0" y="0" width="2" height="22" fill="#ffffff" />
-                  <rect x="4" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="7" y="0" width="3" height="22" fill="#ffffff" />
-                  <rect x="12" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="15" y="0" width="2" height="22" fill="#ffffff" />
-                  <rect x="19" y="0" width="4" height="22" fill="#ffffff" />
-                  <rect x="25" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="28" y="0" width="2" height="22" fill="#ffffff" />
-                  <rect x="32" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="35" y="0" width="3" height="22" fill="#ffffff" />
-                  <rect x="40" y="0" width="2" height="22" fill="#ffffff" />
-                  <rect x="44" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="47" y="0" width="4" height="22" fill="#ffffff" />
-                  <rect x="53" y="0" width="2" height="22" fill="#ffffff" />
-                  <rect x="57" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="60" y="0" width="3" height="22" fill="#ffffff" />
-                  <rect x="65" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="68" y="0" width="2" height="22" fill="#ffffff" />
-                  <rect x="72" y="0" width="4" height="22" fill="#ffffff" />
-                  <rect x="78" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="81" y="0" width="3" height="22" fill="#ffffff" />
-                  <rect x="86" y="0" width="2" height="22" fill="#ffffff" />
-                  <rect x="90" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="93" y="0" width="2" height="22" fill="#ffffff" />
-                  <rect x="97" y="0" width="4" height="22" fill="#ffffff" />
-                  <rect x="103" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="106" y="0" width="3" height="22" fill="#ffffff" />
-                  <rect x="111" y="0" width="2" height="22" fill="#ffffff" />
-                  <rect x="115" y="0" width="1" height="22" fill="#ffffff" />
-                  <rect x="118" y="0" width="2" height="22" fill="#ffffff" />
-                  <rect x="122" y="0" width="3" height="22" fill="#ffffff" />
-                  <rect x="127" y="0" width="2" height="22" fill="#ffffff" />
-                </svg>
-
-                {/* Square Icon Badge */}
-                <div
-                  style={{
-                    width: "18px",
-                    height: "18px",
-                    border: "1.2px solid rgba(255, 255, 255, 0.8)",
-                    borderRadius: "4px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: "2px",
-                  }}
-                >
-                  <svg width="11" height="11" viewBox="0 0 135 118" fill="none">
-                    <path
-                      d="M 42 110 C 18.8 110 0 91.2 0 68 L 0 42 C 0 18.8 18.8 0 42 0 L 92 0 C 115.2 0 134 18.8 134 42 C 134 65.2 115.2 84 92 84 L 56 84 C 52 84 48 88 48 92 L 48 104 C 48 107.3 45.3 110 42 110 Z"
-                      fill="#ffffff"
-                    />
-                    <circle cx="95" cy="85" r="28" fill="#ffffff" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Phone & Address */}
-            <div
-              style={{
-                textAlign: "right",
-                color: "rgba(255, 255, 255, 0.75)",
-                fontSize: "10px",
-                lineHeight: 1.45,
-                letterSpacing: "0.04em",
-                fontFamily:
-                  'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace',
-              }}
-            >
-              <div>+1 (844) 966-1910</div>
-              <div>2261 MARKET STREET STE 4116</div>
-              <div>SAN FRANCISCO, CA 94114-1612</div>
-            </div>
-          </div>
+        {/* 5. Address (grid-area: address) */}
+        <div
+          style={{
+            gridArea: "address",
+            fontFamily: '"PP Telegraf", -apple-system, sans-serif',
+            fontSize: "12px",
+            fontWeight: 400,
+            lineHeight: "106.5%",
+            letterSpacing: "0.2px",
+            textAlign: "right",
+            color: "white",
+            alignSelf: "center",
+          }}
+        >
+          +1 (844) 966-1910
+          <br />
+          2261 MARKET STREET STE 4116
+          <br />
+          SAN FRANCISCO, CA 94114-1612
         </div>
       </div>
     </footer>

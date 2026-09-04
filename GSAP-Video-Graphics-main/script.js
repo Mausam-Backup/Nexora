@@ -1,6 +1,6 @@
 const frames = {
   currentIndex: 0,
-  maxIndex: 1367, // Updated to use 1367 frames
+  maxIndex: 302, // 302 frames extracted from lion.mp4
 };
 
 const canvas = document.querySelector("canvas");
@@ -87,54 +87,57 @@ function startAnimation() {
   //     },
   //   });
 
+  // Helper to proportionally scale keyframe targets to available frames
+  const frameAt = (baseIndex) => Math.min(Math.round((baseIndex / 1344) * (frames.maxIndex - 1)), frames.maxIndex - 1);
+
   //as a is written, it's a flag that make sures both animation happen same time rather, one after another like regular .to
   tl
-  .to(frames, updateFrame(84), "first")
+  .to(frames, updateFrame(frameAt(84)), "first")
   .to(".animate1",{opacity: 0, ease: "linear"},"first")
 
-  .to(frames, updateFrame(168), "second")
+  .to(frames, updateFrame(frameAt(168)), "second")
   .to(".animate2",{opacity: 1, ease: "linear"},"second")
 
-  .to(frames, updateFrame(252), "third")
+  .to(frames, updateFrame(frameAt(252)), "third")
   .to(".animate2",{opacity: 1, ease: "linear"},"third")
 
-  .to(frames, updateFrame(336), "fourth")
+  .to(frames, updateFrame(frameAt(336)), "fourth")
   .to(".animate2",{opacity: 0, ease: "linear"},"fourth")
 
-  .to(frames, updateFrame(420), "fifth")
+  .to(frames, updateFrame(frameAt(420)), "fifth")
   .to(".animate3",{opacity: 1, ease: "linear"},"fifth")
 
-  .to(frames, updateFrame(504), "sixth")
+  .to(frames, updateFrame(frameAt(504)), "sixth")
   .to(".animate3",{opacity: 1, ease: "linear"},"sixth")
 
-  .to(frames, updateFrame(588), "seventh")
+  .to(frames, updateFrame(frameAt(588), "seventh"))
   .to(".animate3",{opacity: 0, ease: "linear"},"seventh")
 
-  .to(frames, updateFrame(672), "eighth")
+  .to(frames, updateFrame(frameAt(672)), "eighth")
   .to(".panel",{x: "0%", ease: "expo"},"eighth")
 
-  .to(frames, updateFrame(756), "ninth")
+  .to(frames, updateFrame(frameAt(756)), "ninth")
   .to(".panel",{x: "0%", ease: "expo"},"ninth")
   
-  .to(frames, updateFrame(840), "tenth")
+  .to(frames, updateFrame(frameAt(840)), "tenth")
   .to(".panel",{opacity: "0", ease: "linear"},"tenth")
   
-  .to(frames, updateFrame(924), "eleventh")
+  .to(frames, updateFrame(frameAt(924)), "eleventh")
   .to("canvas",{scale: .5, ease: "linear"},"eleventh")
   
-  .to(frames, updateFrame(1008), "twelveth")
+  .to(frames, updateFrame(frameAt(1008)), "twelveth")
   .to(".panelism",{opacity: 1, ease: "expo"},"twelveth")
   
-  .to(frames, updateFrame(1092), "twelveth")
+  .to(frames, updateFrame(frameAt(1092)), "twelveth")
   .to(".panelism span",{width: 200, ease: "expo"},"twelveth")
   
-  .to(frames, updateFrame(1176), "thirteen")
+  .to(frames, updateFrame(frameAt(1176)), "thirteen")
   .to("canvas",{scale: 1, ease: "linear"},"thirteen")
   
-  .to(frames, updateFrame(1260), "fourteen")
+  .to(frames, updateFrame(frameAt(1260)), "fourteen")
   .to(".panelism",{scale: 2, ease: "circ"},"fourteen")
   
-  .to(frames, updateFrame(1344), "fifteen")
+  .to(frames, updateFrame(frameAt(1344)), "fifteen")
   .to(".panelism",{scale: 2, ease: "circ"},"fifteen");
 
 }

@@ -28,3 +28,5 @@ dist-ssr
 
 # Large media files (exceeds GitHub 100MB limit)
 *.mp4
+output_frames/
+lion_frames/

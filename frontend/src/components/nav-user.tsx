@@ -60,6 +60,9 @@ export function NavUser({
     navigate('/login')
   }
 
+  const activeName = authUser?.name || userData.name || user.name || "Set your name"
+  const activeEmail = authUser?.email || userData.email || user.email || "user@university.edu"
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -70,16 +73,16 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={userData.avatar || user.avatar} alt={userData.name || user.name} />
+                <AvatarImage src={userData.avatar || user.avatar} alt={activeName} />
                 <AvatarFallback className="rounded-lg">
-                  {(userData.name || user.name) ? (userData.name || user.name).split(' ').map(n => n[0]).join('').toUpperCase() : <User className="h-4 w-4" />}
+                  {activeName ? activeName.split(' ').map(n => n[0]).join('').toUpperCase() : <User className="h-4 w-4" />}
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{userData.name || user.name || "Set your name"}</span>
-                <span className="truncate text-xs">{userData.email || user.email || "Set your email"}</span>
+              <div className="grid flex-1 text-left text-sm leading-tight min-w-0">
+                <span className="truncate font-semibold">{activeName}</span>
+                <span className="truncate text-xs text-muted-foreground">{activeEmail}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <ChevronsUpDown className="ml-auto size-4 shrink-0 text-muted-foreground" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -91,14 +94,14 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={userData.avatar || user.avatar} alt={userData.name || user.name} />
+                  <AvatarImage src={userData.avatar || user.avatar} alt={activeName} />
                   <AvatarFallback className="rounded-lg">
-                    {(userData.name || user.name) ? (userData.name || user.name).split(' ').map(n => n[0]).join('').toUpperCase() : <User className="h-4 w-4" />}
+                    {activeName ? activeName.split(' ').map(n => n[0]).join('').toUpperCase() : <User className="h-4 w-4" />}
                   </AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{userData.name || user.name || "Set your name"}</span>
-                  <span className="truncate text-xs">{userData.email || user.email || "Set your email"}</span>
+                <div className="grid flex-1 text-left text-sm leading-tight min-w-0">
+                  <span className="truncate font-semibold">{activeName}</span>
+                  <span className="truncate text-xs text-muted-foreground">{activeEmail}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

@@ -27,11 +27,28 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'sans': ['Inter', 'ui-sans-serif', 'system-ui'],
-				'serif': ['Playfair Display', 'ui-serif', 'Georgia'],
-				'mono': ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular'],
+				'sans': ['"Times New Roman"', 'Times', 'Georgia', 'serif'],
+				'serif': ['"Times New Roman"', 'Times', 'Georgia', 'serif'],
+				'mono': ['"Times New Roman"', 'Times', 'Georgia', 'serif'],
 			},
 			colors: {
+				pastel: {
+					blue: '#5EA6EB',      // Primary Action & Focus (Soft Royal Blue)
+					mint: '#C4EFDF',      // Success & Reconciled (Mint Green)
+					teal: '#4FA1D8',      // Teal Accent / Attendance line
+					coral: '#FFA5A8',     // Warning & Alert (Soft Coral Red)
+					salmon: '#FFBC94',    // Muted Salmon
+					peach: '#FFDBBA',     // Peach
+					rose: '#FF8894',      // Coral Rose
+					turquoise: '#A1E8DD', // Informational & Analytics (Pastel Turquoise)
+					sky: '#A5E5FF',       // Sky Blue / Dean Tag
+					lavender: '#E2B1CE',  // Secondary Metric & Accents (Soft Lavender)
+					lilac: '#F7DFF6',     // Pastel Lilac
+					purple: '#C387C2',    // Muted Purple
+					pink: '#FA85BD',      // Bright Pink Accent
+					grey: '#E3E5E8',      // Light Grey / Zebra Striping Light
+					charcoal: '#ACB2BB',  // Muted Charcoal
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',

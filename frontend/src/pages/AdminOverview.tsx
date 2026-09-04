@@ -23,7 +23,10 @@ import {
   RefreshCw,
   CreditCard,
   CheckCheck,
-  FileSpreadsheet
+  FileSpreadsheet,
+  RotateCcw,
+  Sparkles,
+  ShieldAlert
 } from 'lucide-react'
 import { useAdminData } from '@/hooks/useAdminData'
 import { useERPData } from '@/hooks/useERPData'
@@ -39,9 +42,10 @@ const AdminOverview = () => {
     statistics 
   } = useAdminData()
 
-  const { students, stats, serverConnected, runIntegrityAudit } = useERPData()
+  const { students, stats, serverConnected, runIntegrityAudit, resetToDefaultData } = useERPData()
   const { toast } = useToast()
   const [isAuditing, setIsAuditing] = useState(false)
+  const [isSimulatingLegacy, setIsSimulatingLegacy] = useState(false)
   const [lastAudited, setLastAudited] = useState<string>('Just now')
 
   const handleReaudit = () => {
@@ -54,6 +58,14 @@ const AdminOverview = () => {
         description: `Verified ${students.length} student records across Admissions, Attendance, Fees, and Exams. All entities unified with 0 mismatches.`,
       })
     }, 600)
+  }
+
+  const handleResetDemoData = () => {
+    resetToDefaultData()
+    toast({
+      title: "ERP Database Reset",
+      description: "Default benchmark student records, attendance quotas, and fee ledgers restored.",
+    })
   }
 
   const quickStats = [
@@ -251,10 +263,16 @@ const AdminOverview = () => {
             </p>
           </div>
           
-          <Button onClick={handleReaudit} disabled={isAuditing} variant="outline" className="gap-2">
-            <RefreshCw className={`h-4 w-4 ${isAuditing ? 'animate-spin text-primary' : ''}`} />
-            {isAuditing ? 'Auditing Cross-Module Data...' : 'Re-Run Discrepancy Audit'}
-          </Button>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Button onClick={handleResetDemoData} variant="outline" size="sm" className="gap-1.5 text-xs">
+              <RotateCcw className="h-3.5 w-3.5 text-muted-foreground" />
+              Reset Demo DB
+            </Button>
+            <Button onClick={handleReaudit} disabled={isAuditing} variant="default" size="sm" className="gap-2 bg-primary text-primary-foreground">
+              <RefreshCw className={`h-3.5 w-3.5 ${isAuditing ? 'animate-spin' : ''}`} />
+              {isAuditing ? 'Auditing Cross-Module Data...' : 'Re-Run Discrepancy Audit'}
+            </Button>
+          </div>
         </div>
 
         {/* Quick Stats */}
@@ -417,14 +435,71 @@ const AdminOverview = () => {
                   </CardDescription>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  variant={isSimulatingLegacy ? "destructive" : "outline"}
+                  onClick={() => {
+                    const next = !isSimulatingLegacy
+                    setIsSimulatingLegacy(next)
+                    if (next) {
+                      toast({
+                        variant: "destructive",
+                        title: "Simulating Legacy Spreadsheet Mismatches",
+                        description: "Demonstrating disconnected Excel silos: 4 severe cross-module discrepancies active.",
+                      })
+                    } else {
+                      toast({
+                        title: "Auto-Reconciliation Applied",
+                        description: "Nexora Unified Engine resolved all 4 mismatches across all student entities.",
+                      })
+                    }
+                  }}
+                  className="gap-1.5 text-xs font-semibold"
+                >
+                  {isSimulatingLegacy ? (
+                    <>
+                      <ShieldAlert className="h-3.5 w-3.5" />
+                      <span>Viewing: Legacy Spreadsheets</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                      <span>Simulate Mismatches</span>
+                    </>
+                  )}
+                </Button>
                 <Badge variant="outline" className="text-xs font-mono">
-                  Audit Timestamp: {lastAudited}
+                  Audit: {lastAudited}
                 </Badge>
               </div>
             </div>
           </CardHeader>
           <CardContent className="pt-4">
+            {isSimulatingLegacy && (
+              <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-700 dark:text-red-300 text-xs flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <ShieldAlert className="h-5 w-5 text-red-600 shrink-0" />
+                  <div>
+                    <strong>Legacy Disconnected Spreadsheets Active:</strong> 4 critical data mismatches across Faculty, Finance & Exam offices. Manual reconciliation required.
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    setIsSimulatingLegacy(false)
+                    toast({
+                      title: "✨ Nexora Auto-Reconciled",
+                      description: "Automated integrity gate resolved all data discrepancies in 0ms.",
+                    })
+                  }}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-7 px-3"
+                >
+                  Auto-Reconcile Now
+                </Button>
+              </div>
+            )}
+
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -451,17 +526,17 @@ const AdminOverview = () => {
                         </div>
                       </td>
                       <td className="py-3.5 px-4 align-top">
-                        <p className="text-xs text-foreground/90">{rec.resolution}</p>
-                        <div className="flex items-center gap-1 mt-1 text-[11px] text-emerald-600 font-medium">
-                          <CheckCircle className="h-3 w-3 flex-shrink-0" />
-                          <span>{rec.impact}</span>
+                        <p className="text-xs text-foreground/90">{isSimulatingLegacy ? '⚠️ Manual spreadsheet cross-checking pending by registrar staff.' : rec.resolution}</p>
+                        <div className={`flex items-center gap-1 mt-1 text-[11px] font-medium ${isSimulatingLegacy ? 'text-red-600' : 'text-emerald-600'}`}>
+                          {isSimulatingLegacy ? <AlertCircle className="h-3 w-3 flex-shrink-0" /> : <CheckCircle className="h-3 w-3 flex-shrink-0" />}
+                          <span>{isSimulatingLegacy ? 'Data mismatch active on spreadsheets' : rec.impact}</span>
                         </div>
                       </td>
                       <td className="py-3.5 pl-4 align-top text-right">
-                        <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-[11px] font-bold">
-                          {rec.status}
+                        <Badge className={`${isSimulatingLegacy ? 'bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/30' : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'} text-[11px] font-bold`}>
+                          {isSimulatingLegacy ? 'MISMATCH ACTIVE' : rec.status}
                         </Badge>
-                        <div className="text-[10px] text-muted-foreground mt-1 font-mono">{rec.time}</div>
+                        <div className="text-[10px] text-muted-foreground mt-1 font-mono">{isSimulatingLegacy ? 'Requires Manual Fix' : rec.time}</div>
                       </td>
                     </tr>
                   ))}

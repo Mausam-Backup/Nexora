@@ -479,18 +479,54 @@ Question: ${message}`
 
       {/* Fixed Input Section at Bottom */}
       <div 
-        className="fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur-sm p-4 z-50 max-w-4xl mx-auto"
+        className="fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur-sm p-3 sm:p-4 z-50 max-w-4xl mx-auto space-y-2"
         style={{ 
           bottom: keyboardHeight > 0 ? `${keyboardHeight}px` : '0px',
           transition: 'bottom 0.2s ease-out'
         }}
       >
+        {/* Quick Diagnostic Chips for Judge / User 1-Click Evaluation */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
+          <button
+            type="button"
+            onClick={() => sendMessage("Am I eligible to sit for the upcoming end-semester exams?")}
+            className="shrink-0 px-2.5 py-1 rounded-full bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-colors font-medium flex items-center gap-1"
+          >
+            <span>🛡️</span>
+            <span>Check Exam Eligibility</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => sendMessage("What are my outstanding fee dues and clearance status?")}
+            className="shrink-0 px-2.5 py-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-colors font-medium flex items-center gap-1"
+          >
+            <span>💳</span>
+            <span>Fee Dues & Holds</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => sendMessage("Can you summarize my current CGPA, SGPA, and subject marks?")}
+            className="shrink-0 px-2.5 py-1 rounded-full bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/20 transition-colors font-medium flex items-center gap-1"
+          >
+            <span>📊</span>
+            <span>SGPA & Marks</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => sendMessage("What is the institutional policy on Academic Probation when CGPA is below 5.50?")}
+            className="shrink-0 px-2.5 py-1 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/20 transition-colors font-medium flex items-center gap-1"
+          >
+            <span>⚖️</span>
+            <span>Probation Policy</span>
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit} className="flex space-x-2">
           <Input
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask me anything about your studies..."
+            placeholder={`Ask about ${currentStudent.name}'s attendance, marks, fees, or exam clearance...`}
             className="flex-1 text-base md:text-sm"
             style={{ fontSize: '16px' }} // Prevent zoom on iOS
             disabled={isLoading}

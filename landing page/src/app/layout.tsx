@@ -3,19 +3,19 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SecuredFinanve v2",
-  description: "Secured Finance - The Institutional DeFi Protocol",
+  title: "Nexora — Enterprise Integrated Campus ERP & Reconciliation Ledger",
+  description: "Nexora (Problem Statement PS-6) — Enterprise-Grade Integrated Student Management & Reconciliation System. Featuring 0ms multi-window synchronization, automated statutory gatekeeping, AI copilot, and deterministic audit ledgers.",
   icons: {
     icon: "/images/favicon.png",
     apple: "/images/webclip.png",
   },
   openGraph: {
-    title: "SecuredFinanve v2",
-    description: "Secured Finance - The Institutional DeFi Protocol",
+    title: "Nexora — Enterprise Integrated Campus ERP & Reconciliation Ledger",
+    description: "Enterprise-grade collegiate platform replacing disconnected spreadsheets with a single synchronized relational ledger and 0ms BroadcastChannel event fabric.",
   },
   twitter: {
-    title: "SecuredFinanve v2",
-    description: "Secured Finance - The Institutional DeFi Protocol",
+    title: "Nexora — Enterprise Integrated Campus ERP & Reconciliation Ledger",
+    description: "Enterprise-grade collegiate platform replacing disconnected spreadsheets with a single synchronized relational ledger and 0ms BroadcastChannel event fabric.",
   },
 };
 
@@ -55,7 +55,7 @@ export default function RootLayout({
 
         {/* Vendor & Runtime Scripts */}
         <script src="/js/jquery-3.5.1.min.dc5e7f18c8.js" defer></script>
-        <script src="/js/secured-finance-old.js" defer></script>
+        <script src="/js/nexora-platform.js" defer></script>
         <script src="/gh/studio-freight/lenis@latest/bundled/lenis.js" defer></script>
         <script src="/ajax/libs/gsap/3.11.3/gsap.min.js" defer></script>
         <script src="/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js" defer></script>

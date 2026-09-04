@@ -10,26 +10,26 @@ export default function MainContent() {
         <div className="hero-slide">
           <div className="hero-slide__head" style={{ display: "none" }}>
             <div className="hero-slide__head-is1 perspective">
-              <h1 data-w-id="8995ea1c-a38e-c732-729b-3eef13438be3" className="h1 white">Interbank-grade Capital</h1>
+              <h1 data-w-id="8995ea1c-a38e-c732-729b-3eef13438be3" className="h1 white">Autonomous Collegiate</h1>
             </div>
             <div className="hero-slide__head-is2 perspective">
-              <h1 data-w-id="8995ea1c-a38e-c732-729b-3eef13438be5" className="h1 white">Markets Protocol</h1>
+              <h1 data-w-id="8995ea1c-a38e-c732-729b-3eef13438be5" className="h1 white">Relational Ledger</h1>
             </div>
             <div className="hero-slide__head-is3 perspective">
               <div data-w-id="96c5a99d-f3e1-44a3-c049-ce568e2ecf6c" className="hero-slide__last-h-container perspective">
                 <h1 className="h1 white">meets</h1>
                 <div className="hero-slide__head-line">
-                  <h1 className="h1 green-font">De</h1>
-                  <h1 className="h1 green-font-italic">Fi.</h1>
+                  <h1 className="h1 green-font">Nex</h1>
+                  <h1 className="h1 green-font-italic">ora.</h1>
                   <div data-w-id="dc81127e-fc18-05a4-0196-1ecbdcec1aed" className="hero-slide__line"></div>
                 </div>
               </div>
             </div>
           </div>
           <div style={{"opacity":"1"}} className="hero-slide__bt-container">
-            <a href="#" className="button-container mob-hide nav-1 w-inline-block explore-btn">
+            <a href="#platform" className="button-container mob-hide nav-1 w-inline-block explore-btn">
               <div data-w-id="dbf30812-dd30-beaf-32a4-f096eee5f5e7" className="hero__bt-container">
-                <div data-w-id="8995ea1c-a38e-c732-729b-3eef13438bf5" className="button-text">Explore</div>
+                <div data-w-id="8995ea1c-a38e-c732-729b-3eef13438bf5" className="button-text">Explore Architecture</div>
                 <div className="bt-ic w-embed">
                   <svg width="100%" height="100%" viewBox="0 0 12 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill="currentColor" clipRule="evenodd" d="M5.00398 7.58579V0H7.00398V7.58579L10.2969 4.29289L11.7111 5.70711L6.00398 11.4142L0.296875 5.70711L1.71109 4.29289L5.00398 7.58579Z">
@@ -39,17 +39,17 @@ export default function MainContent() {
               </div>
               <div data-w-id="e9a05728-4d9b-85d2-143d-14aee99ffcff" className="menu-button__bg transparent is1"></div>
             </a>
-            <a href="#" className="button-green-container margin-left mob to-footer w-inline-block">
+            <a href="mailto:mausamkar5055@gmail.com?subject=Contact%20Team%20AC-DC%20-%20Nexora" className="button-green-container margin-left mob to-footer w-inline-block">
               <div className="bt-wrapper-text">
-                <div data-w-id="8995ea1c-a38e-c732-729b-3eef13438bf9" className="button-text">Sign up</div>
+                <div data-w-id="8995ea1c-a38e-c732-729b-3eef13438bf9" className="button-text">Contact Us</div>
               </div>
               <div data-w-id="65a9b9da-f8a1-0ae8-1b80-53ce3acd00a9" className="menu-button__bg is2"></div>
             </a>
           </div>
           <div data-w-id="9785e6ca-a1df-1993-03dd-7d11ee2ddcb2" className="hero-slide__link-container">
             <div style={{"opacity":"1"}} className="hero-slide__links-container">
-              <a href="#" className="hero-slide__link w-inline-block">
-                <div className="body-caps">Read documentation</div>
+              <a href="https://github.com/Mausam5055/Nexora#readme" target="_blank" className="hero-slide__link w-inline-block">
+                <div className="body-caps">Read PS-6 Architecture Spec</div>
               </a>
               <div className="share">
                 <div id="sharebtn" className="hero-slide__link">
@@ -105,11 +105,11 @@ export default function MainContent() {
           <div data-w-id="84478833-fd79-2bd1-f607-afa7afff23ca" className="hero-quote">
             <div className="hero-quote__text-block">
               <h2 className="h3-large is-quote">
-                <span className="hero-quote__span is1 perspective">Interbank-grade Capital Markets</span>
-                <span className="hero-quote__span is2 perspective">Protocol. Building a trillion dollar-</span><span className="hero-quote__span is3 perspective">scale transaction platform that’s</span>
-                <span className="hero-quote__span is4 perspective">open to everyone, connecting</span>
-                <span className="hero-quote__span is5 perspective">groundbreaking technologies with</span>
-                <span className="hero-quote__span is6 perspective">battle-tested interbanking standards.</span>
+                <span className="hero-quote__span is1 perspective">Autonomous Collegiate Relational</span>
+                <span className="hero-quote__span is2 perspective">Ledger &amp; State Engine. Unifying</span><span className="hero-quote__span is3 perspective">campus administration onto a</span>
+                <span className="hero-quote__span is4 perspective">single synchronized relational store,</span>
+                <span className="hero-quote__span is5 perspective">eliminating departmental silos with</span>
+                <span className="hero-quote__span is6 perspective">0ms sub-millisecond state propagation.</span>
               </h2>
             </div>
           </div>
@@ -118,17 +118,17 @@ export default function MainContent() {
               <div className="scroll-anim__1s-text-container">
                 <div className="scroll-anim__1s-heading">
                   <div className="scroll-anim__1s-h-container-1 anim-h-is1">
-                    <h2 className="h2 light">New</h2>
+                    <h2 className="h2 light">Unified</h2>
                     <div className="scroll-anim__1s-h-img"></div>
-                    <h2 className="h2 light">era</h2>
+                    <h2 className="h2 light">state</h2>
                   </div>
                   <div className="scroll-anim__1s-h-container-2 anim-h-is2">
-                    <h2 className="h2 light">of investing</h2>
+                    <h2 className="h2 light">engine</h2>
                   </div>
                   <div className="scroll-anim__1s-description anim-desc">
                     <div className="body-text-l light">
-                      We are on the verge of a new era for investing: where the market scales from billions to
-                      trillions, with unprecedented opportunities available to all.
+                      Transitioning collegiate operations from fragmented Excel sheets and paper registers
+                      to a deterministic single store (`campussync-unified-erp-v1`) with 100% audit accuracy.
                     </div>
                   </div>
                 </div>
@@ -139,16 +139,15 @@ export default function MainContent() {
                 <div className="scroll-anim__2s-heading perspective">
                   <div className="scroll-anim__2s-h-container-1 anim-h-is1">
                     <div className="scroll-anim__2s-h-img"></div>
-                    <h2 className="h2 light">Realiable</h2>
+                    <h2 className="h2 light">Zero-latency</h2>
                   </div>
                   <div className="scroll-anim__2s-h-container-2 anim-h-is2">
-                    <h2 className="h2 light">yield curve</h2>
+                    <h2 className="h2 light">broadcast bus</h2>
                   </div>
                 </div>
                 <div className="scroll-anim__2s-description anim-desc">
                   <div className="body-text-l light">
-                    Long-term exchanges, efficient collateral management and hedging cannot happen without a standard
-                    interest rate, based on a reliable yield curve
+                    Instantaneous multi-window event propagation via hardware-accelerated BroadcastChannel bus. Mutations in faculty attendance synchronize with examination gatekeepers in 0ms without page reloads.
                   </div>
                 </div>
               </div>
@@ -157,16 +156,15 @@ export default function MainContent() {
               <div className="scroll-anim__3s-text-container">
                 <div className="scroll-anim__3s-heading perspective">
                   <div className="scroll-anim__3s-h-container-1 anim-h-is1">
-                    <h2 className="h2 light">Building</h2>
+                    <h2 className="h2 light">Statutory</h2>
                     <div className="scroll-anim__3s-h-img"></div>
                   </div>
                   <div className="scroll-anim__3s-h-container-2 anim-h-is2">
-                    <h2 className="h2 light">the future</h2>
+                    <h2 className="h2 light">gatekeeper</h2>
                   </div>
                   <div className="scroll-anim__3s-description anim-desc">
                     <div className="body-text-l light">
-                      At Secured Finance, we connect ground-breaking DeFi technologies with battle-tested interbanking
-                      standards. Building a responsive, elegant infrastructure that takes you to the future.
+                      At Nexora, we bridge rigorous relational database integrity with high-frequency reactive state. Automated 75% AICTE attendance locks, dynamic dues holds, and watermarked transcripts eliminate campus fraud.
                     </div>
                   </div>
                 </div>
@@ -182,11 +180,10 @@ export default function MainContent() {
                     </div>
                   </div>
                   <div data-w-id="84478833-fd79-2bd1-f607-afa7afff240c" className="scroll-anim__4s-ftrs-text">
-                    <h4 className="h3 light">Real yield<br /></h4>
-                    <h4 className="h3 light">Curve</h4>
+                    <h4 className="h3 light">Anti-Mismatch<br /></h4>
+                    <h4 className="h3 light">State Ledger</h4>
                     <div className="body-text gray top-margin-30px mob-centre text-white">
-                      Interest rates negotiation, counterparty finding, collateral management made easy. Ensuring
-                      no-arbitrage pricing via open orderbook.
+                      Legacy spreadsheet ingestion simulator identifies cross-departmental discrepancies, auto-reconciles anomalies, and exports compliance audit CSVs.
                     </div>
                   </div>
                 </div>
@@ -200,11 +197,10 @@ export default function MainContent() {
                     </div>
                   </div>
                   <div data-w-id="84478833-fd79-2bd1-f607-afa7afff241a" className="scroll-anim__4s-ftrs-text">
-                    <h4 className="h3 light">Composability</h4>
-                    <h4 className="h3 light">&amp; Scalability</h4>
+                    <h4 className="h3 light">Sub-Millisecond<br /></h4>
+                    <h4 className="h3 light">Multi-Tab Bus</h4>
                     <div className="body-text gray top-margin-30px mob-centre text-white">
-                      Yield curve as one market to enable interpolating and composing interest rates. Netting enables
-                      reduced collateral and leverage on derivatives.
+                      Changes marked in Faculty attendance immediately cascade to CoE Hall Ticket gatekeepers in 0ms without server poll delays or manual refresh.
                     </div>
                   </div>
                 </div>
@@ -216,11 +212,10 @@ export default function MainContent() {
                     </div>
                   </div>
                   <div data-w-id="84478833-fd79-2bd1-f607-afa7afff2426" className="scroll-anim__4s-ftrs-text">
-                    <h4 className="h3 light">Forward</h4>
-                    <h4 className="h3 light">Loan &amp; NDFs</h4>
+                    <h4 className="h3 light">Statutory Gates<br /></h4>
+                    <h4 className="h3 light">&amp; Moderation</h4>
                     <div className="body-text gray top-margin-30px mob-centre text-white">
-                      Composing forward loan to manage future cash-flow. NDFs allow manageing cross-currency without
-                      suffeeing cross chain risks.
+                      Automated grace marks batch moderation, statutory parent notice PDF/SMS generation, QR barcode admit cards, and context-aware ERP AI Copilot.
                     </div>
                   </div>
                 </div>
@@ -236,28 +231,27 @@ export default function MainContent() {
         <div className="_5s-wrapper">
           <div className="_5s">
             <div className="_5s__heading perspective">
-              <h2 data-w-id="62159921-5615-0bab-eba9-bb6c48307efb" className="h1 align-left light">All-in-one capital</h2>
+              <h2 data-w-id="62159921-5615-0bab-eba9-bb6c48307efb" className="h1 align-left light">Enterprise-grade</h2>
               <div data-w-id="bf9745ec-22c5-ccc5-c468-c327e68023ec" className="_5s-head-line">
-                <h2 className="h1 align-left light">market</h2>
+                <h2 className="h1 align-left light">campus</h2>
                 <div className="_5s-line-item">
-                  <h2 className="h1 align-left italic">platform</h2>
+                  <h2 className="h1 align-left italic">ERP</h2>
                   <div className="_5s-line"></div>
                 </div>
                 <div className="_5s-line-item white">
                   <h2 className="h1 align-left">for</h2>
                 </div>
               </div>
-              <h2 data-w-id="604738b8-78f1-acc4-616e-61174fc35f3e" className="h1 align-left light">digital asset</h2>
-              <h2 data-w-id="7bea2957-4f72-1179-b0ab-df1aafd98bc7" className="h1 align-left light">investors</h2>
+              <h2 data-w-id="604738b8-78f1-acc4-616e-61174fc35f3e" className="h1 align-left light">accredited higher</h2>
+              <h2 data-w-id="7bea2957-4f72-1179-b0ab-df1aafd98bc7" className="h1 align-left light">institutions</h2>
             </div>
             <div className="_5s-description">
               <div data-w-id="31c50989-4076-d814-dd3d-ed77c85e356c" className="body-text light">
-                Secured Finance develops protocol and platform for fixed-rate loans to bring derivative structuring
-                capability for digital assets.
+                Nexora establishes a singular relational source of truth across admissions, attendance rosters, continuous internal assessments, SGPA/CGPA evaluation, fee billing, and examination hall tickets.
               </div>
             </div>
-            <a href="#footer" data-w-id="c0d70e7f-3ef0-08e1-c62f-bbba9df1e9af" className="button-green-container is-relative w-inline-block">
-              <div className="button-text-t">Sign up</div>
+            <a href="mailto:mausamkar5055@gmail.com?subject=Team%20AC-DC%20Inquiry%20-%20Nexora" data-w-id="c0d70e7f-3ef0-08e1-c62f-bbba9df1e9af" className="button-green-container is-relative w-inline-block">
+              <div className="button-text-t">Contact Team AC-DC</div>
               <div className="bt-ic hidden w-embed">
                 <svg width="100%" height="100%" viewBox="0 0 12 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path fill="currentColor" clipRule="evenodd" d="M7.58579 6.99992L-2.05754e-07 6.99992L-2.93177e-07 4.99992L7.58579 4.99992L4.29289 1.70703L5.70711 0.292818L11.4142 5.99992L5.70711 11.707L4.29289 10.2928L7.58579 6.99992Z">
@@ -284,19 +278,18 @@ export default function MainContent() {
                 <section className="_6s">
                   <div className="_6s-header perspective">
                     <div className="_6s-h-container">
-                      <h2 data-w-id="40ef0179-dd61-9a6a-caee-4471913d5903" className="h1 align-left">Our</h2>
+                      <h2 data-w-id="40ef0179-dd61-9a6a-caee-4471913d5903" className="h1 align-left">System</h2>
                       <h2 data-w-id="40ef0179-dd61-9a6a-caee-4471913d5905" className="h1 align-left italic mob-margin-left">
-                        Team
+                        Architecture
                       </h2>
                     </div>
                     <div className="_6s-description mob-hide">
                       <div data-w-id="40ef0179-dd61-9a6a-caee-4471913d5908" className="body-text gray">
-                        We are a passionate team of industry experts and professionals in both traditional finance and
-                        DeFi.
+                        Engineered with strict relational normalization, sub-millisecond event concurrency, and regulatory domain authenticity to solve Problem Statement PS-6.
                       </div>
                     </div>
-                    <a data-w-id="40ef0179-dd61-9a6a-caee-4471913d590a" href="https://medium.com/secured-finance" target="_blank" className="button-green-container mob-hide w-inline-block">
-                      <div className="button-text-team black">Learn more</div>
+                    <a data-w-id="40ef0179-dd61-9a6a-caee-4471913d590a" href="https://github.com/Mausam5055/Nexora" target="_blank" className="button-green-container mob-hide w-inline-block">
+                      <div className="button-text-team black">Explore Repository</div>
                       <div className="menu-button__bg"></div>
                     </a>
                   </div>
@@ -304,219 +297,196 @@ export default function MainContent() {
                     <div className="_6s-horizontal-card">
                       <div className="_6s-card-img-wrapper">
                         <div className="_6s-card-img-container">
-                          <img src="/images/Group-137946.webp" loading="eager" sizes="(max-width: 479px) 100vw, (max-width: 767px) 138.8984375px, 14vw" srcSet="
-                                /images/Group-137946-p-500.png 500w,
-                                /images/Group-137946-p-800.png 800w,/images/Group-137946.webp      926w" alt="" className="_6s-card-img" />
+                          <img src="/images/arch-core-engine.svg" loading="eager" alt="Nexora Core Kernel Architecture" className="_6s-card-img" />
                         </div>
                       </div>
                       <div className="_6s-card-text-container">
                         <div className="_6s-card-h-wrapper">
-                          <h3 className="h3">Masa Kikuchi</h3>
-                          <h5 className="h5 gray">Founder &amp; CEO</h5>
+                          <h3 className="h3">Deterministic Core</h3>
+                          <h5 className="h5 gray">Relational Single-Store Engine</h5>
                           <div className="_6s-card-description">
                             <div className="p-normal gray">
-                              Computer Scientist and Former Head of Derivatives Structuring at HSBC with over 17 years
-                              of experience in traditional finance. Member of Trusted Web (Web3) Council in the
-                              Cabinet Secretariat of Japan
+                              Centralized ACID relational core unifying academic records, attendance matrices, and fee clearance into a single verified state.
                             </div>
                           </div>
                         </div>
                         <div className="_6s-link-container">
-                          <a href="https://twitter.com/onion797jp" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/twitter.svg" loading="lazy" alt="" className="_6s-ic" /></a>
-                          <a href="https://www.linkedin.com/in/masa-senshi-kikuchi-55185a23" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/Group.svg" loading="lazy" alt="" className="_6s-ic" /></a>
+                          <a href="https://github.com/Mausam5055/Nexora#system-architecture" target="_blank" className="_6s-link-bt w-inline-block" title="Read technical specifications"><img src="/images/Vector-18.svg" loading="lazy" alt="" className="_6s-ic" /></a>
                         </div>
                       </div>
                     </div>
                     <div className="_6s-horizontal-card">
                       <div className="_6s-card-img-wrapper">
                         <div className="_6s-card-img-container">
-                          <img src="/images/2_2.webp" loading="eager" sizes="(max-width: 479px) 100vw, (max-width: 767px) 138.8984375px, 14vw" srcSet="/images/2_2-p-500.png 500w, /images/2_2.webp 926w" alt="" className="_6s-card-img" />
+                          <img src="/images/arch-relational-db.svg" loading="eager" alt="Relational PostgreSQL Schema" className="_6s-card-img" />
                         </div>
                       </div>
                       <div className="_6s-card-text-container">
                         <div className="_6s-card-h-wrapper">
-                          <h3 className="h3">Kenji Mitsusada</h3>
-                          <h5 className="h5 gray">Head of markets</h5>
+                          <h3 className="h3">Relational Core</h3>
+                          <h5 className="h5 gray">Normalized PostgreSQL Engine</h5>
                           <div className="_6s-card-description">
                             <div className="p-normal gray">
-                              18 years of interest rate derivatives and macro trading experience. Former Co-Head of
-                              G10 FX Forwards and STIR Trading at Goldman Sachs and Hedge Fund Manager at Capula
-                              Investment and Management.
+                              Strict normalized relational schema with cascading constraints across student registries, grading records, and hall ticket locks.
                             </div>
                           </div>
                         </div>
                         <div className="_6s-link-container">
-                          <a href="https://twitter.com/mitsusada25" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/twitter.svg" loading="lazy" alt="" className="_6s-ic" /></a>
-                          <a href="https://www.linkedin.com/in/kenji-mitsusada-1107b7b/" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/Group.svg" loading="lazy" alt="" className="_6s-ic" /></a>
+                          <a href="https://github.com/Mausam5055/Nexora/blob/main/db.sql" target="_blank" className="_6s-link-bt w-inline-block" title="Read database schema"><img src="/images/Vector-18.svg" loading="lazy" alt="" className="_6s-ic" /></a>
                         </div>
                       </div>
                     </div>
                     <div className="_6s-horizontal-card">
                       <div className="_6s-card-img-wrapper">
                         <div className="_6s-card-img-container">
-                          <img src="/images/3_1.webp" loading="eager" sizes="(max-width: 479px) 100vw, (max-width: 767px) 138.8984375px, 14vw" srcSet="/images/3_1-p-500.png 500w, /images/3_1-p-800.png 800w, /images/3_1.webp 926w" alt="" className="_6s-card-img" />
+                          <img src="/images/arch-distributed-bus.svg" loading="eager" alt="Distributed Multi-Tab Bus" className="_6s-card-img" />
                         </div>
                       </div>
                       <div className="_6s-card-text-container">
                         <div className="_6s-card-h-wrapper">
-                          <h3 className="h3">Reuven Aboulker</h3>
-                          <h5 className="h5 gray">Director of Engineering</h5>
+                          <h3 className="h3">Distributed Bus</h3>
+                          <h5 className="h5 gray">0ms Concurrency Engine</h5>
                           <div className="_6s-card-description">
                             <div className="p-normal gray">
-                              12 years as an interest rate derivatives financial engineer in traditional finance.
-                              Former technical lead in a top-tier bank. A strong believer in the Web3 revolution.
+                              Sub-millisecond multi-tab state propagation via Web BroadcastChannel, syncing faculty and student portals without server polling.
                             </div>
                           </div>
                         </div>
                         <div className="_6s-link-container">
-                          <a href="https://www.linkedin.com/in/reuven-aboulker-93b0b811/" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/Group.svg" loading="lazy" alt="" className="_6s-ic" /></a>
+                          <a href="https://github.com/Mausam5055/Nexora#distributed-state-bus" target="_blank" className="_6s-link-bt w-inline-block" title="Read concurrency specifications"><img src="/images/Vector-18.svg" loading="lazy" alt="" className="_6s-ic" /></a>
                         </div>
                       </div>
                     </div>
                     <div className="_6s-horizontal-card">
                       <div className="_6s-card-img-wrapper">
                         <div className="_6s-card-img-container">
-                          <img src="/images/ki-won.webp" loading="eager" sizes="(max-width: 479px) 100vw, (max-width: 767px) 138.8984375px, 14vw" srcSet="/images/ki-won-p-500.png 500w, /images/ki-won.webp 926w" alt="" className="_6s-card-img" />
+                          <img src="/images/arch-exam-gatekeeper.svg" loading="eager" alt="Exam Controller Gatekeeper" className="_6s-card-img" />
                         </div>
                       </div>
                       <div className="_6s-card-text-container">
                         <div className="_6s-card-h-wrapper">
-                          <h3 className="h3">Ki Kwon</h3>
-                          <h5 className="h5 gray">Head of Digital Strategy</h5>
+                          <h3 className="h3">Exam Controller</h3>
+                          <h5 className="h5 gray">Statutory Moderation Protocol</h5>
                           <div className="_6s-card-description">
                             <div className="p-normal gray">
-                              Digital transformation specialist with a decade of innovation experience spanning across
-                              Wall Street (Morgan Stanley, Goldman Sachs), FinTech (GS spinoff), and Mega Tech
-                              (Microsoft).
+                              Automated 75% AICTE debarment gatekeeper, dynamic grace marks moderation (+3 near-pass), and instant barcode hall ticket release.
                             </div>
                           </div>
                         </div>
                         <div className="_6s-link-container">
-                          <a href="https://www.linkedin.com/in/ki-kwon/" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/Group.svg" loading="lazy" alt="" className="_6s-ic" /></a>
+                          <a href="https://github.com/Mausam5055/Nexora#exam-controller--statutory-moderation" target="_blank" className="_6s-link-bt w-inline-block" title="Read examination controller specs"><img src="/images/Vector-18.svg" loading="lazy" alt="" className="_6s-ic" /></a>
                         </div>
                       </div>
                     </div>
                     <div className="_6s-horizontal-card">
                       <div className="_6s-card-img-wrapper">
                         <div className="_6s-card-img-container">
-                          <img src="/images/5.webp" loading="eager" sizes="(max-width: 479px) 100vw, (max-width: 767px) 138.8984375px, 14vw" srcSet="/images/5-p-500.png 500w, /images/5.webp 926w" alt="" className="_6s-card-img" />
+                          <img src="/images/arch-anti-mismatch.svg" loading="eager" alt="Anti-Mismatch Ingestion Core" className="_6s-card-img" />
                         </div>
                       </div>
                       <div className="_6s-card-text-container">
                         <div className="_6s-card-h-wrapper">
-                          <h3 className="h3">Timo Lee</h3>
-                          <h5 className="h5 gray">Community Lead</h5>
+                          <h3 className="h3">Anti-Mismatch Core</h3>
+                          <h5 className="h5 gray">Spreadsheet Ingestion Simulator</h5>
                           <div className="_6s-card-description">
                             <div className="p-normal gray">
-                              Multilingual and multicultural business developer. Contributor to Web3, IPFS, and DeFi.
-                              Master of Engineering from TU Berlin in the field of machine learning and transfer
-                              learning.
+                              Autonomous reconciliation engine resolving legacy Excel clashes across departmental spreadsheets into unified database records.
                             </div>
                           </div>
                         </div>
                         <div className="_6s-link-container">
-                          <a href="https://twitter.com/timowlee" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/twitter.svg" loading="lazy" alt="" className="_6s-ic" /></a>
-                          <a href="https://www.linkedin.com/in/timo-lee-a64b69136/" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/Group.svg" loading="lazy" alt="" className="_6s-ic" /></a>
+                          <a href="https://github.com/Mausam5055/Nexora#anti-mismatch-ingestion" target="_blank" className="_6s-link-bt w-inline-block" title="Read reconciliation specs"><img src="/images/Vector-18.svg" loading="lazy" alt="" className="_6s-ic" /></a>
                         </div>
                       </div>
                     </div>
                     <div className="_6s-horizontal-card">
                       <div className="_6s-card-img-wrapper">
                         <div className="_6s-card-img-container">
-                          <img src="/images/6.webp" loading="eager" sizes="(max-width: 479px) 100vw, (max-width: 767px) 138.8984375px, 14vw" srcSet="/images/6-p-500.png 500w, /images/6.webp 926w" alt="" className="_6s-card-img" />
+                          <img src="/images/arch-transcript-engine.svg" loading="eager" alt="Watermarked Transcript Engine" className="_6s-card-img" />
                         </div>
                       </div>
                       <div className="_6s-card-text-container">
                         <div className="_6s-card-h-wrapper">
-                          <h3 className="h3">Akihiro Tanaka</h3>
-                          <h5 className="h5 gray">Smart Contract Engineer</h5>
+                          <h3 className="h3">Transcript Engine</h3>
+                          <h5 className="h5 gray">Cryptographic Watermarked Seals</h5>
                           <div className="_6s-card-description">
                             <div className="p-normal gray">
-                              Former lead engineer at Securitize with extensive Web3 skills to build a regulatory
-                              compliant STO platform for financial institutions. 9 years as a software
-                              engineer/architect at Accenture. A blockchain advocate since 2013.
+                              Client-side official transcript generation with cryptographic verification IDs, registrar seals, and anti-tamper security watermarks.
                             </div>
                           </div>
                         </div>
                         <div className="_6s-link-container">
-                          <a href="https://twitter.com/alexanderisora" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/twitter.svg" loading="lazy" alt="" className="_6s-ic" /></a>
+                          <a href="https://github.com/Mausam5055/Nexora#transcript-engine" target="_blank" className="_6s-link-bt w-inline-block" title="Read transcript engine specs"><img src="/images/Vector-18.svg" loading="lazy" alt="" className="_6s-ic" /></a>
                         </div>
                       </div>
                     </div>
                     <div className="_6s-horizontal-card">
                       <div className="_6s-card-img-wrapper">
                         <div className="_6s-card-img-container">
-                          <img src="/images/Group-137943.webp" loading="eager" sizes="(max-width: 479px) 100vw, (max-width: 767px) 138.8984375px, 14vw" srcSet="/images/Group-137943-p-500.png 500w, /images/Group-137943.webp 926w" alt="" className="_6s-card-img" />
+                          <img src="/images/arch-domain-ai.svg" loading="eager" alt="Domain ERP AI Copilot" className="_6s-card-img" />
                         </div>
                       </div>
                       <div className="_6s-card-text-container">
                         <div className="_6s-card-h-wrapper">
-                          <h3 className="h3">Jasper Neo</h3>
-                          <h5 className="h5 gray">Markets and Operations Specialist</h5>
+                          <h3 className="h3">Domain ERP AI</h3>
+                          <h5 className="h5 gray">Rules Engine + Gemini 1.5 Flash</h5>
                           <div className="_6s-card-description">
                             <div className="p-normal gray">
-                              Markets expert in operations for 8 years dealing with collateral, equities, bonds, and
-                              derivative products. Former settlement analyst at FNZ and SS&amp;C. A budding enthusiast
-                              trying to harness wealth’s full potential to grow through the financial revolution in
-                              Web3.
+                              Context-aware AI copilot running local institutional rule checks and Google Gemini 1.5 Flash for personalized student guidance.
                             </div>
                           </div>
                         </div>
                         <div className="_6s-link-container">
-                          <a href="https://www.linkedin.com/in/jasper-neo-a7793561/" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/Group.svg" loading="lazy" alt="" className="_6s-ic" /></a>
+                          <a href="https://github.com/Mausam5055/Nexora#domain-erp-ai" target="_blank" className="_6s-link-bt w-inline-block" title="Read AI copilot architecture"><img src="/images/Vector-18.svg" loading="lazy" alt="" className="_6s-ic" /></a>
                         </div>
                       </div>
                     </div>
                     <div className="_6s-horizontal-card">
                       <div className="_6s-card-img-wrapper">
                         <div className="_6s-card-img-container">
-                          <img src="/images/Group-137942.webp" loading="eager" sizes="(max-width: 479px) 100vw, (max-width: 767px) 138.8984375px, 14vw" srcSet="/images/Group-137942-p-500.png 500w, /images/Group-137942.webp 926w" alt="" className="_6s-card-img" />
+                          <img src="/images/arch-billing-engine.svg" loading="eager" alt="Billing Clearance Ledger" className="_6s-card-img" />
                         </div>
                       </div>
                       <div className="_6s-card-text-container">
                         <div className="_6s-card-h-wrapper">
-                          <h3 className="h3">Arpit Singh</h3>
-                          <h5 className="h5 gray">Software Engineer</h5>
+                          <h3 className="h3">Billing Engine</h3>
+                          <h5 className="h5 gray">Automated Fee Hold Clearance</h5>
                           <div className="_6s-card-description">
                             <div className="p-normal gray">
-                              Full Stack Developer interested in both Tech and Finance. Prior experience as a Quant
-                              developer for OTC trades within a top-tier bank. IIT Delhi graduate and enthusiastic
-                              about the future of Web3 and Decentralized Finance.
+                              Real-time tuition fee reconciliation clearing statutory examination holds automatically upon digital payment confirmation.
                             </div>
                           </div>
                         </div>
                         <div className="_6s-link-container">
-                          <a href="#" className="_6s-link-bt hide w-inline-block"><img src="/images/twitter.svg" loading="lazy" alt="" className="_6s-ic" /></a>
+                          <a href="https://github.com/Mausam5055/Nexora#billing-engine" target="_blank" className="_6s-link-bt w-inline-block" title="Read billing ledger specs"><img src="/images/Vector-18.svg" loading="lazy" alt="" className="_6s-ic" /></a>
                         </div>
                       </div>
                     </div>
                     <div className="_6s-horizontal-card">
                       <div className="_6s-card-img-wrapper">
                         <div className="_6s-card-img-container">
-                          <img src="/images/9.webp" loading="eager" sizes="(max-width: 479px) 100vw, (max-width: 767px) 138.8984375px, 14vw" srcSet="/images/9-p-500.png 500w, /images/9.webp 926w" alt="" className="_6s-card-img" />
+                          <img src="/images/arch-judge-auditor.svg" loading="eager" alt="Auditor and Compliance Suite" className="_6s-card-img" />
                         </div>
                       </div>
                       <div className="_6s-card-text-container">
                         <div className="_6s-card-h-wrapper">
-                          <h3 className="h3">Reza Shahi</h3>
-                          <h5 className="h5 gray">Senior Advisor</h5>
+                          <h3 className="h3">Auditor &amp; Compliance</h3>
+                          <h5 className="h5 gray">Live Verification Cockpit</h5>
                           <div className="_6s-card-description">
                             <div className="p-normal gray">
-                              Reza Shahi was the Chief Operating Officer of the firm’s credit business at Citadel.
-                              After Citadel, Reza worked at Sequoia Heritage which is a large multi-family office
-                              within Sequoia Capital. He is now a senior advisor for Secured Finance.
+                              Super-admin evaluation suite with dual-window live sync verification, health telemetry, and one-click PS-6 audit exports.
                             </div>
                           </div>
                         </div>
                         <div className="_6s-link-container">
-                          <a href="https://www.linkedin.com/in/reza-shahi-cfa-4039366/" target="_blank" className="_6s-link-bt w-inline-block"><img src="/images/Group.svg" loading="lazy" alt="" className="_6s-ic" /></a>
+                          <a href="https://github.com/Mausam5055/Nexora#compliance-and-verification" target="_blank" className="_6s-link-bt w-inline-block" title="Read compliance suite specs"><img src="/images/Vector-18.svg" loading="lazy" alt="" className="_6s-ic" /></a>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="_6s__mob-container-bt">
-                    <a href="#" className="button-green-container w-inline-block">
-                      <div className="button-text-t black">Learn more</div>
+                    <a href="https://github.com/Mausam5055/Nexora" target="_blank" className="button-green-container w-inline-block">
+                      <div className="button-text-t black">Explore Repository</div>
                       <img src="/images/Vector-18.svg" loading="lazy" alt="" className="ic-arrow" />
                     </a>
                   </div>
@@ -528,74 +498,71 @@ export default function MainContent() {
                         <div className="anchor-news"></div>
                         <div className="_8s">
                           <div className="_8s-container">
-                            <a href="https://medium.com/secured-finance" target="_blank" className="articles-btn w-inline-block">
-                              <div className="button-2-text">See more</div>
+                            <a href="https://github.com/Mausam5055/Nexora#readme" target="_blank" className="articles-btn w-inline-block">
+                              <div className="button-2-text">See all specs</div>
                               <div className="articles-button__bg bt-bg"></div>
                             </a>
                             <div className="_8s-header">
-                              <h2 className="h1 align-left">Recent</h2>
-                              <h2 className="h1 align-left italic margin-left">articles</h2>
+                              <h2 className="h1 align-left">Technical</h2>
+                              <h2 className="h1 align-left italic margin-left">whitepapers</h2>
                             </div>
                             <div className="_8s-catalog-container">
                               <div className="_8s-catalog-1">
                                 <div id="w-node-_18ad697e-3863-afac-de35-10818a039df6-51c2b876" className="s8-item _1">
                                   <div className="s8-article__img-article-wrapper is-1">
-                                    <img src="/images/pic1.png" srcSet="/images/pic1.png 1x, /images/pic1%402x.png 2x" loading="lazy" alt="" className="s8-img-article" />
+                                    <img src="/images/pic2-benchmark.svg" loading="lazy" alt="Concurrency Benchmarks" className="s8-img-article is-1" />
                                   </div>
                                   <div id="w-node-_18ad697e-3863-afac-de35-10818a039df9-51c2b876" className="s8-article is-1">
                                     <div className="s8-article__h5-wrapper">
-                                      <div className="h5">Interest Rate Markets in DeFi</div>
+                                      <div className="h5">Sub-Millisecond Concurrency: Web BroadcastChannel Bus</div>
                                     </div>
                                     <div className="s8-article-text">
                                       <div className="p-normal gray">
-                                        Automated Market Maker Pool or AMM Pool is one of the greatest inventions
-                                        created in Decentralized Finance (DeFi).
+                                        Benchmarking 0ms multi-tab state propagation between faculty registers and exam hall gatekeepers without WebSocket overhead.
                                       </div>
                                     </div>
                                     <div className="s8-article__date-wrapper">
-                                      <div className="body-caps gray">Oct 25 2022</div>
+                                      <div className="body-caps gray">Sep 2026</div>
                                     </div>
-                                    <a href="https://medium.com/secured-finance/interest-rate-market-in-defi-4d5d846a9852" target="_blank" className="s8-bt-article w-button">Read now</a>
+                                    <a href="https://github.com/Mausam5055/Nexora#readme" target="_blank" className="s8-bt-article w-button">Read spec</a>
                                   </div>
                                 </div>
                                 <div id="w-node-_18ad697e-3863-afac-de35-10818a039e02-51c2b876" className="s8-item _2">
                                   <div className="s8-article__img-article-wrapper is-2">
-                                    <img src="/images/pic2.png" srcSet="/images/pic2.png 1x, /images/pic2%402x.png 2x" loading="lazy" alt="" className="s8-img-article is-2" />
+                                    <img src="/images/pic1-reconciliation.svg" loading="lazy" alt="PS-6 Relational Reconciliation Architecture" className="s8-img-article is-2" />
                                   </div>
                                   <div className="s8-article is-2">
                                     <div className="s8-article__h5-wrapper">
-                                      <div className="h5">Secured Finance at FIL Singapore’22 Summit</div>
+                                      <div className="h5">Solving PS-6: Relational Reconciliation vs. Spreadsheets</div>
                                     </div>
                                     <div className="s8-article-text">
                                       <div className="p-normal gray">
-                                        New brand, New app release, VC demo day, and Workshops to grow with strategic
-                                        Web3 ecosystem partners
+                                        Eliminating departmental Excel silos and manual billing mismatches via a deterministic relational single store.
                                       </div>
                                     </div>
                                     <div className="s8-article__date-wrapper">
-                                      <div className="body-caps gray">Oct 20 2022</div>
+                                      <div className="body-caps gray">Sep 2026</div>
                                     </div>
-                                    <a href="https://medium.com/secured-finance/secured-finance-at-fil-singapore22-summit-fe4aff760ec1" target="_blank" className="s8-bt-article w-button">Read now</a>
+                                    <a href="https://github.com/Mausam5055/Nexora#readme" target="_blank" className="s8-bt-article w-button">Read spec</a>
                                   </div>
                                 </div>
                                 <div id="w-node-_18ad697e-3863-afac-de35-10818a039e0e-51c2b876" className="s8-item _2">
                                   <div className="s8-article__img-article-wrapper is-2">
-                                    <img src="/images/pic3.png" srcSet="/images/pic3.png 1x, /images/pic3%402x.png 2x" loading="lazy" alt="" className="s8-img-article is-2" />
+                                    <img src="/images/pic3-statutory.svg" loading="lazy" alt="Statutory Gatekeeping" className="s8-img-article is-2" />
                                   </div>
                                   <div className="s8-article is-2">
                                     <div className="s8-article__h5-wrapper">
-                                      <div className="h5">Building ‘Real’ Yield Curve</div>
+                                      <div className="h5">Statutory 75% Attendance &amp; Parent Notice Dispatch</div>
                                     </div>
                                     <div className="s8-article-text">
                                       <div className="p-normal gray">
-                                        Demystifying Interest Rates Composability for Large-Scale Derivatives’
-                                        Applications
+                                        Automated compliance evaluation enforcing AICTE/UGC debarment rules with instant print-to-PDF, SMS, and email statutory notice generation.
                                       </div>
                                     </div>
                                     <div className="s8-article__date-wrapper">
-                                      <div className="body-caps gray">Sep 20 2022</div>
+                                      <div className="body-caps gray">Aug 2026</div>
                                     </div>
-                                    <a href="https://medium.com/secured-finance/building-real-yield-curve-a83380126af0" target="_blank" className="s8-bt-article w-button">Read now</a>
+                                    <a href="https://github.com/Mausam5055/Nexora#readme" target="_blank" className="s8-bt-article w-button">Read spec</a>
                                   </div>
                                 </div>
                               </div>
@@ -603,53 +570,49 @@ export default function MainContent() {
                                 <div className="s8-item _4">
                                   <div className="s8-article _2-catalog">
                                     <div className="s8-article__h5-wrapper">
-                                      <div className="h5">Future of Finance IV</div>
+                                      <div className="h5">Batch Moderation &amp; Grace Marks Calculation Theory</div>
                                     </div>
                                     <div className="s8-article-text">
                                       <div className="p-normal gray">
-                                        This story is a continuation of Future of Finance III, Chapter 3 Decentralized
-                                        Finance — The Future of Finance Shaped by Web 3.0
+                                        Deterministic grade adjustment protocols (+3 near-pass threshold), dynamic SGPA/CGPA recomputation, and CoE audit logging.
                                       </div>
                                     </div>
                                     <div className="s8-article__date-wrapper">
-                                      <div className="body-caps gray">Jul 5 2022</div>
+                                      <div className="body-caps gray">Aug 2026</div>
                                     </div>
-                                    <a href="https://medium.com/secured-finance/future-of-finance-ⅳ-c56c30656e7a" target="_blank" className="s8-bt-article w-button">Read now</a>
+                                    <a href="https://github.com/Mausam5055/Nexora#readme" target="_blank" className="s8-bt-article w-button">Read spec</a>
                                   </div>
                                 </div>
                                 <div className="s8-item _4">
                                   <div className="s8-article _2-catalog">
                                     <div className="s8-article__h5-wrapper">
-                                      <div className="h5">Future of Finance III</div>
+                                      <div className="h5">Cryptographic Transcripts &amp; Candidate QR Verification</div>
                                     </div>
                                     <div className="s8-article-text">
                                       <div className="p-normal gray">
-                                        This story is a continuation of Future of Finance II, Chapter 2: Information
-                                        Asymmetry: The Merits and Drawbacks of Centralized Finance
+                                        Institutional export engine rendering watermarked semester grade cards, Registrar signature stamps, and dynamic QR gatekeeper verification.
                                       </div>
                                     </div>
                                     <div className="s8-article__date-wrapper">
-                                      <div className="body-caps gray">May 13 2022</div>
+                                      <div className="body-caps gray">Aug 2026</div>
                                     </div>
-                                    <a href="https://medium.com/secured-finance/future-of-finance-ⅲ-744b9ddd81d2" target="_blank" className="s8-bt-article w-button">Read now</a>
+                                    <a href="https://github.com/Mausam5055/Nexora#readme" target="_blank" className="s8-bt-article w-button">Read spec</a>
                                   </div>
                                 </div>
                                 <div className="s8-item _4">
                                   <div className="s8-article _2-catalog">
                                     <div className="s8-article__h5-wrapper">
-                                      <div className="h5">Future of Finance II</div>
+                                      <div className="h5">Hybrid Persistence: LocalStorage with Express REST Sync</div>
                                     </div>
                                     <div className="s8-article-text">
                                       <div className="p-normal gray">
-                                        This story is a continuation of Future of Finance I, Chapter 1: A Modern
-                                        History of Financial Institutions — Changes Induced by the Once-in-a-Century
-                                        Crisis
+                                        Architectural design of offline-first reactive state stores paired with Bearer token-authorized Node.js REST servers and PostgreSQL schemas.
                                       </div>
                                     </div>
                                     <div className="s8-article__date-wrapper">
-                                      <div className="body-caps gray">March 23 2022</div>
+                                      <div className="body-caps gray">Aug 2026</div>
                                     </div>
-                                    <a href="https://medium.com/secured-finance/future-of-finance-ⅱ-da9ce0cc9127" target="_blank" className="s8-bt-article w-button">Read now</a>
+                                    <a href="https://github.com/Mausam5055/Nexora#readme" target="_blank" className="s8-bt-article w-button">Read spec</a>
                                   </div>
                                 </div>
                               </div>

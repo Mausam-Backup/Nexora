@@ -264,7 +264,7 @@ export default function LionVideoScrollSection() {
               marginBottom: "8px",
             }}
           >
-            ©2026 @MausamKar
+            ©2026 @MausamKar • VIT Bhopal
           </div>
           <h2
             style={{
@@ -276,7 +276,7 @@ export default function LionVideoScrollSection() {
               textTransform: "uppercase",
             }}
           >
-            SHAPING BRANDS <span style={{ color: "#7CB1FF" }}>→</span> CRAFTING MOTION
+            NEXORA RELATIONAL CORE <span style={{ color: "#7CB1FF" }}>→</span> ZERO-LATENCY ERP
           </h2>
           <div
             style={{
@@ -294,12 +294,12 @@ export default function LionVideoScrollSection() {
               backdropFilter: "blur(6px)",
             }}
           >
-            <span>Scroll Down to Scrub Video</span>
+            <span>Scroll Down to Scrub Architecture Engine</span>
             <span style={{ fontSize: "14px" }}>↓</span>
           </div>
         </div>
 
-        {/* 2. Slide 2 Overlay: Transforming Visions */}
+        {/* 2. Slide 2 Overlay: Deterministic Data Integrity */}
         <div
           style={{
             position: "absolute",
@@ -317,39 +317,38 @@ export default function LionVideoScrollSection() {
         >
           <h2
             style={{
-              fontSize: "clamp(28px, 4.5vw, 60px)",
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: "-1px",
-              margin: "0 0 16px",
+              fontSize: "clamp(24px, 3.5vw, 44px)",
+              fontWeight: 700,
+              lineHeight: 1.1,
+              letterSpacing: "-0.5px",
+              margin: "0 0 10px",
               textTransform: "uppercase",
             }}
           >
-            Transforming Visions
+            Deterministic Data Integrity
           </h2>
           <p
             style={{
-              fontSize: "clamp(14px, 1.4vw, 18px)",
-              lineHeight: 1.5,
+              fontSize: "clamp(13px, 1.2vw, 16px)",
+              lineHeight: 1.4,
               opacity: 0.85,
               margin: 0,
-              maxWidth: "500px",
+              maxWidth: "420px",
               marginLeft: "auto",
             }}
           >
-            Building identity and inspiring action. Sculpting digital experiences
-            that resonate across platforms and borders.
+            Transactional consistency across all campus portals.
           </p>
         </div>
 
-        {/* 3. Slide 3 Overlay: Elevating Aesthetics */}
+        {/* 3. Slide 3 Overlay: Statutory Compliance & Gates */}
         <div
           style={{
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: `translate(-50%, -50%) scale(${0.95 + op3 * 0.05})`,
-            width: "min(800px, 90%)",
+            width: "min(650px, 90%)",
             textAlign: "center",
             opacity: op3,
             transition: "opacity 0.15s ease-out, transform 0.15s ease-out",
@@ -360,27 +359,26 @@ export default function LionVideoScrollSection() {
         >
           <h2
             style={{
-              fontSize: "clamp(32px, 5.5vw, 72px)",
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: "-1.5px",
-              margin: "0 0 16px",
+              fontSize: "clamp(26px, 4vw, 48px)",
+              fontWeight: 700,
+              lineHeight: 1.1,
+              letterSpacing: "-0.5px",
+              margin: "0 0 10px",
               textTransform: "uppercase",
             }}
           >
-            Elevating Aesthetics
+            Statutory Compliance &amp; Gates
           </h2>
           <p
             style={{
-              fontSize: "clamp(15px, 1.6vw, 20px)",
-              lineHeight: 1.6,
+              fontSize: "clamp(14px, 1.3vw, 17px)",
+              lineHeight: 1.4,
               opacity: 0.85,
               margin: "0 auto",
-              maxWidth: "600px",
+              maxWidth: "460px",
             }}
           >
-            Crafting solutions and exploring new horizons. Evolving narratives
-            and elevating visual aesthetics in every motion sequence.
+            Automated 75% AICTE gatekeeping &amp; hall ticket release.
           </p>
         </div>
 
@@ -416,65 +414,83 @@ export default function LionVideoScrollSection() {
                 letterSpacing: "1px",
               }}
             >
-              © 2026 MausamKar
+              TEAM AC-DC • VIT BHOPAL
             </div>
             <h3
               style={{
-                fontSize: "36px",
+                fontSize: "30px",
                 fontWeight: 700,
-                lineHeight: 1.15,
+                lineHeight: 1.2,
                 letterSpacing: "-0.5px",
-                marginTop: "30px",
+                marginTop: "20px",
+                marginBottom: "14px",
+                color: "#0f172a",
+              }}
+            >
+              Contact &amp; Authorship
+            </h3>
+            <div
+              style={{
+                fontSize: "14px",
+                lineHeight: 1.5,
+                color: "#1e293b",
+                marginBottom: "12px",
+              }}
+            >
+              <strong>Mausam Kar</strong> • Lead Architect &amp; Developer<br />
+              <span style={{ color: "#64748b", fontSize: "13px" }}>
+                CSE, VIT Bhopal University • Problem Statement PS-6
+              </span>
+            </div>
+            <p
+              style={{
+                fontSize: "14px",
+                lineHeight: 1.6,
+                color: "#475569",
                 marginBottom: "20px",
               }}
             >
-              Sculpting Digital
-            </h3>
-            <p
-              style={{
-                fontSize: "16px",
-                lineHeight: 1.6,
-                color: "#444a56",
-              }}
-            >
-              Transforming visions into digital realities. Weaving stories that
-              captivate and innovate with modern GPU-accelerated motion.
+              Engineered Nexora to eliminate collegiate administrative silos through deterministic relational reconciliation, sub-millisecond multi-tab state bus, and automated statutory gatekeepers.
             </p>
             <a
-              href="#intro"
+              href="mailto:mausamkar5055@gmail.com?subject=Contact%20Team%20AC-DC%20-%20Nexora"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
-                marginTop: "24px",
-                padding: "12px 22px",
-                borderRadius: "8px",
-                border: "1px solid #08090d",
-                color: "#08090d",
+                padding: "10px 20px",
+                borderRadius: "6px",
+                backgroundColor: "#0f172a",
+                color: "#ffffff",
                 textDecoration: "none",
-                fontSize: "14px",
+                fontSize: "13px",
                 fontWeight: 600,
               }}
             >
-              Enter Main Platform →
+              Email Team AC-DC →
             </a>
           </div>
 
-          <div>
-            <div style={{ fontSize: "18px", fontWeight: 700 }}>
-              Innovating Design
-            </div>
-            <p
-              style={{
-                fontSize: "13px",
-                color: "#6b7280",
-                marginTop: "8px",
-                lineHeight: 1.5,
-              }}
+          <div
+            style={{
+              borderTop: "1px solid #e2e8f0",
+              paddingTop: "14px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontSize: "12px",
+              color: "#64748b",
+            }}
+          >
+            <span>© 2026 Team AC-DC</span>
+            <a
+              href="https://github.com/Mausam5055/Nexora"
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: "#0f172a", textDecoration: "none", fontWeight: 600 }}
             >
-              Connecting ideas to foster creativity. Designing impactful
-              experiences that resonate.
-            </p>
+              GitHub Repo →
+            </a>
           </div>
         </div>
 
@@ -524,7 +540,7 @@ export default function LionVideoScrollSection() {
               textTransform: "uppercase",
             }}
           >
-            Continue scrolling to enter Secured Finance
+            Continue scrolling to enter Nexora Platform
           </div>
         </div>
 

@@ -82,7 +82,7 @@ CREATE TABLE profiles (
     semester INTEGER,
     roll_number VARCHAR(50),
     employee_id VARCHAR(50),
-    admission_year VARCHAR(10),
+    admission_year VARCHAR(50),
     joining_date DATE,
     designation VARCHAR(100),
     qualification VARCHAR(255),
@@ -167,7 +167,7 @@ CREATE TABLE course_enrollments (
     course_id VARCHAR(100) REFERENCES courses(id) ON DELETE CASCADE,
     enrolled_at TIMESTAMPTZ DEFAULT NOW(),
     progress INTEGER DEFAULT 0,
-    grade VARCHAR(10) DEFAULT 'In Progress',
+    grade VARCHAR(50) DEFAULT 'In Progress',
     UNIQUE(student_id, course_id)
 );
 
@@ -209,7 +209,7 @@ CREATE TABLE teacher_subjects (
 CREATE TABLE subject_slots (
     id VARCHAR(100) PRIMARY KEY,
     subject_id VARCHAR(100) REFERENCES teacher_subjects(id) ON DELETE CASCADE,
-    day VARCHAR(20) NOT NULL,
+    day VARCHAR(50) NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     type VARCHAR(50) DEFAULT 'lecture' CHECK (type IN ('lecture', 'lab', 'tutorial')),
@@ -224,7 +224,7 @@ CREATE TABLE attendance_records (
     subject_name VARCHAR(255),
     date DATE NOT NULL,
     slot VARCHAR(100),
-    status VARCHAR(20) NOT NULL CHECK (status IN ('present', 'absent', 'late')),
+    status VARCHAR(50) NOT NULL CHECK (status IN ('present', 'absent', 'late')),
     marked_by VARCHAR(255) DEFAULT 'Faculty',
     marked_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -269,8 +269,8 @@ CREATE TABLE student_timetables (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     instructor VARCHAR(255) NOT NULL,
-    start_time VARCHAR(10) NOT NULL,
-    end_time VARCHAR(10) NOT NULL,
+    start_time VARCHAR(50) NOT NULL,
+    end_time VARCHAR(50) NOT NULL,
     day INTEGER NOT NULL CHECK (day BETWEEN 0 AND 5), -- 0: MON, 5: SAT
     location VARCHAR(100) NOT NULL,
     type VARCHAR(50) DEFAULT 'Theory',
@@ -283,8 +283,8 @@ CREATE TABLE teacher_timetables (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     students_batch VARCHAR(255) NOT NULL,
-    start_time VARCHAR(10) NOT NULL,
-    end_time VARCHAR(10) NOT NULL,
+    start_time VARCHAR(50) NOT NULL,
+    end_time VARCHAR(50) NOT NULL,
     day INTEGER NOT NULL CHECK (day BETWEEN 0 AND 5),
     location VARCHAR(100) NOT NULL,
     type VARCHAR(50) DEFAULT 'Theory',
@@ -314,7 +314,7 @@ CREATE TABLE exams (
     branch VARCHAR(50) NOT NULL,
     exam_type VARCHAR(50) NOT NULL,
     date DATE NOT NULL,
-    time VARCHAR(20) NOT NULL,
+    time VARCHAR(50) NOT NULL,
     duration INTEGER NOT NULL, -- in minutes
     location VARCHAR(100) NOT NULL,
     max_marks INTEGER DEFAULT 100,
@@ -347,7 +347,7 @@ CREATE TABLE student_marks (
     internal_marks NUMERIC(5, 2) NOT NULL,
     external_marks NUMERIC(5, 2) NOT NULL,
     total_marks NUMERIC(5, 2) NOT NULL,
-    grade VARCHAR(10) NOT NULL,
+    grade VARCHAR(50) NOT NULL,
     grade_point NUMERIC(4, 2) NOT NULL,
     slot_id VARCHAR(100),
     created_at TIMESTAMPTZ DEFAULT NOW()
@@ -390,7 +390,7 @@ CREATE TABLE assignments (
     submission_type VARCHAR(100) DEFAULT 'PDF Report',
     max_points INTEGER DEFAULT 100,
     progress INTEGER DEFAULT 0,
-    grade VARCHAR(10),
+    grade VARCHAR(50),
     feedback TEXT,
     submissions_count INTEGER DEFAULT 0,
     total_students INTEGER DEFAULT 25,
@@ -407,9 +407,9 @@ CREATE TABLE digital_id_cards (
     section VARCHAR(50),
     roll_number VARCHAR(50),
     employee_id VARCHAR(50),
-    admission_year VARCHAR(10),
+    admission_year VARCHAR(50),
     valid_until VARCHAR(50),
-    blood_group VARCHAR(10),
+    blood_group VARCHAR(50),
     emergency_contact VARCHAR(50),
     hostel_block VARCHAR(50),
     room_number VARCHAR(50),

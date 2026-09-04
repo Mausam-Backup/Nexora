@@ -25,9 +25,6 @@ export default function LionFullscreenModal({
   const rafRef = useRef<number | null>(null);
 
   const [scrollProgress, setScrollProgress] = useState<number>(0);
-  const [currentFrameNum, setCurrentFrameNum] = useState<number>(1);
-  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: -100, y: -100 });
-  const [cursorHovered, setCursorHovered] = useState<boolean>(false);
 
   // Preload frames progressively when modal opens
   useEffect(() => {
@@ -47,7 +44,7 @@ export default function LionFullscreenModal({
       drawFrame(1);
     };
 
-    // 2. Progressive background preload
+    // 2. Background preload of remaining frames
     for (let i = 2; i <= totalFrames; i++) {
       const img = new Image();
       const padded = i.toString().padStart(4, "0");
@@ -72,7 +69,7 @@ export default function LionFullscreenModal({
 
       let img = imagesRef.current[frameIndex];
       if (!img || !img.complete || img.naturalWidth === 0) {
-        // Fallback to closest loaded frame
+        // Fallback to nearest loaded frame
         for (let offset = 1; offset < totalFrames; offset++) {
           const lower = frameIndex - offset;
           const higher = frameIndex + offset;
@@ -130,16 +127,15 @@ export default function LionFullscreenModal({
     [totalFrames]
   );
 
-  // Handle modal scroll & calculate frame and animation progress
+  // Handle scroll to calculate progress and target frame
   const handleScroll = useCallback(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    // Trackable scroll height for the 302 frames sequence (first 400vh)
-    const trackHeight = window.innerHeight * 4.2;
-    const scrollTop = container.scrollTop;
+    const maxScroll = container.scrollHeight - container.clientHeight;
+    if (maxScroll <= 0) return;
 
-    const rawProgress = Math.max(0, Math.min(1, scrollTop / trackHeight));
+    const rawProgress = Math.max(0, Math.min(1, container.scrollTop / maxScroll));
     setScrollProgress(rawProgress);
 
     const targetFrame = Math.round(1 + rawProgress * (totalFrames - 1));
@@ -155,11 +151,9 @@ export default function LionFullscreenModal({
       const target = targetFrameRef.current;
 
       if (Math.abs(target - current) > 0.05) {
-        const next = current + (target - current) * 0.28;
+        const next = current + (target - current) * 0.3;
         currentFrameRef.current = next;
-        const rounded = Math.round(next);
-        drawFrame(rounded);
-        setCurrentFrameNum(rounded);
+        drawFrame(Math.round(next));
       }
 
       rafRef.current = requestAnimationFrame(renderLoop);
@@ -172,11 +166,6 @@ export default function LionFullscreenModal({
     };
   }, [isOpen, drawFrame]);
 
-  // Mouse move for magnetic cursor
-  const handleMouseMove = (e: React.MouseEvent) => {
-    setMousePos({ x: e.clientX, y: e.clientY });
-  };
-
   // Keyboard navigation & ESC handler
   useEffect(() => {
     if (!isOpen) return;
@@ -185,10 +174,10 @@ export default function LionFullscreenModal({
         onClose();
       } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
         const container = scrollContainerRef.current;
-        if (container) container.scrollBy({ top: 120, behavior: "smooth" });
+        if (container) container.scrollBy({ top: 150, behavior: "smooth" });
       } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
         const container = scrollContainerRef.current;
-        if (container) container.scrollBy({ top: -120, behavior: "smooth" });
+        if (container) container.scrollBy({ top: -150, behavior: "smooth" });
       }
     };
 
@@ -206,13 +195,12 @@ export default function LionFullscreenModal({
 
   if (!isOpen) return null;
 
-  // Calculate opacity & transforms for each GSAP text overlay phase
-  // Phase 1: 0.0 - 0.22 (Animate 1: Shaping Brands)
-  const p1 = Math.max(0, Math.min(1, scrollProgress / 0.2));
-  const op1 = scrollProgress < 0.2 ? 1 - scrollProgress / 0.2 : 0;
-  const y1 = scrollProgress * 100;
+  // Phase Calculations (Matching original GSAP Video Graphics)
+  // Phase 1 (0.0 - 0.20): Shaping Brands
+  const op1 = scrollProgress <= 0.18 ? 1 - scrollProgress / 0.18 : 0;
+  const y1 = scrollProgress * 120;
 
-  // Phase 2: 0.18 - 0.42 (Animate 2: Transforming Visions)
+  // Phase 2 (0.18 - 0.42): Transforming Visions
   const op2 =
     scrollProgress >= 0.18 && scrollProgress <= 0.42
       ? scrollProgress < 0.3
@@ -220,7 +208,7 @@ export default function LionFullscreenModal({
         : 1 - (scrollProgress - 0.3) / 0.12
       : 0;
 
-  // Phase 3: 0.38 - 0.64 (Animate 3: Elevating Aesthetics)
+  // Phase 3 (0.38 - 0.64): Elevating Aesthetics
   const op3 =
     scrollProgress >= 0.38 && scrollProgress <= 0.64
       ? scrollProgress < 0.5
@@ -228,13 +216,7 @@ export default function LionFullscreenModal({
         : 1 - (scrollProgress - 0.5) / 0.14
       : 0;
 
-  // Phase 4: 0.60 - 0.84 (Panel: Slide-in Drawer)
-  const panelProgress =
-    scrollProgress >= 0.6 && scrollProgress <= 0.84
-      ? (scrollProgress - 0.6) / 0.24
-      : scrollProgress > 0.84
-      ? 1
-      : 0;
+  // Phase 4 (0.60 - 0.84): Clean Slide-in Side Panel
   const panelX =
     scrollProgress < 0.6
       ? 100
@@ -245,224 +227,90 @@ export default function LionFullscreenModal({
       : 100;
   const panelOp = scrollProgress >= 0.6 && scrollProgress <= 0.84 ? 1 : 0;
 
-  // Phase 5: 0.80 - 1.0 (Panelism: Nexora Finale Badge)
+  // Phase 5 (0.80 - 1.0): Nexora / Mausam Finale Badge
   const op5 = scrollProgress >= 0.8 ? Math.min(1, (scrollProgress - 0.8) / 0.15) : 0;
-  const lineWidth = scrollProgress >= 0.8 ? Math.min(140, (scrollProgress - 0.8) * 700) : 0;
+  const lineWidth = scrollProgress >= 0.8 ? Math.min(120, (scrollProgress - 0.8) * 600) : 0;
 
   return (
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="GSAP Video Graphics Interactive Fullscreen Experience"
-      onMouseMove={handleMouseMove}
+      aria-label="GSAP Video Graphics Experience"
       style={{
         position: "fixed",
         inset: 0,
         zIndex: 999999,
-        backgroundColor: "#08090d",
+        backgroundColor: "#000000",
         color: "#ffffff",
         overflow: "hidden",
         fontFamily:
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        animation: "modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        animation: "modalFadeIn 0.25s ease-out",
       }}
     >
       <style>{`
         @keyframes modalFadeIn {
-          from { opacity: 0; transform: scale(0.99); }
-          to { opacity: 1; transform: scale(1); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
-        @keyframes pulseGlow {
-          0%, 100% { transform: scale(1); opacity: 0.8; }
-          50% { transform: scale(1.08); opacity: 1; }
+        .clean-modal-scrollbar::-webkit-scrollbar {
+          display: none;
         }
-        .gsap-custom-scrollbar::-webkit-scrollbar {
-          width: 5px;
+        .clean-modal-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
-        .gsap-custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.2);
+        .close-btn-minimal {
+          transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
         }
-        .gsap-custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(81, 98, 255, 0.5);
-          border-radius: 4px;
-        }
-        .work-item-row {
-          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-          cursor: pointer;
-        }
-        .work-item-row:hover {
-          padding-left: 24px;
-          color: #5162ff;
-          border-color: #5162ff !important;
-        }
-        .close-btn-glow {
-          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .close-btn-glow:hover {
-          transform: scale(1.06);
-          background: rgba(255, 255, 255, 0.2) !important;
-          box-shadow: 0 0 25px rgba(81, 98, 255, 0.6);
+        .close-btn-minimal:hover {
+          transform: scale(1.1);
+          background: rgba(255, 255, 255, 0.25) !important;
         }
       `}</style>
 
-      {/* Floating Header HUD */}
-      <div
+      {/* Ultra-Clean Floating Close Button Only */}
+      <button
+        onClick={onClose}
+        className="close-btn-minimal"
+        aria-label="Close"
         style={{
           position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
+          top: "28px",
+          right: "32px",
           zIndex: 100,
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
-          padding: "24px 36px",
-          background:
-            "linear-gradient(180deg, rgba(8, 9, 13, 0.85) 0%, rgba(8, 9, 13, 0) 100%)",
+          justifyContent: "center",
+          width: "44px",
+          height: "44px",
+          borderRadius: "50%",
+          background: "rgba(0, 0, 0, 0.5)",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
-          pointerEvents: "none",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
+          color: "#ffffff",
+          fontSize: "18px",
+          cursor: "pointer",
         }}
       >
-        {/* Left: Badge */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            pointerEvents: "auto",
-          }}
-        >
-          <div
-            style={{
-              width: "10px",
-              height: "10px",
-              borderRadius: "50%",
-              backgroundColor: "#00F298",
-              boxShadow: "0 0 12px #00F298",
-              animation: "pulseGlow 2s infinite ease-in-out",
-            }}
-          />
-          <span
-            style={{
-              fontSize: "13px",
-              fontWeight: 800,
-              letterSpacing: "1.2px",
-              textTransform: "uppercase",
-            }}
-          >
-            GSAP Video Graphics
-          </span>
-          <span
-            style={{
-              fontSize: "11px",
-              fontWeight: 600,
-              color: "rgba(255, 255, 255, 0.6)",
-              background: "rgba(255, 255, 255, 0.1)",
-              padding: "4px 10px",
-              borderRadius: "12px",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-            }}
-          >
-            302 Frames • Scroll Interactive
-          </span>
-        </div>
+        ✕
+      </button>
 
-        {/* Center: Live Frame Counter */}
-        <div
-          style={{
-            fontSize: "13px",
-            fontWeight: 700,
-            color: "rgba(255, 255, 255, 0.9)",
-            letterSpacing: "1px",
-            fontVariantNumeric: "tabular-nums",
-            background: "rgba(8, 9, 13, 0.6)",
-            padding: "6px 16px",
-            borderRadius: "20px",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-          }}
-        >
-          FRAME {currentFrameNum} / {totalFrames} • {Math.round(scrollProgress * 100)}%
-        </div>
-
-        {/* Right: Close Button */}
-        <button
-          onClick={onClose}
-          className="close-btn-glow"
-          onMouseEnter={() => setCursorHovered(true)}
-          onMouseLeave={() => setCursorHovered(false)}
-          style={{
-            pointerEvents: "auto",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "10px",
-            background: "rgba(255, 255, 255, 0.12)",
-            border: "1px solid rgba(255, 255, 255, 0.25)",
-            color: "#ffffff",
-            padding: "10px 22px",
-            borderRadius: "24px",
-            fontSize: "14px",
-            fontWeight: 700,
-            cursor: "pointer",
-          }}
-        >
-          <span>✕ Close</span>
-          <span
-            style={{
-              fontSize: "10px",
-              opacity: 0.7,
-              background: "rgba(255, 255, 255, 0.2)",
-              padding: "2px 7px",
-              borderRadius: "5px",
-            }}
-          >
-            ESC
-          </span>
-        </button>
-      </div>
-
-      {/* Vertical Glowing Progress Bar on Left */}
-      <div
-        style={{
-          position: "fixed",
-          left: "24px",
-          top: "50%",
-          transform: "translateY(-50%)",
-          width: "3px",
-          height: "200px",
-          background: "rgba(255, 255, 255, 0.15)",
-          borderRadius: "3px",
-          zIndex: 90,
-          overflow: "hidden",
-          pointerEvents: "none",
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            height: `${scrollProgress * 100}%`,
-            background: "linear-gradient(180deg, #5162FF, #00F298)",
-            boxShadow: "0 0 10px #5162FF",
-            transition: "height 0.05s linear",
-          }}
-        />
-      </div>
-
-      {/* Main Scrollable Canvas & Content Track */}
+      {/* Main Scrollable Viewport Track */}
       <div
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="gsap-custom-scrollbar"
+        className="clean-modal-scrollbar"
         style={{
           position: "absolute",
           inset: 0,
           overflowY: "auto",
           overflowX: "hidden",
-          scrollBehavior: "auto",
         }}
       >
-        {/* Sticky 500vh Section driving the Canvas Video & Overlays */}
-        <div style={{ position: "relative", height: "480vh" }}>
+        <div style={{ position: "relative", height: "450vh" }}>
+          {/* Sticky Canvas & Text Viewport */}
           <div
             style={{
               position: "sticky",
@@ -484,23 +332,12 @@ export default function LionFullscreenModal({
               }}
             />
 
-            {/* Subtle Vignette Overlay */}
+            {/* 1. Animate 1: Shaping Brands (Bottom-Left) */}
             <div
               style={{
                 position: "absolute",
-                inset: 0,
-                background:
-                  "radial-gradient(circle at center, rgba(0,0,0,0) 40%, rgba(8,9,13,0.7) 100%)",
-                pointerEvents: "none",
-              }}
-            />
-
-            {/* Overlay 1: Shaping Brands (Frames 1-84 / Progress 0.0 - 0.2) */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "70px",
-                left: "70px",
+                bottom: "50px",
+                left: "50px",
                 width: "min(650px, 85%)",
                 opacity: op1,
                 transform: `translateY(-${y1}px)`,
@@ -509,57 +346,42 @@ export default function LionFullscreenModal({
                 zIndex: 10,
               }}
             >
-              <div
+              <h2
                 style={{
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  letterSpacing: "2px",
-                  color: "#00F298",
-                  textTransform: "uppercase",
-                  marginBottom: "12px",
+                  fontSize: "clamp(20px, 2.2vw, 30px)",
+                  fontWeight: 200,
+                  margin: "0 0 10px",
+                  opacity: 0.9,
+                  letterSpacing: "0.5px",
                 }}
               >
                 © 2026 @MausamKar
-              </div>
+              </h2>
               <h1
                 style={{
-                  fontSize: "clamp(36px, 5.5vw, 76px)",
+                  fontSize: "clamp(32px, 4.2vw, 64px)",
                   fontWeight: 800,
                   lineHeight: 1.05,
-                  letterSpacing: "-2px",
+                  letterSpacing: "-1.5px",
                   margin: 0,
                   textTransform: "uppercase",
                   color: "#ffffff",
-                  textShadow: "0 10px 40px rgba(0,0,0,0.8)",
                 }}
               >
                 SHAPING BRANDS →<br />CRAFTING MOTION
               </h1>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  marginTop: "24px",
-                  fontSize: "13px",
-                  color: "rgba(255, 255, 255, 0.7)",
-                  letterSpacing: "1px",
-                }}
-              >
-                <span style={{ fontSize: "16px" }}>↓</span> Scroll to play animation & explore
-              </div>
             </div>
 
-            {/* Overlay 2: Transforming Visions (Progress 0.18 - 0.42) */}
+            {/* 2. Animate 2: Transforming Visions (Bottom-Right) */}
             <div
               style={{
                 position: "absolute",
-                bottom: "80px",
-                right: "70px",
-                width: "min(700px, 85%)",
+                bottom: "60px",
+                right: "50px",
+                width: "min(650px, 85%)",
                 textAlign: "right",
                 opacity: op2,
-                transform: `translateY(${op2 > 0 ? (1 - op2) * 40 : 40}px)`,
+                transform: `translateY(${op2 > 0 ? (1 - op2) * 30 : 30}px)`,
                 transition: "opacity 0.2s ease-out, transform 0.2s ease-out",
                 pointerEvents: op2 > 0.1 ? "auto" : "none",
                 zIndex: 10,
@@ -567,41 +389,39 @@ export default function LionFullscreenModal({
             >
               <h2
                 style={{
-                  fontSize: "clamp(34px, 5.5vw, 72px)",
+                  fontSize: "clamp(32px, 4.5vw, 68px)",
                   fontWeight: 800,
                   lineHeight: 1.05,
-                  letterSpacing: "-2px",
-                  margin: "0 0 16px",
+                  letterSpacing: "-1.5px",
+                  margin: "0 0 14px",
                   textTransform: "uppercase",
                   color: "#ffffff",
-                  textShadow: "0 10px 40px rgba(0,0,0,0.8)",
                 }}
               >
                 Transforming Visions
               </h2>
               <p
                 style={{
-                  fontSize: "clamp(15px, 1.6vw, 22px)",
+                  fontSize: "clamp(14px, 1.4vw, 18px)",
                   lineHeight: 1.5,
                   color: "rgba(255, 255, 255, 0.85)",
                   margin: 0,
-                  maxWidth: "520px",
+                  maxWidth: "480px",
                   marginLeft: "auto",
                 }}
               >
-                Building identity and inspiring action. Sculpting digital experiences that resonate
-                across platforms and borders.
+                Building Identity and Inspiring action. Sculpting digital experiences that resonate.
               </p>
             </div>
 
-            {/* Overlay 3: Elevating Aesthetics (Progress 0.38 - 0.64) */}
+            {/* 3. Animate 3: Elevating Aesthetics (Center) */}
             <div
               style={{
                 position: "absolute",
                 top: "50%",
                 left: "50%",
-                transform: `translate(-50%, -50%) scale(${0.92 + op3 * 0.08})`,
-                width: "min(850px, 90%)",
+                transform: `translate(-50%, -50%) scale(${0.94 + op3 * 0.06})`,
+                width: "min(750px, 90%)",
                 textAlign: "center",
                 opacity: op3,
                 transition: "opacity 0.2s ease-out, transform 0.2s ease-out",
@@ -611,43 +431,41 @@ export default function LionFullscreenModal({
             >
               <h2
                 style={{
-                  fontSize: "clamp(36px, 6vw, 84px)",
-                  fontWeight: 900,
+                  fontSize: "clamp(34px, 5vw, 76px)",
+                  fontWeight: 800,
                   lineHeight: 1.05,
-                  letterSpacing: "-3px",
-                  margin: "0 0 18px",
+                  letterSpacing: "-2px",
+                  margin: "0 0 16px",
                   textTransform: "uppercase",
                   color: "#ffffff",
-                  textShadow: "0 15px 50px rgba(0,0,0,0.9)",
                 }}
               >
                 Elevating Aesthetics
               </h2>
               <p
                 style={{
-                  fontSize: "clamp(16px, 1.8vw, 22px)",
+                  fontSize: "clamp(15px, 1.6vw, 20px)",
                   lineHeight: 1.6,
                   color: "rgba(255, 255, 255, 0.85)",
                   margin: "0 auto",
-                  maxWidth: "650px",
+                  maxWidth: "580px",
                 }}
               >
-                Crafting solutions and exploring new horizons. Evolving narratives and elevating
-                visual aesthetics in every motion sequence.
+                Crafting solutions and exploring new horizons. Evolving narratives and elevating aesthetics in every project.
               </p>
             </div>
 
-            {/* Overlay 4: Slide-in Side Drawer Panel (Progress 0.60 - 0.84) */}
+            {/* 4. Animate 4: Slide-in Side Panel */}
             <div
               style={{
                 position: "absolute",
                 top: 0,
                 right: 0,
-                width: "min(480px, 92vw)",
+                width: "min(440px, 90vw)",
                 height: "100vh",
-                backgroundColor: "rgba(255, 255, 255, 0.98)",
+                backgroundColor: "#ffffff",
                 color: "#08090d",
-                padding: "60px 48px",
+                padding: "60px 45px",
                 boxSizing: "border-box",
                 display: "flex",
                 flexDirection: "column",
@@ -656,80 +474,95 @@ export default function LionFullscreenModal({
                 opacity: panelOp,
                 transition: "transform 0.1s linear",
                 zIndex: 20,
-                boxShadow: "-15px 0 60px rgba(0,0,0,0.6)",
+                boxShadow: "-15px 0 50px rgba(0,0,0,0.5)",
               }}
             >
               <div>
                 <div
                   style={{
-                    fontSize: "13px",
-                    fontWeight: 700,
+                    fontSize: "14px",
+                    fontWeight: 600,
                     opacity: 0.6,
-                    letterSpacing: "1.5px",
-                    textTransform: "uppercase",
+                    letterSpacing: "1px",
                   }}
                 >
                   © 2026 MausamKar
                 </div>
                 <h3
                   style={{
-                    fontSize: "40px",
-                    fontWeight: 800,
+                    fontSize: "36px",
+                    fontWeight: 700,
                     lineHeight: 1.15,
-                    letterSpacing: "-1px",
-                    marginTop: "32px",
-                    marginBottom: "20px",
+                    letterSpacing: "-0.5px",
+                    marginTop: "30px",
+                    marginBottom: "18px",
                   }}
                 >
-                  Sculpting Digital Realities
+                  Sculpting Digital
                 </h3>
                 <p
                   style={{
-                    fontSize: "16px",
-                    lineHeight: 1.65,
-                    color: "#374151",
+                    fontSize: "15px",
+                    lineHeight: 1.6,
+                    color: "#444a56",
                   }}
                 >
-                  Transforming visions into digital realities. Weaving stories that captivate and
-                  innovate with modern GPU-accelerated motion sequences.
+                  Transforming visions into digital realities. Weaving stories that captivate and innovate. Exploring new possibilities with a focus on narrative evolution. Crafting solutions that engage and elevate.
                 </p>
-                <div
+                <button
+                  type="button"
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
                     gap: "8px",
-                    marginTop: "28px",
-                    padding: "14px 26px",
-                    borderRadius: "8px",
-                    border: "2px solid #08090d",
+                    marginTop: "24px",
+                    padding: "12px 22px",
+                    border: "1px solid #555555",
+                    background: "transparent",
                     color: "#08090d",
                     fontSize: "14px",
-                    fontWeight: 700,
-                    background: "transparent",
+                    fontWeight: 500,
+                    cursor: "pointer",
                   }}
                 >
-                  Explore Showcase →
-                </div>
+                  Get Reviews →
+                </button>
               </div>
 
               <div>
-                <div style={{ fontSize: "20px", fontWeight: 800, letterSpacing: "-0.5px" }}>
+                <div style={{ fontSize: "18px", fontWeight: 700 }}>
                   Innovating Design
                 </div>
                 <p
                   style={{
-                    fontSize: "14px",
+                    fontSize: "13px",
                     color: "#6b7280",
                     marginTop: "8px",
                     lineHeight: 1.5,
                   }}
                 >
-                  Connecting ideas to foster creativity. Designing impactful experiences that resonate.
+                  Connecting ideas to foster creativity. Designing Impactful experiences that resonate. Feel free to mix and match these sections to suit your website design needs!
                 </p>
+                <button
+                  type="button"
+                  style={{
+                    background: "#08090d",
+                    color: "#ffffff",
+                    padding: "12px 24px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    border: "none",
+                    marginTop: "16px",
+                    cursor: "pointer",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  Experience
+                </button>
               </div>
             </div>
 
-            {/* Overlay 5: Nexora Finale Badge (Progress 0.80 - 1.0) */}
+            {/* 5. Animate 5: Finale Badge (Center) */}
             <div
               style={{
                 position: "absolute",
@@ -745,216 +578,28 @@ export default function LionFullscreenModal({
             >
               <div
                 style={{
-                  fontSize: "clamp(36px, 6.5vw, 84px)",
-                  fontWeight: 900,
+                  fontSize: "clamp(34px, 5.5vw, 72px)",
+                  fontWeight: 800,
                   letterSpacing: "-2px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "20px",
+                  gap: "18px",
                   color: "#ffffff",
                 }}
               >
-                <span>© NEXORA</span>
+                <span>© Mausam</span>
                 <span
                   style={{
                     display: "inline-block",
                     width: `${lineWidth}px`,
-                    height: "4px",
-                    backgroundColor: "#5162FF",
-                    boxShadow: "0 0 15px #5162FF",
+                    height: "3px",
+                    backgroundColor: "#ffffff",
                     transition: "width 0.1s linear",
                   }}
                 />
-                <span style={{ color: "#5162FF" }}>2026</span>
+                <span>2048</span>
               </div>
-              <div
-                style={{
-                  marginTop: "24px",
-                  fontSize: "15px",
-                  fontWeight: 600,
-                  color: "rgba(255, 255, 255, 0.7)",
-                  letterSpacing: "2px",
-                  textTransform: "uppercase",
-                }}
-              >
-                Continue scrolling for Recent Works & Showcase ↓
-              </div>
-            </div>
-
-            {/* Bottom Floating Scrubber Pill for Quick Seek */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "28px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                zIndex: 30,
-                display: "flex",
-                alignItems: "center",
-                gap: "14px",
-                background: "rgba(8, 9, 13, 0.75)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
-                padding: "8px 20px",
-                borderRadius: "30px",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
-                boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-              }}
-            >
-              <span style={{ fontSize: "11px", opacity: 0.6, letterSpacing: "0.5px" }}>FRAME</span>
-              <input
-                type="range"
-                min={1}
-                max={totalFrames}
-                value={currentFrameNum}
-                onChange={(e) => {
-                  const targetF = parseInt(e.target.value, 10);
-                  const progressRatio = (targetF - 1) / (totalFrames - 1);
-                  const container = scrollContainerRef.current;
-                  if (container) {
-                    container.scrollTop = progressRatio * (window.innerHeight * 4.2);
-                  }
-                }}
-                style={{
-                  width: "160px",
-                  accentColor: "#5162FF",
-                  cursor: "pointer",
-                }}
-              />
-              <span
-                style={{
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  color: "#00F298",
-                  minWidth: "60px",
-                  fontVariantNumeric: "tabular-nums",
-                }}
-              >
-                {currentFrameNum} / {totalFrames}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Subsequent Section: Works Showcase from GSAP Video Graphics */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 40,
-            background: "#ffffff",
-            color: "#08090d",
-            padding: "120px 80px 100px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-            <div
-              style={{
-                fontSize: "14px",
-                fontWeight: 700,
-                letterSpacing: "2px",
-                color: "#5162FF",
-                textTransform: "uppercase",
-                marginBottom: "16px",
-              }}
-            >
-              PORTFOLIO & MOTION ARCHIVE
-            </div>
-            <h2
-              style={{
-                fontSize: "clamp(48px, 7vw, 96px)",
-                fontWeight: 900,
-                lineHeight: 0.95,
-                letterSpacing: "-3px",
-                margin: "0 0 60px",
-                textTransform: "uppercase",
-              }}
-            >
-              ® Recent Motion Works
-            </h2>
-
-            {/* Works List Grid */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-                gap: "32px 64px",
-              }}
-            >
-              {[
-                { name: "Mustela", category: "Brand Experience • 3D Motion" },
-                { name: "A24 - WYFSTW", category: "Cinematic Web Experience" },
-                { name: "CM | Equity", category: "Institutional DeFi Identity" },
-                { name: "Citroën ë-C3", category: "Automotive Interactive 3D" },
-                { name: "Perspective Fund", category: "Financial Motion System" },
-                { name: "Martin Solveig", category: "Audio-Visual Spatial Web" },
-                { name: "Heiwa", category: "Editorial Typography & Motion" },
-                { name: "Nothing Ear", category: "Hardware Product Launch" },
-              ].map((item, idx) => (
-                <div
-                  key={item.name}
-                  className="work-item-row"
-                  style={{
-                    padding: "20px 0",
-                    borderBottom: "1px solid #e5e7eb",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div>
-                    <div style={{ fontSize: "28px", fontWeight: 800, letterSpacing: "-0.5px" }}>
-                      {item.name}
-                    </div>
-                    <div style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>
-                      {item.category}
-                    </div>
-                  </div>
-                  <div style={{ fontSize: "20px", opacity: 0.4 }}>→</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Bottom Contact Banner */}
-            <div
-              style={{
-                marginTop: "100px",
-                padding: "60px 48px",
-                borderRadius: "20px",
-                background: "#08090d",
-                color: "#ffffff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-                gap: "24px",
-              }}
-            >
-              <div>
-                <h3 style={{ fontSize: "36px", fontWeight: 800, margin: "0 0 8px", letterSpacing: "-1px" }}>
-                  Let's Talk Motion 🎙️
-                </h3>
-                <p style={{ margin: 0, opacity: 0.7, fontSize: "16px" }}>
-                  Ready to craft an award-winning web experience together?
-                </p>
-              </div>
-              <button
-                onClick={onClose}
-                style={{
-                  background: "#5162FF",
-                  color: "#ffffff",
-                  border: "none",
-                  padding: "16px 36px",
-                  borderRadius: "12px",
-                  fontSize: "16px",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  boxShadow: "0 10px 30px rgba(81, 98, 255, 0.4)",
-                }}
-              >
-                Back to Landing Page
-              </button>
             </div>
           </div>
         </div>

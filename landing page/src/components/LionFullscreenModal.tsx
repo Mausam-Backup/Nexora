@@ -22,26 +22,39 @@ export default function LionFullscreenModal({
   const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
 
   // Virtual scroll & frame physics
-  const MAX_SCROLL = 3500; // Total virtual scroll distance
+  const MAX_SCROLL = 3500;
   const virtualScrollRef = useRef<number>(0);
   const currentFrameRef = useRef<number>(1);
   const targetFrameRef = useRef<number>(1);
   const rafRef = useRef<number | null>(null);
-
-  const [progress, setProgress] = useState<number>(0);
   const touchStartYRef = useRef<number>(0);
+
+  // UI state for reactive overlay opacities & interactive buttons
+  const [scrollProgress, setScrollProgress] = useState<number>(0);
+  const [activeFrame, setActiveFrame] = useState<number>(1);
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const CONTACT_EMAIL = "contact@tryresponse.com";
+
+  const handleCopyEmail = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(CONTACT_EMAIL).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
 
   // Preload frames progressively when modal opens
   useEffect(() => {
     if (!isOpen) return;
 
-    // Reset scroll & frames
     virtualScrollRef.current = 0;
     currentFrameRef.current = 1;
     targetFrameRef.current = 1;
-    setProgress(0);
+    setScrollProgress(0);
+    setActiveFrame(1);
+    setCopied(false);
 
-    // Lock main page scroll
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -80,7 +93,6 @@ export default function LionFullscreenModal({
 
       let img = imagesRef.current[frameIndex];
       if (!img || !img.complete || img.naturalWidth === 0) {
-        // Fallback to nearest loaded frame
         for (let offset = 1; offset < totalFrames; offset++) {
           const lower = frameIndex - offset;
           const higher = frameIndex + offset;
@@ -125,8 +137,8 @@ export default function LionFullscreenModal({
       } else {
         drawH = height;
         drawW = height * imgAspect;
-        drawY = 0;
-        drawX = (width - drawW) / 2;
+        drawX = 0;
+        drawY = (width - drawW) / 2;
       }
 
       ctx.clearRect(0, 0, width, height);
@@ -146,7 +158,7 @@ export default function LionFullscreenModal({
       virtualScrollRef.current = nextScroll;
 
       const p = nextScroll / MAX_SCROLL;
-      setProgress(p);
+      setScrollProgress(p);
 
       const targetFrame = Math.max(1, Math.min(totalFrames, Math.round(1 + p * (totalFrames - 1))));
       targetFrameRef.current = targetFrame;
@@ -154,14 +166,13 @@ export default function LionFullscreenModal({
     [MAX_SCROLL, totalFrames]
   );
 
-  // Direct Wheel Listener with non-passive event capture
+  // Direct Wheel & Touch Listener with non-passive capture
   useEffect(() => {
     if (!isOpen) return;
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      // Multiplier for responsive, buttery scroll speed
       const delta = e.deltaY * 1.5;
       updateScrollProgress(delta);
     };
@@ -231,7 +242,9 @@ export default function LionFullscreenModal({
       if (Math.abs(target - current) > 0.05) {
         const next = current + (target - current) * 0.35;
         currentFrameRef.current = next;
-        drawFrame(Math.round(next));
+        const rounded = Math.round(next);
+        setActiveFrame(rounded);
+        drawFrame(rounded);
       }
 
       rafRef.current = requestAnimationFrame(renderLoop);
@@ -254,62 +267,104 @@ export default function LionFullscreenModal({
 
   if (!isOpen) return null;
 
-  // Phase Calculations (Exact GSAP Video Graphics timing)
-  // Phase 1 (0.0 - 0.20): Shaping Brands
-  const op1 = progress <= 0.18 ? 1 - progress / 0.18 : 0;
-  const y1 = progress * 140;
+  // Opacity calculations for smooth text overlay transitions across scroll progress
+  // Slide 1: Intro (0.00 -> 0.22)
+  const op1 = Math.max(0, Math.min(1, 1 - scrollProgress / 0.18));
 
-  // Phase 2 (0.18 - 0.42): Transforming Visions
+  // Slide 2: Vision & Expertise (0.20 -> 0.48, peak at 0.34)
   const op2 =
-    progress >= 0.18 && progress <= 0.42
-      ? progress < 0.3
-        ? (progress - 0.18) / 0.12
-        : 1 - (progress - 0.3) / 0.12
+    scrollProgress >= 0.18 && scrollProgress <= 0.48
+      ? scrollProgress < 0.33
+        ? (scrollProgress - 0.18) / 0.15
+        : (0.48 - scrollProgress) / 0.15
       : 0;
 
-  // Phase 3 (0.38 - 0.64): Elevating Aesthetics
+  // Slide 3: Main Contact Focus (0.46 -> 0.78, peak at 0.62)
   const op3 =
-    progress >= 0.38 && progress <= 0.64
-      ? progress < 0.5
-        ? (progress - 0.38) / 0.12
-        : 1 - (progress - 0.5) / 0.14
+    scrollProgress >= 0.46 && scrollProgress <= 0.78
+      ? scrollProgress < 0.62
+        ? (scrollProgress - 0.46) / 0.16
+        : (0.78 - scrollProgress) / 0.16
       : 0;
 
-  // Phase 4 (0.60 - 0.84): Clean Slide-in Side Panel
-  const panelX =
-    progress < 0.6
-      ? 100
-      : progress <= 0.74
-      ? Math.max(0, 100 - (progress - 0.6) * 700)
-      : progress <= 0.84
-      ? (progress - 0.74) * 1000
-      : 100;
-  const panelOp = progress >= 0.6 && progress <= 0.84 ? 1 : 0;
-
-  // Phase 5 (0.80 - 1.0): Finale Badge
-  const op5 = progress >= 0.8 ? Math.min(1, (progress - 0.8) / 0.15) : 0;
-  const lineWidth = progress >= 0.8 ? Math.min(140, (progress - 0.8) * 700) : 0;
+  // Slide 4: Slide-in Contact Sheet / Drawer (0.76 -> 1.0)
+  const op4 = scrollProgress >= 0.76 ? Math.min(1, (scrollProgress - 0.76) / 0.14) : 0;
+  const panelTranslateX = scrollProgress >= 0.76 ? (1 - op4) * 100 : 100;
 
   return (
     <div
       ref={modalRef}
       role="dialog"
       aria-modal="true"
-      aria-label="GSAP Video Graphics Fullscreen Experience"
+      aria-label="Fullscreen Contact & Motion Experience"
       style={{
         position: "fixed",
         inset: 0,
         zIndex: 999999,
         backgroundColor: "#000000",
-        color: "#ffffff",
         overflow: "hidden",
+        userSelect: "none",
         fontFamily:
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        userSelect: "none",
-        cursor: "default",
       }}
     >
       <style>{`
+        .modal-glass-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 14px;
+          border-radius: 9999px;
+          background: rgba(255, 255, 255, 0.12);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          color: #ffffff;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+        }
+        .modal-cta-primary {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 14px 28px;
+          border-radius: 9999px;
+          background: #ffffff;
+          color: #000000;
+          font-size: 15px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+        .modal-cta-primary:hover {
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 14px 35px rgba(255, 255, 255, 0.25);
+          background: #f0f0f5;
+        }
+        .modal-cta-secondary {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 14px 24px;
+          border-radius: 9999px;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+        .modal-cta-secondary:hover {
+          transform: translateY(-2px);
+          background: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.4);
+        }
         .close-btn-minimal {
           transition: transform 0.2s ease, background 0.2s ease;
         }
@@ -317,35 +372,78 @@ export default function LionFullscreenModal({
           transform: scale(1.1);
           background: rgba(255, 255, 255, 0.25) !important;
         }
+        .contact-channel-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px 16px;
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #ffffff;
+          text-decoration: none;
+          transition: all 0.2s ease;
+        }
+        .contact-channel-row:hover {
+          background: rgba(255, 255, 255, 0.12);
+          border-color: rgba(255, 255, 255, 0.25);
+          transform: translateX(4px);
+        }
       `}</style>
 
-      {/* Ultra-Clean Floating Close Button */}
-      <button
-        onClick={onClose}
-        className="close-btn-minimal"
-        aria-label="Close"
+      {/* Top Floating Bar: Brand & Close */}
+      <div
         style={{
           position: "absolute",
-          top: "28px",
+          top: "24px",
+          left: "32px",
           right: "32px",
-          zIndex: 100,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          width: "44px",
-          height: "44px",
-          borderRadius: "50%",
-          background: "rgba(0, 0, 0, 0.5)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          border: "1px solid rgba(255, 255, 255, 0.2)",
-          color: "#ffffff",
-          fontSize: "18px",
-          cursor: "pointer",
+          justifyContent: "space-between",
+          zIndex: 100,
+          pointerEvents: "none",
         }}
       >
-        ✕
-      </button>
+        <div style={{ pointerEvents: "auto", display: "flex", alignItems: "center", gap: "12px" }}>
+          <div className="modal-glass-pill">
+            <span
+              style={{
+                width: "7px",
+                height: "7px",
+                borderRadius: "50%",
+                background: "#10b981",
+                boxShadow: "0 0 10px #10b981",
+              }}
+            />
+            Nexora • Contact & Vision
+          </div>
+        </div>
+
+        <button
+          onClick={onClose}
+          className="close-btn-minimal"
+          aria-label="Close modal"
+          style={{
+            pointerEvents: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "44px",
+            height: "44px",
+            borderRadius: "50%",
+            background: "rgba(0, 0, 0, 0.6)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            color: "#ffffff",
+            fontSize: "18px",
+            cursor: "pointer",
+          }}
+        >
+          ✕
+        </button>
+      </div>
 
       {/* Fullscreen Video Canvas */}
       <div
@@ -366,274 +464,402 @@ export default function LionFullscreenModal({
             objectFit: "cover",
           }}
         />
-
-        {/* 1. Animate 1: Shaping Brands (Bottom-Left) */}
+        {/* Subtle cinematic vignette */}
         <div
           style={{
             position: "absolute",
-            bottom: "50px",
-            left: "50px",
-            width: "min(650px, 85%)",
-            opacity: op1,
-            transform: `translateY(-${y1}px)`,
-            transition: "opacity 0.15s ease-out, transform 0.15s ease-out",
-            pointerEvents: op1 > 0.1 ? "auto" : "none",
-            zIndex: 10,
+            inset: 0,
+            background:
+              "radial-gradient(circle at center, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%)",
+            pointerEvents: "none",
+          }}
+        />
+      </div>
+
+      {/* SLIDE 1: Hero & Studio Tagline (Frames 1-70) */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "100px",
+          left: "clamp(24px, 5vw, 60px)",
+          maxWidth: "600px",
+          color: "#ffffff",
+          opacity: op1,
+          transform: `translateY(${(1 - op1) * 25}px)`,
+          transition: "opacity 0.15s ease-out, transform 0.15s ease-out",
+          pointerEvents: op1 > 0.1 ? "auto" : "none",
+          zIndex: 10,
+        }}
+      >
+        <div className="modal-glass-pill" style={{ marginBottom: "14px" }}>
+          &copy; 2025 NEXORA STUDIO
+        </div>
+        <h1
+          style={{
+            fontSize: "clamp(32px, 5vw, 56px)",
+            fontWeight: 800,
+            lineHeight: 1.05,
+            letterSpacing: "-1.5px",
+            margin: "0 0 14px",
+            textTransform: "uppercase",
+            textShadow: "0 4px 20px rgba(0,0,0,0.8)",
           }}
         >
-          <h2
-            style={{
-              fontSize: "clamp(20px, 2.2vw, 30px)",
-              fontWeight: 200,
-              margin: "0 0 10px",
-              opacity: 0.9,
-              letterSpacing: "0.5px",
-            }}
-          >
-            © 2026 @MausamKar
-          </h2>
-          <h1
-            style={{
-              fontSize: "clamp(32px, 4.2vw, 64px)",
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: "-1.5px",
-              margin: 0,
-              textTransform: "uppercase",
-              color: "#ffffff",
-            }}
-          >
-            SHAPING BRANDS →<br />CRAFTING MOTION
-          </h1>
-        </div>
-
-        {/* 2. Animate 2: Transforming Visions (Bottom-Right) */}
-        <div
+          Shaping Brands → Crafting Motion
+        </h1>
+        <p
           style={{
-            position: "absolute",
-            bottom: "60px",
-            right: "50px",
-            width: "min(650px, 85%)",
-            textAlign: "right",
-            opacity: op2,
-            transform: `translateY(${op2 > 0 ? (1 - op2) * 30 : 30}px)`,
-            transition: "opacity 0.2s ease-out, transform 0.2s ease-out",
-            pointerEvents: op2 > 0.1 ? "auto" : "none",
-            zIndex: 10,
+            fontSize: "clamp(15px, 1.4vw, 18px)",
+            lineHeight: 1.5,
+            color: "rgba(255, 255, 255, 0.85)",
+            margin: "0 0 20px",
+            textShadow: "0 2px 10px rgba(0,0,0,0.8)",
           }}
         >
-          <h2
-            style={{
-              fontSize: "clamp(32px, 4.5vw, 68px)",
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: "-1.5px",
-              margin: "0 0 14px",
-              textTransform: "uppercase",
-              color: "#ffffff",
-            }}
-          >
-            Transforming Visions
-          </h2>
-          <p
-            style={{
-              fontSize: "clamp(14px, 1.4vw, 18px)",
-              lineHeight: 1.5,
-              color: "rgba(255, 255, 255, 0.85)",
-              margin: 0,
-              maxWidth: "480px",
-              marginLeft: "auto",
-            }}
-          >
-            Building Identity and Inspiring action. Sculpting digital experiences that resonate.
-          </p>
-        </div>
-
-        {/* 3. Animate 3: Elevating Aesthetics (Center) */}
+          Pushing the boundaries of digital architecture, high-performance web systems, and immersive visual storytelling.
+        </p>
         <div
           style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: `translate(-50%, -50%) scale(${0.94 + op3 * 0.06})`,
-            width: "min(750px, 90%)",
-            textAlign: "center",
-            opacity: op3,
-            transition: "opacity 0.2s ease-out, transform 0.2s ease-out",
-            pointerEvents: op3 > 0.1 ? "auto" : "none",
-            zIndex: 10,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            color: "rgba(255, 255, 255, 0.6)",
+            fontSize: "13px",
+            letterSpacing: "0.5px",
           }}
         >
-          <h2
-            style={{
-              fontSize: "clamp(34px, 5vw, 76px)",
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: "-2px",
-              margin: "0 0 16px",
-              textTransform: "uppercase",
-              color: "#ffffff",
-            }}
-          >
-            Elevating Aesthetics
-          </h2>
-          <p
-            style={{
-              fontSize: "clamp(15px, 1.6vw, 20px)",
-              lineHeight: 1.6,
-              color: "rgba(255, 255, 255, 0.85)",
-              margin: "0 auto",
-              maxWidth: "580px",
-            }}
-          >
-            Crafting solutions and exploring new horizons. Evolving narratives and elevating aesthetics in every project.
-          </p>
+          <span>↓ Scroll to explore contact details</span>
         </div>
+      </div>
 
-        {/* 4. Animate 4: Slide-in Side Panel */}
+      {/* SLIDE 2: Vision & Capabilities (Frames 70-150) */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "100px",
+          right: "clamp(24px, 5vw, 60px)",
+          maxWidth: "580px",
+          textAlign: "right",
+          color: "#ffffff",
+          opacity: op2,
+          transform: `translateY(${(1 - op2) * 25}px)`,
+          transition: "opacity 0.15s ease-out, transform 0.15s ease-out",
+          pointerEvents: op2 > 0.1 ? "auto" : "none",
+          zIndex: 10,
+        }}
+      >
+        <div className="modal-glass-pill" style={{ marginBottom: "14px" }}>
+          Capabilities & Creative Focus
+        </div>
+        <h2
+          style={{
+            fontSize: "clamp(30px, 4.5vw, 52px)",
+            fontWeight: 800,
+            lineHeight: 1.08,
+            letterSpacing: "-1.2px",
+            margin: "0 0 14px",
+            textTransform: "uppercase",
+            textShadow: "0 4px 20px rgba(0,0,0,0.8)",
+          }}
+        >
+          Transforming Visions Into Reality
+        </h2>
+        <p
+          style={{
+            fontSize: "clamp(15px, 1.4vw, 18px)",
+            lineHeight: 1.5,
+            color: "rgba(255, 255, 255, 0.85)",
+            margin: 0,
+            textShadow: "0 2px 10px rgba(0,0,0,0.8)",
+          }}
+        >
+          Building identity and inspiring action. Sculpting high-end digital experiences that captivate audiences and elevate brand presence.
+        </p>
+      </div>
+
+      {/* SLIDE 3: Main Contact Spotlight (Frames 150-240) */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: `translate(-50%, -50%) scale(${0.96 + op3 * 0.04})`,
+          width: "min(720px, 92%)",
+          textAlign: "center",
+          color: "#ffffff",
+          opacity: op3,
+          transition: "opacity 0.15s ease-out, transform 0.15s ease-out",
+          pointerEvents: op3 > 0.1 ? "auto" : "none",
+          zIndex: 10,
+        }}
+      >
+        <div className="modal-glass-pill" style={{ marginBottom: "18px" }}>
+          Start a Project
+        </div>
+        <h2
+          style={{
+            fontSize: "clamp(34px, 5.5vw, 68px)",
+            fontWeight: 900,
+            lineHeight: 1.02,
+            letterSpacing: "-2px",
+            margin: "0 0 16px",
+            textTransform: "uppercase",
+            textShadow: "0 4px 24px rgba(0,0,0,0.9)",
+          }}
+        >
+          Let's Build Together
+        </h2>
+        <p
+          style={{
+            fontSize: "clamp(15px, 1.6vw, 20px)",
+            lineHeight: 1.6,
+            color: "rgba(255, 255, 255, 0.9)",
+            margin: "0 auto 28px",
+            maxWidth: "580px",
+            textShadow: "0 2px 12px rgba(0,0,0,0.9)",
+          }}
+        >
+          Have an ambitious project, partnership, or bold creative vision in mind? Connect with us directly and let's craft something remarkable.
+        </p>
+
+        {/* Action Buttons Group */}
         <div
           style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            width: "min(440px, 90vw)",
-            height: "100vh",
-            backgroundColor: "#ffffff",
-            color: "#08090d",
-            padding: "60px 45px",
-            boxSizing: "border-box",
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            transform: `translateX(${panelX}%)`,
-            opacity: panelOp,
-            transition: "transform 0.1s linear",
-            zIndex: 20,
-            boxShadow: "-15px 0 50px rgba(0,0,0,0.5)",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "14px",
+            flexWrap: "wrap",
           }}
         >
-          <div>
-            <div
-              style={{
-                fontSize: "14px",
-                fontWeight: 600,
-                opacity: 0.6,
-                letterSpacing: "1px",
-              }}
-            >
-              © 2026 MausamKar
-            </div>
-            <h3
-              style={{
-                fontSize: "36px",
-                fontWeight: 700,
-                lineHeight: 1.15,
-                letterSpacing: "-0.5px",
-                marginTop: "30px",
-                marginBottom: "18px",
-              }}
-            >
-              Sculpting Digital
-            </h3>
-            <p
-              style={{
-                fontSize: "15px",
-                lineHeight: 1.6,
-                color: "#444a56",
-              }}
-            >
-              Transforming visions into digital realities. Weaving stories that captivate and innovate. Exploring new possibilities with a focus on narrative evolution. Crafting solutions that engage and elevate.
-            </p>
-            <button
-              type="button"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                marginTop: "24px",
-                padding: "12px 22px",
-                border: "1px solid #555555",
-                background: "transparent",
-                color: "#08090d",
-                fontSize: "14px",
-                fontWeight: 500,
-                cursor: "pointer",
-              }}
-            >
-              Get Reviews →
-            </button>
-          </div>
+          <a
+            href={`mailto:${CONTACT_EMAIL}?subject=Project%20Inquiry%20-%20Nexora`}
+            className="modal-cta-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>✉</span>
+            <span>Send Email Now</span>
+          </a>
 
-          <div>
-            <div style={{ fontSize: "18px", fontWeight: 700 }}>
-              Innovating Design
-            </div>
-            <p
-              style={{
-                fontSize: "13px",
-                color: "#6b7280",
-                marginTop: "8px",
-                lineHeight: 1.5,
-              }}
-            >
-              Connecting ideas to foster creativity. Designing Impactful experiences that resonate. Feel free to mix and match these sections to suit your website design needs!
-            </p>
-            <button
-              type="button"
-              style={{
-                background: "#08090d",
-                color: "#ffffff",
-                padding: "12px 24px",
-                fontSize: "13px",
-                fontWeight: 500,
-                border: "none",
-                marginTop: "16px",
-                cursor: "pointer",
-                textTransform: "capitalize",
-              }}
-            >
-              Experience
-            </button>
-          </div>
+          <button onClick={handleCopyEmail} className="modal-cta-secondary" type="button">
+            <span>{copied ? "✓" : "📋"}</span>
+            <span>{copied ? "Email Copied!" : "Copy Email"}</span>
+          </button>
         </div>
 
-        {/* 5. Animate 5: Finale Badge (Center) */}
         <div
           style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            textAlign: "center",
-            opacity: op5,
-            transition: "opacity 0.2s ease-out",
-            pointerEvents: op5 > 0.5 ? "auto" : "none",
-            zIndex: 10,
+            marginTop: "16px",
+            fontSize: "13px",
+            color: "rgba(255, 255, 255, 0.6)",
           }}
         >
+          Direct: <span style={{ color: "#ffffff", fontWeight: 600 }}>{CONTACT_EMAIL}</span>
+        </div>
+      </div>
+
+      {/* SLIDE 4: Slide-in Contact & Inquiry Panel (Frames 240-302) */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          width: "min(460px, 92vw)",
+          height: "100vh",
+          backgroundColor: "rgba(10, 11, 16, 0.92)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          borderLeft: "1px solid rgba(255, 255, 255, 0.15)",
+          color: "#ffffff",
+          padding: "clamp(30px, 6vh, 50px) clamp(24px, 4vw, 40px)",
+          boxSizing: "border-box",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          transform: `translateX(${panelTranslateX}%)`,
+          transition: "transform 0.15s ease-out",
+          pointerEvents: op4 > 0.1 ? "auto" : "none",
+          zIndex: 50,
+          boxShadow: "-10px 0 40px rgba(0, 0, 0, 0.6)",
+        }}
+      >
+        {/* Panel Header */}
+        <div>
           <div
             style={{
-              fontSize: "clamp(34px, 5.5vw, 72px)",
-              fontWeight: 800,
-              letterSpacing: "-2px",
-              display: "flex",
+              display: "inline-flex",
               alignItems: "center",
-              justifyContent: "center",
-              gap: "18px",
-              color: "#ffffff",
+              gap: "8px",
+              padding: "4px 12px",
+              borderRadius: "999px",
+              background: "rgba(16, 185, 129, 0.15)",
+              border: "1px solid rgba(16, 185, 129, 0.3)",
+              color: "#34d399",
+              fontSize: "12px",
+              fontWeight: 600,
+              marginBottom: "16px",
             }}
           >
-            <span>© Mausam</span>
             <span
               style={{
-                display: "inline-block",
-                width: `${lineWidth}px`,
-                height: "3px",
-                backgroundColor: "#ffffff",
-                transition: "width 0.1s linear",
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "#10b981",
+                boxShadow: "0 0 8px #10b981",
               }}
             />
-            <span>2048</span>
+            Available for Select Projects
+          </div>
+
+          <h3
+            style={{
+              fontSize: "clamp(26px, 3.2vw, 36px)",
+              fontWeight: 800,
+              letterSpacing: "-1px",
+              margin: "0 0 10px",
+              lineHeight: 1.1,
+            }}
+          >
+            Nexora Studio
+          </h3>
+
+          <p
+            style={{
+              fontSize: "14px",
+              lineHeight: 1.6,
+              color: "rgba(255, 255, 255, 0.75)",
+              margin: "0 0 24px",
+            }}
+          >
+            We partner with visionary founders, forward-thinking brands, and ambitious engineering teams to build category-defining digital products.
+          </p>
+
+          {/* Quick Contact Links */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "24px" }}>
+            <a
+              href={`mailto:${CONTACT_EMAIL}?subject=Project%20Inquiry%20-%20Nexora`}
+              className="contact-channel-row"
+            >
+              <div>
+                <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.5)", textTransform: "uppercase", letterSpacing: "1px" }}>Email</div>
+                <div style={{ fontSize: "14px", fontWeight: 600, marginTop: "2px" }}>{CONTACT_EMAIL}</div>
+              </div>
+              <span style={{ fontSize: "16px", opacity: 0.7 }}>↗</span>
+            </a>
+
+            <div
+              onClick={handleCopyEmail}
+              className="contact-channel-row"
+              style={{ cursor: "pointer" }}
+            >
+              <div>
+                <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.5)", textTransform: "uppercase", letterSpacing: "1px" }}>Quick Action</div>
+                <div style={{ fontSize: "14px", fontWeight: 600, marginTop: "2px" }}>
+                  {copied ? "Copied to Clipboard!" : "Copy Email Address"}
+                </div>
+              </div>
+              <span style={{ fontSize: "14px", opacity: 0.7 }}>{copied ? "✓" : "📋"}</span>
+            </div>
+
+            <div className="contact-channel-row">
+              <div>
+                <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.5)", textTransform: "uppercase", letterSpacing: "1px" }}>Studio Location</div>
+                <div style={{ fontSize: "14px", fontWeight: 600, marginTop: "2px" }}>Global • Remote Worldwide</div>
+              </div>
+              <span style={{ fontSize: "14px", opacity: 0.7 }}>🌐</span>
+            </div>
+          </div>
+
+          {/* Direct CTA */}
+          <a
+            href={`mailto:${CONTACT_EMAIL}?subject=New%20Project%20Inquiry`}
+            className="modal-cta-primary"
+            style={{ width: "100%", justifyContent: "center", boxSizing: "border-box" }}
+          >
+            <span>Start a Conversation →</span>
+          </a>
+        </div>
+
+        {/* Panel Footer */}
+        <div style={{ borderTop: "1px solid rgba(255, 255, 255, 0.1)", paddingTop: "18px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.5)" }}>
+              &copy; 2025 Nexora
+            </span>
+            <div style={{ display: "flex", gap: "16px", fontSize: "12px" }}>
+              <a
+                href="https://github.com/Mausam5055/Nexora"
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: "rgba(255, 255, 255, 0.7)", textDecoration: "none" }}
+              >
+                GitHub
+              </a>
+              <a
+                href="mailto:contact@tryresponse.com"
+                style={{ color: "rgba(255, 255, 255, 0.7)", textDecoration: "none" }}
+              >
+                Inquiries
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Minimalist Bottom Navigation / Progress Pill */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "24px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 100,
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          style={{
+            pointerEvents: "auto",
+            display: "flex",
+            alignItems: "center",
+            gap: "14px",
+            padding: "8px 18px",
+            borderRadius: "9999px",
+            background: "rgba(0, 0, 0, 0.65)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            border: "1px solid rgba(255, 255, 255, 0.18)",
+            color: "rgba(255, 255, 255, 0.8)",
+            fontSize: "12px",
+            boxShadow: "0 8px 30px rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          {/* Stage breadcrumb indicator */}
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <span style={{ color: scrollProgress < 0.22 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress < 0.22 ? 700 : 400 }}>
+              01 Intro
+            </span>
+            <span style={{ opacity: 0.3 }}>•</span>
+            <span style={{ color: scrollProgress >= 0.22 && scrollProgress < 0.48 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress >= 0.22 && scrollProgress < 0.48 ? 700 : 400 }}>
+              02 Vision
+            </span>
+            <span style={{ opacity: 0.3 }}>•</span>
+            <span style={{ color: scrollProgress >= 0.48 && scrollProgress < 0.76 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress >= 0.48 && scrollProgress < 0.76 ? 700 : 400 }}>
+              03 Contact
+            </span>
+            <span style={{ opacity: 0.3 }}>•</span>
+            <span style={{ color: scrollProgress >= 0.76 ? "#ffffff" : "rgba(255,255,255,0.4)", fontWeight: scrollProgress >= 0.76 ? 700 : 400 }}>
+              04 Connect
+            </span>
+          </div>
+
+          <div style={{ width: "1px", height: "14px", background: "rgba(255, 255, 255, 0.2)" }} />
+
+          {/* Frame counter */}
+          <div style={{ fontVariantNumeric: "tabular-nums", fontSize: "11px", color: "rgba(255, 255, 255, 0.6)" }}>
+            {activeFrame.toString().padStart(3, "0")} / {totalFrames}
           </div>
         </div>
       </div>

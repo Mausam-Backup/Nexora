@@ -28,7 +28,7 @@ export default function LandingPageEffects() {
     const initAll = () => {
       const $ = window.$;
 
-      // 1. WebGL Initialization with retry polling
+      // 1. WebGL Initialization with retry polling and fallback
       let webglAttempts = 0;
       const tryInitWebgl = () => {
         const videoParent = document.querySelector(".scroll-anim__2s-video");
@@ -36,13 +36,24 @@ export default function LandingPageEffects() {
           if (!videoParent.querySelector("canvas")) {
             try {
               window.setupWebgl({ parent: videoParent });
+              console.log("[WebGL] Successfully mounted WebGL canvas into .scroll-anim__2s-video");
             } catch (e) {
               console.warn("WebGL setup note:", e);
             }
           }
-        } else if (webglAttempts < 50) {
+        } else if (webglAttempts < 60) {
           webglAttempts++;
           setTimeout(tryInitWebgl, 100);
+        } else if (videoParent && !videoParent.querySelector("canvas")) {
+          // Dynamic fallback loader for main.js
+          const s = document.createElement("script");
+          s.src = "/static/main.js";
+          s.onload = () => {
+            if (typeof window.setupWebgl === "function") {
+              window.setupWebgl({ parent: videoParent });
+            }
+          };
+          document.body.appendChild(s);
         }
       };
       tryInitWebgl();

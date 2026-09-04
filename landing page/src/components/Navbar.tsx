@@ -22,22 +22,22 @@ export default function Navbar() {
         </a>
       </div>
       <div className="menu-items">
-        <a href="#intro" className="menu-item nav-1 w-inline-block">
+        <a href="#intro" className="menu-item nav-1 w-inline-block" suppressHydrationWarning>
           <div className="menu-text">Intro</div>
         </a>
-        <a href="#platform" className="menu-item nav-2 w-inline-block">
+        <a href="#platform" className="menu-item nav-2 w-inline-block" suppressHydrationWarning>
           <div className="menu-text">Platform</div>
         </a>
-        <a href="#about" className="menu-item nav-3 w-inline-block">
+        <a href="#about" className="menu-item nav-3 w-inline-block" suppressHydrationWarning>
           <div className="menu-text">About</div>
         </a>
-        <a href="#investors" className="menu-item nav-4 w-inline-block">
+        <a href="#investors" className="menu-item nav-4 w-inline-block" suppressHydrationWarning>
           <div className="menu-text">Investors</div>
         </a>
-        <a href="#news" className="menu-item nav-5 w-inline-block">
+        <a href="#news" className="menu-item nav-5 w-inline-block" suppressHydrationWarning>
           <div className="menu-text">News</div>
         </a>
-        <a href="#" className="menu-button to-footer w-inline-block">
+        <a href="#" className="menu-button to-footer w-inline-block" suppressHydrationWarning>
           <div className="menu-text-non-hover">Sign up</div>
           <div data-w-id="8312a1a5-dae7-16a1-8cec-e79ee9e966df" style={{"WebkitTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","MozTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","msTransform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)","transform":"translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"}} className="menu-button__bg"></div>
         </a>

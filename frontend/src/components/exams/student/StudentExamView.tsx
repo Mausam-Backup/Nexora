@@ -294,47 +294,55 @@ export function StudentExamView({
         <TabsContent value="hall-ticket" className="mt-4 space-y-4">
           {!student.clearances.admitCardIssued || (hallTicket && !hallTicket.isEligible) ? (
             /* Debarred Banner */
-            <Card className="border-red-300 dark:border-red-900 bg-red-50/50 dark:bg-red-950/20">
-              <CardContent className="p-6 text-center space-y-4">
-                <div className="mx-auto w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/60 flex items-center justify-center text-red-600">
-                  <ShieldAlert className="h-6 w-6" />
+            <Card className="rounded-3xl border-2 border-rose-500/40 bg-gradient-to-br from-rose-500/10 via-card to-card shadow-card glow-rose">
+              <CardContent className="p-6 sm:p-8 text-center space-y-4">
+                <div className="mx-auto w-16 h-16 rounded-3xl bg-rose-500/15 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-md animate-pulse">
+                  <ShieldAlert className="h-8 w-8" />
                 </div>
-                <div className="space-y-1">
-                  <Badge variant="destructive" className="text-xs">
-                    STATUTORY DEBARMENT ORDER
+                <div className="space-y-1.5">
+                  <Badge variant="destructive" className="text-xs uppercase font-extrabold px-3 py-1">
+                    STATUTORY DEBARMENT ORDER • UNIVERSITY REGULATION 14.B
                   </Badge>
-                  <h3 className="text-xl font-bold text-red-900 dark:text-red-200">
-                    Hall Ticket Withheld / Ineligible
+                  <h3 className="text-2xl font-black text-foreground">
+                    Examination Hall Ticket Withheld & Locked
                   </h3>
-                  <p className="text-sm text-red-800 dark:text-red-300 max-w-xl mx-auto">
-                    Reason: <strong>{!student.clearances.attendanceClearance ? 'Attendance below statutory requirement (75%)' : 'Tuition fee clearance pending'}</strong>
+                  <p className="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto">
+                    Candidate <strong className="text-foreground">{student.name} ({student.rollNumber})</strong> does not meet the minimum statutory criteria for examination appearance.
                   </p>
                 </div>
-                <div className="p-4 rounded-xl bg-card border max-w-md mx-auto text-xs text-muted-foreground text-left space-y-1.5">
-                  <div>Candidate Attendance: <strong className="text-red-600 font-mono">{liveAttendancePct}%</strong> (Min required: 75.0%)</div>
-                  <div>Tuition Fee Dues: <strong>{student.clearances.feeClearance ? 'Cleared' : `Outstanding (₹${student.fees.outstanding.toLocaleString('en-IN')})`}</strong></div>
-                  <div className="pt-2 border-t text-[11px] italic">
-                    To appeal this debarment, submit formal petition to the Office of the Controller of Examinations (Admin Block 108).
+                <div className="p-4 rounded-2xl bg-muted/40 border border-border/80 max-w-md mx-auto text-xs text-left space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground">Cumulative Attendance:</span>
+                    <strong className="text-rose-600 dark:text-rose-400 font-mono text-sm">{liveAttendancePct}% (Required: ≥75.0%)</strong>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground">Financial Ledger Status:</span>
+                    <strong className={student.clearances.feeClearance ? 'text-emerald-600' : 'text-rose-600'}>
+                      {student.clearances.feeClearance ? 'Cleared (₹0)' : `Pending Dues (₹${student.fees.outstanding.toLocaleString('en-IN')})`}
+                    </strong>
+                  </div>
+                  <div className="pt-2 border-t border-border/60 text-[11px] text-muted-foreground italic">
+                    To petition for conditional condonation, submit a formal appeal endorsed by your Head of Department to the Office of the Controller of Examinations.
                   </div>
                 </div>
               </CardContent>
             </Card>
           ) : (
             /* Digital Hall Ticket Pass */
-            <Card className="border-2 border-indigo-300 dark:border-indigo-800 shadow-lg overflow-hidden max-w-3xl mx-auto">
-              <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 p-5 text-white flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <div className="text-[11px] font-mono tracking-widest text-indigo-200 uppercase">
-                    CampusSync Autonomous University
+            <Card className="rounded-3xl border-2 border-primary/40 shadow-2xl overflow-hidden max-w-3xl mx-auto bg-card">
+              <div className="bg-gradient-to-r from-primary via-indigo-700 to-purple-800 p-6 text-white flex items-center justify-between">
+                <div className="space-y-1">
+                  <div className="text-[11px] font-mono tracking-widest text-white/80 uppercase font-semibold">
+                    Nexora Autonomous Collegiate ERP
                   </div>
-                  <h2 className="text-lg font-bold">OFFICIAL ADMIT CARD / HALL TICKET</h2>
-                  <div className="text-xs text-indigo-200">
+                  <h2 className="text-xl font-black tracking-tight">OFFICIAL ADMIT CARD & HALL TICKET</h2>
+                  <div className="text-xs text-white/80 font-medium">
                     {activeCycle?.name || 'Autumn End-Semester Examination 2024-25'}
                   </div>
                 </div>
-                <div className="text-right">
-                  <Badge className="bg-emerald-500 text-white font-mono text-[11px]">
-                    VERIFIED PASS
+                <div className="text-right space-y-1">
+                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-mono text-xs font-bold px-2.5 py-1 shadow-sm">
+                    VERIFIED PASS ✅
                   </Badge>
                 </div>
               </div>

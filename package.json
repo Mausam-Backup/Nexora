@@ -1,0 +1,21 @@
+{
+  "name": "campus-sync",
+  "version": "1.0.0",
+  "description": "CampusSync - Comprehensive Educational Management Platform",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build": "npm run build --workspace=frontend",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "install:all": "npm install && npm run install --workspace=frontend && npm run install --workspace=backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  }
+}

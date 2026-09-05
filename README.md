@@ -34,26 +34,26 @@
 
 ## 📑 Table of Contents
 
-| Icon | Section | Link |
-| :---: | :--- | :--- |
-| 🎯 | **Hackathon Problem Statement & Solution Mapping** | [Go](#-hackathon-problem-statement--solution-mapping) |
-| 📝 | **Executive Summary** | [Go](#1-executive-summary) |
-| 🏗️ | **System Architecture & Data Flow** | [Go](#2-system-architecture--data-flow) |
-| 🏛️ | **Three-Panel ERP Architecture** | [Go](#3-three-panel-erp-architecture) |
-| ⚙️ | **Anti-Mismatch Reconciliation Engine** | [Go](#4-anti-mismatch-reconciliation-engine) |
-| 💻 | **Technology Stack** | [Go](#5-technology-stack) |
-| 🔄 | **Application Workflow** | [Go](#6-application-workflow) |
-| 🌊 | **Data Flow & State Management** | [Go](#7-data-flow--state-management) |
-| 📁 | **Project Structure** | [Go](#8-project-structure) |
-| 🔌 | **API Reference** | [Go](#9-api-reference) |
-| ⚙️ | **Environment Configuration** | [Go](#10-environment-configuration) |
-| 🚀 | **Installation & Local Setup** | [Go](#11-installation--local-setup) |
-| 🐳 | **Docker Deployment** | [Go](#12-docker-deployment) |
-| 🔒 | **Security Considerations** | [Go](#13-security-considerations) |
-| 📖 | **Feature Documentation** | [Go](#14-feature-documentation) |
-| 📈 | **Scalability & Future Improvements** | [Go](#15-scalability--future-improvements) |
-| 🤝 | **Contributing** | [Go](#16-contributing) |
-| 📜 | **License** | [Go](#17-license) |
+| Icon | Section | Description | Link |
+| :---: | :--- | :--- | :--- |
+| 🎯 | **Hackathon Problem Statement** | PS-6 alignment and solution mapping table | [Go](#-hackathon-problem-statement--solution-mapping) |
+| 📝 | **Executive Summary** | High-level overview — 3 core problems solved | [Go](#1-executive-summary) |
+| 🏗️ | **System Architecture & Data Flow** | Backend architecture diagram + Mermaid layer breakdown | [Go](#2-system-architecture--data-flow) |
+| 🏛️ | **Three-Panel ERP Architecture** | Admin · Faculty · Student · CoE command centres | [Go](#3-three-panel-erp-architecture) |
+| ⚙️ | **Anti-Mismatch Reconciliation Engine** | Cross-module integrity validator + 5 discrepancy codes | [Go](#4-anti-mismatch-reconciliation-engine) |
+| 💻 | **Technology Stack** | Frameworks, services, and infrastructure with badges | [Go](#5-technology-stack) |
+| 🔄 | **Application Workflow** | End-to-end request pipeline and role-based routing | [Go](#6-application-workflow) |
+| 🌊 | **Data Flow & State Management** | BroadcastChannel sync + unified ERP state schema | [Go](#7-data-flow--state-management) |
+| 📁 | **Project Structure** | Annotated directory tree of the monorepo | [Go](#8-project-structure) |
+| 🔌 | **API Reference** | All Express endpoints — Auth · Admin · Faculty · CoE | [Go](#9-api-reference) |
+| ⚙️ | **Environment Configuration** | Required and optional environment variables | [Go](#10-environment-configuration) |
+| 🚀 | **Installation & Local Setup** | Step-by-step guide with demo credentials | [Go](#11-installation--local-setup) |
+| 🐳 | **Docker Deployment** | 4-service Compose stack with health checks | [Go](#12-docker-deployment) |
+| 🔒 | **Security Considerations** | JWT, CORS, SHA-256 gating, audit trail | [Go](#13-security-considerations) |
+| 📖 | **Feature Documentation** | All 20 core modules and capabilities | [Go](#14-feature-documentation) |
+| 📈 | **Scalability & Future Improvements** | Current status and planned enhancements | [Go](#15-scalability--future-improvements) |
+| 🤝 | **Contributing** | Team AC-DC members and contribution guidelines | [Go](#16-contributing) |
+| 📜 | **License** | ISC open-source licensing terms | [Go](#17-license) |
 
 ---
 
@@ -107,43 +107,60 @@ The platform delivers:
 
 ### 🔹 Layer Breakdown
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│  CLIENT PANELS                                                      │
-│  ┌──────────┐  ┌─────────────┐  ┌─────────┐                        │
-│  │ Teacher  │  │ Admin Panel │  │ Student │  ← Role-gated React UI │
-│  └──────────┘  └─────────────┘  └─────────┘                        │
-│  Mobile Client · Desktop Client · Web Client                        │
-└─────────────────────┬───────────────────────────────────────────────┘
-                      │  HTTP + Bearer JWT
-┌─────────────────────▼───────────────────────────────────────────────┐
-│  EXPRESS.JS SERVER                                                  │
-│  ┌──────────────────────────────────────┐                           │
-│  │ MIDDLEWARE LAYER                     │                           │
-│  │ Auth(JWT) · Validation · Logging     │                           │
-│  │ Error Handling · Rate Limiting       │                           │
-│  └──────────────────────────────────────┘                           │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │ CONTROLLER LAYER                                              │  │
-│  │ Admin Ctrl · Teacher Ctrl · Student Ctrl · Shared Ctrl        │  │
-│  │ Course Ctrl · Media Ctrl · Blog Ctrl · Billing Ctrl           │  │
-│  └───────────────────────────────────────────────────────────────┘  │
-└─────────────────────┬───────────────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────────────┐
-│  DATABASE LAYER                                                     │
-│  ┌──────────────────────────────────────┐  ┌────────┐  ┌─────────┐ │
-│  │ MONGODB                              │  │ Redis  │  │  SMTP   │ │
-│  │ Users · Students · Teachers · Admins │  │ Cache  │  │  Email  │ │
-│  │ Courses · Attendance · Grades        │  └────────┘  └─────────┘ │
-│  │ Exams · Billing · Expenses · Notes   │                           │
-│  └──────────────────────────────────────┘                           │
-└─────────────────────┬───────────────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────────────┐
-│  EXTERNAL SERVICES                                                  │
-│  OpenAI (AI Copilot)  ·  Stripe (Payment Processing)               │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    classDef panel fill:#1C1000,stroke:#D97706,stroke-width:2px,color:#FFFFFF
+    classDef middleware fill:#0C1825,stroke:#0891B2,stroke-width:2px,color:#FFFFFF
+    classDef controller fill:#0C1525,stroke:#1D4ED8,stroke-width:2px,color:#FFFFFF
+    classDef db fill:#052e16,stroke:#22c55e,stroke-width:2px,color:#FFFFFF
+    classDef ext fill:#450a0a,stroke:#ef4444,stroke-width:2px,color:#FFFFFF
+
+    subgraph Panels["📱 CLIENT PANELS"]
+        direction LR
+        TEACHER["👨‍🏫 Teacher Panel"]:::panel
+        ADMIN["👑 Admin Panel"]:::panel
+        STUDENT["🎓 Student Panel"]:::panel
+        CLIENT["Mobile · Desktop · Web"]:::panel
+    end
+
+    subgraph Server["⚙️ EXPRESS.JS SERVER"]
+        direction TB
+        subgraph MW["🛡️ MIDDLEWARE LAYER"]
+            direction LR
+            A1["Auth JWT"]:::middleware
+            A2["Validation"]:::middleware
+            A3["Logging"]:::middleware
+            A4["Rate Limiting"]:::middleware
+            A5["Error Handling"]:::middleware
+        end
+        subgraph CTRL["🎮 CONTROLLER LAYER"]
+            direction LR
+            C1["Admin Ctrl"]:::controller
+            C2["Teacher Ctrl"]:::controller
+            C3["Student Ctrl"]:::controller
+            C4["CoE Ctrl"]:::controller
+            C5["Billing Ctrl"]:::controller
+            C6["Media Ctrl"]:::controller
+        end
+    end
+
+    subgraph DB["💾 DATABASE LAYER"]
+        direction LR
+        MONGO[("🍃 MongoDB\nStudents · Courses · Attendance\nGrades · Billing · Exams")]:::db
+        REDIS[("⚡ Redis\nSession Cache")]:::db
+        SMTP["📧 Email SMTP\nNotifications"]:::db
+    end
+
+    subgraph EXT["🌐 EXTERNAL SERVICES"]
+        direction LR
+        OPENAI["🤖 OpenAI\nAI Copilot"]:::ext
+        STRIPE["💳 Stripe\nPayments"]:::ext
+    end
+
+    Panels -->|"HTTP + Bearer JWT"| MW
+    MW --> CTRL
+    CTRL --> DB
+    DB --> EXT
 ```
 
 ---
@@ -230,6 +247,16 @@ Exam Eligibility (CoE)              ─┘                     YES ──▶ Rai
 
 ### 🖥️ 5.1 Frontend
 
+[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
+[![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-latest-000000?style=flat-square&logo=shadcnui)](https://ui.shadcn.com/)
+[![Recharts](https://img.shields.io/badge/Recharts-2.x-22B5BF?style=flat-square)](https://recharts.org/)
+[![Three.js](https://img.shields.io/badge/Three.js-r160-000000?style=flat-square&logo=threedotjs)](https://threejs.org/)
+[![React Router](https://img.shields.io/badge/React_Router-6.x-CA4245?style=flat-square&logo=reactrouter)](https://reactrouter.com/)
+[![Lucide](https://img.shields.io/badge/Lucide_React-latest-F472B6?style=flat-square)](https://lucide.dev/)
+
 | Technology | Version | Purpose |
 | :--- | :--- | :--- |
 | **React** | 18.x | UI component model, hooks, context providers |
@@ -245,6 +272,14 @@ Exam Eligibility (CoE)              ─┘                     YES ──▶ Rai
 
 ### ⚙️ 5.2 Backend
 
+[![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-4.18-000000?style=flat-square&logo=express)](https://expressjs.com/)
+[![Mongoose](https://img.shields.io/badge/Mongoose-7.x-880000?style=flat-square)](https://mongoosejs.com/)
+[![JWT](https://img.shields.io/badge/JWT-9.x-000000?style=flat-square&logo=jsonwebtokens)](https://jwt.io/)
+[![bcryptjs](https://img.shields.io/badge/bcryptjs-2.x-525252?style=flat-square)](https://github.com/dcodeIO/bcrypt.js)
+[![Helmet](https://img.shields.io/badge/Helmet-7.x-FF6B35?style=flat-square)](https://helmetjs.github.io/)
+[![nodemon](https://img.shields.io/badge/nodemon-3.x-76D04B?style=flat-square&logo=nodemon)](https://nodemon.io/)
+
 | Technology | Version | Purpose |
 | :--- | :--- | :--- |
 | **Node.js** | 20.x | JavaScript runtime for the Express server |
@@ -259,6 +294,11 @@ Exam Eligibility (CoE)              ─┘                     YES ──▶ Rai
 | **nodemon** | 3.x | Development hot-reload |
 
 ### 🗄️ 5.3 Data & Storage
+
+[![MongoDB](https://img.shields.io/badge/MongoDB-7.x-47A248?style=flat-square&logo=mongodb)](https://mongodb.com)
+[![Redis](https://img.shields.io/badge/Redis-7.x-DC382D?style=flat-square&logo=redis)](https://redis.io)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com)
+[![BroadcastChannel](https://img.shields.io/badge/BroadcastChannel-0ms_sync-FF4154?style=flat-square)](https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel)
 
 | Technology | Role |
 | :--- | :--- |
@@ -691,7 +731,44 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up
 
 ## 🤝 16. Contributing
 
-We welcome contributions from developers, educators, and institutional technology researchers.
+Nexora ERP was built by **Team AC-DC** for Origin Hackathon-2026. We welcome contributions from developers, educators, and institutional technology researchers.
+
+### 👥 Core Team — AC-DC
+
+[![Contributors](https://img.shields.io/github/contributors/Mausam5055/Nexora?style=for-the-badge&logo=github&label=Contributors)](https://github.com/Mausam5055/Nexora/graphs/contributors)
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/Mausam5055">
+        <img src="https://github.com/Mausam5055.png" width="80" alt="Mausam Kar" /><br />
+        <sub><b>Mausam Kar</b></sub>
+      </a><br />
+      <a href="https://github.com/Mausam5055">@Mausam5055</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/KrishnaNsingh">
+        <img src="https://github.com/KrishnaNsingh.png" width="80" alt="Krishna Narayan Singh" /><br />
+        <sub><b>Krishna Narayan Singh</b></sub>
+      </a><br />
+      <a href="https://github.com/KrishnaNsingh">@KrishnaNsingh</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/ShaikhWarsi">
+        <img src="https://github.com/ShaikhWarsi.png" width="80" alt="ShaikhWarsi" /><br />
+        <sub><b>ShaikhWarsi</b></sub>
+      </a><br />
+      <a href="https://github.com/ShaikhWarsi">@ShaikhWarsi</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Rachit-Tiwari-7">
+        <img src="https://github.com/Rachit-Tiwari-7.png" width="80" alt="Rachit Tiwari" /><br />
+        <sub><b>Rachit Tiwari</b></sub>
+      </a><br />
+      <a href="https://github.com/Rachit-Tiwari-7">@Rachit-Tiwari-7</a>
+    </td>
+  </tr>
+</table>
 
 ### 📝 Contribution Workflow
 
@@ -721,7 +798,7 @@ We welcome contributions from developers, educators, and institutional technolog
 
 Licensed under **ISC**.
 
-Submitted for **SMART VIThackathon(SVH)-2026**. For usage beyond hackathon evaluation, please open an issue to discuss licensing terms with the maintainers.
+Submitted for **Origin Hackathon-2026**. For usage beyond hackathon evaluation, please open an issue to discuss licensing terms with the maintainers.
 
 ---
 
@@ -729,7 +806,12 @@ Submitted for **SMART VIThackathon(SVH)-2026**. For usage beyond hackathon evalu
 
 ---
 
-### 🔹 Built with ❤️ by Team **Nexora** for SMART VIThackathon(SVH)-2026
+### 🔹 Built with ❤️ by Team **AC-DC** (Nexora) for Origin Hackathon-2026
+
+[![Mausam5055](https://img.shields.io/badge/Mausam_Kar-Mausam5055-181717?style=flat-square&logo=github)](https://github.com/Mausam5055)
+[![KrishnaNsingh](https://img.shields.io/badge/Krishna_Singh-KrishnaNsingh-181717?style=flat-square&logo=github)](https://github.com/KrishnaNsingh)
+[![ShaikhWarsi](https://img.shields.io/badge/ShaikhWarsi-ShaikhWarsi-181717?style=flat-square&logo=github)](https://github.com/ShaikhWarsi)
+[![Rachit-Tiwari-7](https://img.shields.io/badge/Rachit_Tiwari-Rachit--Tiwari--7-181717?style=flat-square&logo=github)](https://github.com/Rachit-Tiwari-7)
 
 *Nexora ERP — One Ledger. Zero Mismatches. Total Control.*
 

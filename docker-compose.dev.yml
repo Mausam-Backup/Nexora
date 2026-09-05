@@ -1,0 +1,50 @@
+# ============================================================
+# Nexora ERP — docker-compose.dev.yml
+# Development override — hot reload + debug ports
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+# ============================================================
+
+version: "3.9"
+
+services:
+
+  # ─── Frontend Dev — Vite HMR ───────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      target: builder              # Stop at the build stage (no Nginx)
+    container_name: nexora_frontend_dev
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    ports:
+      - "5173:5173"                # Vite HMR at http://localhost:5173
+    volumes:
+      - ./frontend:/app:rw
+      - /app/node_modules          # Prevent host node_modules override
+    environment:
+      VITE_API_BASE_URL: http://localhost:5000
+    networks:
+      - nexora_network
+
+  # ─── Backend Dev — nodemon hot reload ──────────────────────
+  backend:
+    container_name: nexora_backend_dev
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./backend/src:/app/src:rw
+      - ./backend/data:/app/data:rw
+    command: ["node_modules/.bin/nodemon", "src/server.js"]
+    ports:
+      - "5000:5000"                # API
+      - "9229:9229"                # Node.js inspector (--inspect flag)
+
+  # ─── Expose DB ports for GUI tools ─────────────────────────
+  mongo:
+    ports:
+      - "27017:27017"              # MongoDB Compass / Studio 3T
+
+  redis:
+    ports:
+      - "6379:6379"                # RedisInsight / redis-cli on host

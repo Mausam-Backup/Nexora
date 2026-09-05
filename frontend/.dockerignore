@@ -1,0 +1,30 @@
+# frontend/.dockerignore
+# Keeps the build context lean — only source files go to Docker daemon
+
+node_modules
+dist
+build
+.vite
+
+.env
+.env.*
+!.env.example
+
+.git
+.gitignore
+*.log
+*.md
+
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+coverage
+**/__tests__
+**/*.test.*
+**/*.spec.*
+
+Dockerfile
+nginx.conf
+.dockerignore

@@ -1,0 +1,63 @@
+# ============================================================
+# .dockerignore — Nexora ERP
+# Prevents unnecessary files from being sent to Docker daemon,
+# keeping image size small and builds fast.
+# ============================================================
+
+# ─── Version Control ───────────────────────────────────────
+.git
+.gitignore
+.gitattributes
+
+# ─── Node.js ───────────────────────────────────────────────
+node_modules
+**/node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun.lock
+package-lock.json
+
+# ─── Build Outputs ─────────────────────────────────────────
+**/dist
+**/build
+**/.next
+**/.vite
+
+# ─── Development / IDE files ───────────────────────────────
+.env
+.env.*
+!.env.example
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ─── Logs ──────────────────────────────────────────────────
+logs
+*.log
+
+# ─── Tests ─────────────────────────────────────────────────
+**/__tests__
+**/*.test.js
+**/*.test.ts
+**/*.spec.js
+**/*.spec.ts
+**/coverage
+
+# ─── Documentation ─────────────────────────────────────────
+README.md
+Project Docs
+**/*.md
+
+# ─── Docker itself (no recursion) ──────────────────────────
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# ─── Misc ──────────────────────────────────────────────────
+supabase
+landing page
+vercel.json

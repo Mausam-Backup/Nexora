@@ -19,7 +19,8 @@ export default function Landing() {
     // Dismiss preloader class after initial reveal
     const timer = setTimeout(() => {
       document.body.classList.remove("landing-preloading");
-    }, 1400);
+      document.documentElement.classList.add("is-loaded");
+    }, 1000);
 
     // If restored from browser back-forward cache (bfcache), reload cleanly to re-mount WebGL & Webflow animations
     const handlePageShow = (event: PageTransitionEvent) => {

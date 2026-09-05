@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import * as THREE from "three";
 import { useTheme } from "@/components/theme-provider";
 
@@ -14,6 +15,12 @@ export const ExpanseBackground: React.FC<ExpanseBackgroundProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { theme } = useTheme();
+  const location = useLocation();
+
+  // Disable background shader on landing page and 360 tour to avoid WebGL context conflicts
+  if (location.pathname === "/" || location.pathname === "/explore") {
+    return null;
+  }
 
   // Keep references to update uniforms on the fly without tearing down the WebGL context
   const uniformsRef = useRef<{

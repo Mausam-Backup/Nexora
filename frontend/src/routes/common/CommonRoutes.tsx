@@ -52,6 +52,7 @@ export const CommonRoutes: React.FC = () => {
     <Routes>
       {/* Dashboard */}
       <Route path="/" element={<Index />} />
+      <Route path="/dashboard" element={<Index />} />
       
       {/* Academic & Core Features */}
       <Route path="/timetable" element={<SmartTimetable />} />

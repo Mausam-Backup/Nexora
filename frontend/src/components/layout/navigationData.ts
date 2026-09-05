@@ -1,4 +1,4 @@
-﻿import {
+import {
   LayoutDashboard,
   Timer,
   Calculator,
@@ -223,7 +223,7 @@ export const teacherSecondaryNav: SecondaryNavItem[] = [
 export const studentPrimaryNav: NavItem[] = [
   {
     title: 'Student Overview',
-    url: '/',
+    url: '/dashboard',
     icon: LayoutDashboard,
     isActive: true,
   },

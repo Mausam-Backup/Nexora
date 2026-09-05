@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./frontend/public/nexora-logo.svg" alt="Nexora ERP Logo" width="100" height="100" />
+<img src="./frontend/public/nexora-logo.svg" alt="Nexora ERP Logo" width="80" height="80" />
 
 # Nexora — Enterprise ERP for Collegiate Institutions
 
@@ -66,7 +66,7 @@
   <tr>
     <td align="center">
       <img
-        src="./Project%20Docs/screenshots/01-landing-page.png"
+        src="./Project Docs/screenshots/Screenshot (554).png"
         alt="Nexora Landing Page — Hero section with VIT Bhopal campus backdrop, navigation bar (Overview · Architecture · Core Modules · 3D Campus Tour · Ledger Specs · Whitepapers), and dual CTA buttons: Explore Architecture & Contact Us"
         width="100%"
       />
@@ -81,7 +81,7 @@
   <tr>
     <td width="50%" align="center">
       <img
-        src="./Project Docs/screenshots/Screenshot (554).png"
+        src="./Project Docs/screenshots/Screenshot (555).png"
         alt="Nexora Admin Dashboard — mobile and desktop dual-view mockup showing the Executive ERP Console with Dr. R. K. Sharma (Dean Academics), Weekly Attendance Heatmap, Student Growth & Admissions Trajectory chart, Collegiate Infrastructure stats (1,650 Students · 50 Faculty · 94.6% Avg Att), and Financial Overview panel"
         width="100%"
       />
@@ -90,7 +90,7 @@
     </td>
     <td width="50%" align="center">
       <img
-        src="./Project Docs/screenshots/Screenshot (555).png"
+        src="./Project Docs/screenshots/Screenshot (557).png"
         alt="Nexora Sign In Page — role-selector login UI with tabs for Student · Faculty · Admin · CoE · Parent, email/password fields, Forgot Password link, and Hackathon Evaluator Quick Pass shortcuts (Admin Overview · Faculty View · Student Cle · Exam Contr)"
         width="100%"
       />
@@ -105,7 +105,7 @@
   <tr>
     <td width="50%" align="center">
       <img
-        src="./Project Docs/screenshots/Screenshot (556).png"
+        src="./Project Docs/screenshots/Screenshot (558).png"
         alt="Nexora Executive Admin Overview — PS-6 ERP Core Operations sidebar (Spreadsheet Audit Ledger · Manage Students · Manage Faculty Roster · Institutional Fees · Academic Operations · Branch Directories · Digital Admin ID Pass · Campus Broadcasts · AI ERP Copilot), main panel with Dr. R. K. Sharma executive card, Student Growth & Admissions Trajectory line chart, Live Classroom Broadcast (CS301 Section A), Collegiate Infrastructure widget, Weekly Attendance Heatmap (CSE/ECE/MECH/IT), and Financial Overview bar chart"
         width="100%"
       />

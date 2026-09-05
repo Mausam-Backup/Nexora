@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
 import { SEO } from "@/components/SEO"
-import { useAuth } from "@/contexts/AuthContext"
+import { useAuth, UserRoleType } from "@/contexts/AuthContext"
 import { useUserData } from "@/hooks/useUserData"
 import { 
   Eye, 
@@ -16,7 +16,9 @@ import {
   UserCog, 
   Users, 
   Heart, 
-  Award
+  Award,
+  AlertCircle,
+  CheckCircle2
 } from "lucide-react"
 import { 
   SvgConcaveTop, 
@@ -24,8 +26,6 @@ import {
   SvgConcentricRings, 
   PayoneerRingLogo 
 } from "@/components/auth"
-
-type UserRoleType = 'student' | 'admin' | 'teacher' | 'parent' | 'examination_controller';
 
 interface RoleOption {
   type: UserRoleType;
@@ -52,13 +52,15 @@ export default function Auth() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [authError, setAuthError] = useState<string | null>(null)
+  const [authSuccess, setAuthSuccess] = useState<string | null>(null)
   const [formStep, setFormStep] = useState(1)
   const [selectedRole, setSelectedRole] = useState<UserRoleType>('student')
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState("English")
   
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, signInWithSupabase, signUpWithSupabase } = useAuth()
   const { updateUserData } = useUserData()
   const [searchParams, setSearchParams] = useSearchParams()
   
@@ -83,11 +85,15 @@ export default function Auth() {
     const mode = searchParams.get('mode')
     setIsSignUp(mode === 'signup')
     setFormStep(1)
+    setAuthError(null)
+    setAuthSuccess(null)
   }, [searchParams])
 
   const toggleMode = (signUp: boolean) => {
     setIsSignUp(signUp)
     setFormStep(1)
+    setAuthError(null)
+    setAuthSuccess(null)
     if (signUp) {
       setSearchParams({ mode: 'signup' }, { replace: true })
     } else {
@@ -101,52 +107,92 @@ export default function Auth() {
       return
     }
     setSelectedRole(role)
+    setAuthError(null)
+  }
+
+  const getPanelRedirect = (role: UserRoleType) => {
+    switch (role) {
+      case 'admin':
+        return '/admin/overview'
+      case 'teacher':
+        return '/teacher/attendance'
+      case 'examination_controller':
+        return '/examination-controller'
+      default:
+        return '/student/dashboard'
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setAuthError(null)
+    setAuthSuccess(null)
     setIsLoading(true)
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 600))
-      
-      const role = selectedRole
-      const isCoE = role === 'examination_controller'
-      const userData = {
-        id: isCoE ? 'coe_001' : role === 'teacher' ? 'T001' : role === 'admin' ? 'admin_001' : '1',
-        name: isSignUp ? name : isCoE ? 'Dr. K. R. Ramanathan' : role === 'teacher' ? 'Dr. Sarah Johnson' : role === 'admin' ? 'Campus Administrator' : 'Demo User',
-        email: email || (isCoE ? 'coe@campussync.edu' : role === 'teacher' ? 'sarah.johnson@college.edu' : role === 'admin' ? 'admin@campussync.edu' : 'demo@university.edu'),
-        collegeName: isSignUp ? collegeName : 'Nexora University',
-        role,
-      }
-      
       if (isSignUp) {
-        updateUserData({
-          name: name,
-          email: email,
-          course: collegeName
+        if (!password || password.length < 6) {
+          setAuthError("Password must be at least 6 characters long.")
+          setIsLoading(false)
+          return
+        }
+        if (password !== confirmPassword) {
+          setAuthError("Passwords do not match.")
+          setIsLoading(false)
+          return
+        }
+
+        const result = await signUpWithSupabase({
+          email: email.trim(),
+          password,
+          name: name.trim(),
+          role: selectedRole,
+          collegeName: collegeName.trim() || 'Nexora University',
         })
+
+        if (!result.success) {
+          setAuthError(result.error || "Failed to create account. Please try again.")
+          return
+        }
+
+        if (result.requiresEmailConfirmation) {
+          setAuthSuccess("Account created successfully! Please check your email inbox to verify your account before logging in.")
+          return
+        }
+
+        updateUserData({
+          name: name.trim(),
+          email: email.trim(),
+          course: collegeName.trim() || 'Nexora University',
+        })
+
+        const panelPath = getPanelRedirect(selectedRole)
+        navigate(panelPath, { replace: true })
       } else {
-        updateUserData({
-          name: userData.name,
-          email: userData.email
-        })
+        const result = await signInWithSupabase(email.trim(), password)
+
+        if (!result.success) {
+          setAuthError(result.error || "Invalid credentials. Please verify your email and password.")
+          return
+        }
+
+        const userObj = result.user
+        const resolvedRole: UserRoleType = (userObj?.role as UserRoleType) || selectedRole
+
+        if (userObj) {
+          updateUserData({
+            name: userObj.name,
+            email: userObj.email,
+            course: userObj.collegeName || 'Nexora University',
+          })
+        }
+
+        const panelPath = getPanelRedirect(resolvedRole)
+        navigate(panelPath, { replace: true })
       }
-      
-      login(userData)
-      
-      const panelPath = 
-        role === 'admin' 
-          ? '/admin/overview' 
-          : role === 'teacher' 
-          ? '/teacher/attendance' 
-          : role === 'examination_controller' 
-          ? '/examination-controller' 
-          : '/student/dashboard'
-          
-      navigate(panelPath, { replace: true })
-    } catch (error) {
-      console.error('Auth error:', error)
+    } catch (error: any) {
+      console.error('Auth submission error:', error)
+      setAuthError(error?.message || "An unexpected error occurred. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -347,6 +393,21 @@ export default function Auth() {
                 })}
               </div>
             </div>
+
+            {/* Error & Success Feedback Alerts */}
+            {authError && (
+              <div className="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2 animate-in fade-in">
+                <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-rose-500" />
+                <span className="leading-relaxed font-medium">{authError}</span>
+              </div>
+            )}
+
+            {authSuccess && (
+              <div className="mb-4 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-start gap-2 animate-in fade-in">
+                <CheckCircle2 className="h-4 w-4 mt-0.5 flex-shrink-0 text-emerald-500" />
+                <span className="leading-relaxed font-medium">{authSuccess}</span>
+              </div>
+            )}
 
             {/* Form Elements */}
             <form onSubmit={handleSubmit} className="space-y-4">

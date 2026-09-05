@@ -10,7 +10,7 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({
   children, 
   redirectTo = '/' 
 }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) {
     // Show loading spinner while checking auth status

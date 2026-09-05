@@ -583,62 +583,87 @@ export default function Auth() {
               )}
             </form>
 
-            {/* ================= HACKATHON EVALUATOR QUICK PASS (ON RIGHT SIDE BELOW FORM) ================= */}
-            <div className="mt-8 pt-5 border-t border-neutral-200/80 space-y-2.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-800">
-                  <div className="w-5 h-5 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-[#5162ff] text-[10px] shadow-sm">
-                    ✦
+            {/* ================= HACKATHON EVALUATOR QUICK PASS ================= */}
+            <div className="mt-7 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-blue-50/60 to-purple-50/90 border-2 border-indigo-200/90 shadow-sm space-y-3.5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+                    <Zap className="h-3.5 w-3.5 fill-current" />
                   </div>
-                  <span className="flex items-center gap-1 text-neutral-900 font-bold">
-                    <Zap className="h-3.5 w-3.5 text-[#5162ff]" />
-                    Hackathon Evaluator Quick Pass:
-                  </span>
+                  <div>
+                    <span className="text-xs font-bold text-neutral-900 tracking-tight flex items-center gap-1.5">
+                      Hackathon Evaluator Quick Pass
+                      <span className="inline-flex items-center px-1.5 py-0.5 bg-indigo-600 text-white text-[9px] font-extrabold rounded uppercase tracking-wider">
+                        Fast Track
+                      </span>
+                    </span>
+                    <p className="text-[10px] text-neutral-500">1-click instant persona access • no password required</p>
+                  </div>
                 </div>
-                <span className="text-[10px] text-neutral-500 font-mono bg-neutral-100 px-2 py-0.5 rounded-full border border-neutral-200">
-                  1-Click Access
+                <span className="text-[10px] font-semibold text-indigo-700 bg-indigo-100/80 px-2.5 py-1 rounded-full border border-indigo-200">
+                  ⚡ 4 Live Roles
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                 <button
                   type="button"
                   onClick={() => handleJudgeLogin('admin', 'ADM001', 'Dr. Sarah Jenkins (Registrar)')}
-                  className="px-2.5 py-2 rounded-full bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200/80 text-neutral-800 text-[11px] font-medium transition-all text-left truncate flex items-center gap-1.5 active:scale-95 shadow-sm"
+                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-blue-50/80 border border-blue-200/80 hover:border-blue-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group"
                   title="Login as Administrator (Overview)"
                 >
-                  <span className="h-2 w-2 rounded-full bg-blue-500 flex-shrink-0" />
-                  <span className="truncate">Admin Overview</span>
+                  <span className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <UserCog className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-neutral-900 leading-tight">Admin Overview</div>
+                    <div className="text-[10px] text-neutral-500 truncate">Institutional Governance</div>
+                  </div>
                 </button>
                 
                 <button
                   type="button"
                   onClick={() => handleJudgeLogin('teacher', 'T101', 'Prof. Rajesh Iyer (Faculty)')}
-                  className="px-2.5 py-2 rounded-full bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200/80 text-neutral-800 text-[11px] font-medium transition-all text-left truncate flex items-center gap-1.5 active:scale-95 shadow-sm"
-                  title="Login as Faculty (Attendance)"
+                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-purple-50/80 border border-purple-200/80 hover:border-purple-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group"
+                  title="Login as Faculty (Attendance & Grading)"
                 >
-                  <span className="h-2 w-2 rounded-full bg-purple-500 flex-shrink-0" />
-                  <span className="truncate">Faculty View</span>
+                  <span className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-600 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                    <Users className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-neutral-900 leading-tight">Faculty View</div>
+                    <div className="text-[10px] text-neutral-500 truncate">Attendance & Marks</div>
+                  </div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleJudgeLogin('student', '20CS001', 'Aarav Sharma (Cleared)')}
-                  className="px-2.5 py-2 rounded-full bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200/80 text-neutral-800 text-[11px] font-medium transition-all text-left truncate flex items-center gap-1.5 active:scale-95 shadow-sm"
-                  title="Login as Cleared Student"
+                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-emerald-50/80 border border-emerald-200/80 hover:border-emerald-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group"
+                  title="Login as Cleared Student (AskAI & Schedule)"
                 >
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 flex-shrink-0" />
-                  <span className="truncate">Student (Clear)</span>
+                  <span className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                    <GraduationCap className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-neutral-900 leading-tight">Student Portal</div>
+                    <div className="text-[10px] text-neutral-500 truncate">Aarav Sharma (Cleared)</div>
+                  </div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleJudgeLogin('examination_controller')}
-                  className="px-2.5 py-2 rounded-full bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200/80 text-neutral-800 text-[11px] font-medium transition-all text-left truncate flex items-center gap-1.5 active:scale-95 shadow-sm"
+                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-amber-50/80 border border-amber-200/80 hover:border-amber-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group"
                   title="Login as Controller of Examinations"
                 >
-                  <span className="h-2 w-2 rounded-full bg-amber-500 flex-shrink-0" />
-                  <span className="truncate">Exam Controller</span>
+                  <span className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                    <Award className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-neutral-900 leading-tight">Exam Controller</div>
+                    <div className="text-[10px] text-neutral-500 truncate">Hall Tickets & Debarment</div>
+                  </div>
                 </button>
               </div>
             </div>

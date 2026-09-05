@@ -34,6 +34,7 @@ import {
   GroundedUserContext
 } from '@/services/groqService'
 import { useVapi } from '@/hooks/useVapi'
+import { ChatMessageContent } from '@/components/ai/ChatMessageContent'
 
 interface Message {
   id: string
@@ -567,6 +568,11 @@ const AskAI = () => {
     sendMessage(prompt)
   }
 
+  const voiceAssistantPrompt = useMemo(() => {
+    const s = currentStudent
+    return `You are NEXORA Voice Assistant for student ${s?.name || 'Aarav Sharma'} (${s?.rollNumber || '20CS001'}), department ${s?.department || 'CSE'}, semester ${s?.semester || 6}. Overall attendance is 88.6% (meets requirement). Fee balance is 0. Exam status is eligible. Answer user questions in concise, natural 1-2 spoken sentences.`
+  }, [currentStudent])
+
   const handleVoiceButtonClick = async () => {
     if (!isVapiReady) {
       toast({
@@ -576,7 +582,7 @@ const AskAI = () => {
       })
       return
     }
-    await toggleCall(liveSystemPrompt)
+    await toggleCall(voiceAssistantPrompt)
   }
 
   const hasGroq = isGroqConfigured()
@@ -595,7 +601,7 @@ const AskAI = () => {
               {hasGroq ? (
                 <Badge variant="outline" className="text-[10px] py-0 px-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 flex items-center gap-1 font-mono">
                   <Zap className="h-2.5 w-2.5 fill-current" />
-                  Groq Llama 3.3
+                  Groq LPU Engine
                 </Badge>
               ) : (
                 <Badge variant="outline" className="text-[10px] py-0 px-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 flex items-center gap-1">
@@ -611,32 +617,35 @@ const AskAI = () => {
 
         {/* Voice AI Action Controller */}
         <div className="flex items-center space-x-2">
-          {callActive && (
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 animate-pulse">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-              <span className="text-xs font-medium text-primary">
-                {isSpeaking ? 'AI Speaking...' : isListening ? 'Listening...' : 'Voice Connected'}
+          {(callActive || isConnecting) && (
+            <div className={`flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-medium transition-all ${
+              callActive
+                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 animate-pulse'
+                : 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400'
+            }`}>
+              <div className={`w-2 h-2 rounded-full ${callActive ? 'bg-emerald-500 animate-ping' : 'bg-amber-500 animate-pulse'}`} />
+              <span>
+                {callActive ? (isSpeaking ? 'AI Speaking...' : isListening ? 'Listening...' : 'Voice Connected') : 'Connecting Audio...'}
               </span>
             </div>
           )}
 
           <Button
             type="button"
-            variant={callActive ? "destructive" : isConnecting ? "secondary" : "outline"}
+            variant={callActive ? "destructive" : isConnecting ? "destructive" : "outline"}
             size="sm"
             onClick={handleVoiceButtonClick}
-            disabled={isConnecting}
             className={`relative overflow-hidden transition-all duration-300 gap-1.5 text-xs font-medium ${
-              callActive
+              callActive || isConnecting
                 ? 'shadow-lg shadow-red-500/20 ring-2 ring-red-500/30'
                 : 'hover:border-primary/50'
             }`}
-            title={callActive ? 'End voice call' : 'Start real-time voice call with NEXORA AI'}
+            title={callActive ? 'End voice call' : isConnecting ? 'Click to cancel voice connection' : 'Start real-time voice call with NEXORA AI'}
           >
             {isConnecting ? (
               <>
                 <div className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                <span>Connecting...</span>
+                <span>Cancel</span>
               </>
             ) : callActive ? (
               <>
@@ -743,25 +752,7 @@ const AskAI = () => {
                     </div>
                   )}
 
-                  <div className={`text-sm whitespace-pre-wrap leading-relaxed ${
-                    message.role === 'assistant' ? 'space-y-2' : ''
-                  }`}>
-                    {message.content.split('\n').map((line, index) => {
-                      if (line.trim().startsWith('•')) {
-                        return (
-                          <div key={index} className="flex items-start space-x-2 my-1">
-                            <span className="text-primary font-bold mt-0.5">•</span>
-                            <span className="flex-1">{line.replace('•', '').trim()}</span>
-                          </div>
-                        )
-                      }
-                      return line.trim() ? (
-                        <p key={index} className="mb-1.5 last:mb-0">{line}</p>
-                      ) : (
-                        <div key={index} className="h-1.5"></div>
-                      )
-                    })}
-                  </div>
+                  <ChatMessageContent content={message.content} role={message.role} />
                   <span className="text-[10px] opacity-60 mt-1.5 block text-right font-mono">
                     {message.timestamp.toLocaleTimeString([], { 
                       hour: '2-digit', 

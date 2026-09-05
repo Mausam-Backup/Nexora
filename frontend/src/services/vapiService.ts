@@ -9,18 +9,21 @@ export interface VapiTranscriptMessage {
 
 let vapiInstance: Vapi | null = null
 
+const PROD_VAPI_PUBLIC_KEY = '80bc7929-579d-436d-b3b3-0af46271dbb5'
+const PROD_VAPI_ASSISTANT_ID = '4b803768-1228-44fe-b904-b4a4999171f6'
+
 /**
  * Returns the configured Vapi public key
  */
 export function getVapiPublicKey(): string {
-  return import.meta.env.VITE_VAPI_PUBLIC_KEY || ''
+  return (import.meta.env.VITE_VAPI_PUBLIC_KEY || PROD_VAPI_PUBLIC_KEY || '').trim()
 }
 
 /**
  * Returns the optional configured Vapi assistant ID
  */
 export function getVapiAssistantId(): string {
-  return import.meta.env.VITE_VAPI_ASSISTANT_ID || ''
+  return (import.meta.env.VITE_VAPI_ASSISTANT_ID || PROD_VAPI_ASSISTANT_ID || '').trim()
 }
 
 /**
@@ -28,7 +31,7 @@ export function getVapiAssistantId(): string {
  */
 export function isVapiConfigured(): boolean {
   const key = getVapiPublicKey()
-  return Boolean(key && key.trim() && key !== 'YOUR_VAPI_PUBLIC_KEY_HERE')
+  return Boolean(key && key !== 'YOUR_VAPI_PUBLIC_KEY_HERE')
 }
 
 /**

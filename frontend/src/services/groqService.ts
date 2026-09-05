@@ -24,14 +24,16 @@ export interface GroqChatOptions {
 }
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
+const PROD_GROQ_MODEL = 'openai/gpt-oss-120b'
 const DEFAULT_MODEL = 'llama-3.3-70b-versatile'
+const FALLBACK_MODELS = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'groq/compound-mini']
 
 /**
  * Checks if the Groq API key is present in Vite environment
  */
 export function isGroqConfigured(): boolean {
-  const apiKey = import.meta.env.VITE_GROQ_API_KEY
-  return Boolean(apiKey && apiKey.trim() && apiKey !== 'YOUR_GROQ_API_KEY_HERE')
+  const apiKey = (import.meta.env.VITE_GROQ_API_KEY || '').trim()
+  return Boolean(apiKey && apiKey !== 'YOUR_GROQ_API_KEY_HERE')
 }
 
 /**
@@ -64,12 +66,12 @@ export async function sendGroqChatMessage(
   context: GroundedUserContext,
   options?: GroqChatOptions
 ): Promise<string> {
-  const apiKey = import.meta.env.VITE_GROQ_API_KEY
+  const apiKey = (import.meta.env.VITE_GROQ_API_KEY || '').trim()
   if (!apiKey) {
-    throw new Error('Groq API Key is not configured. Please set VITE_GROQ_API_KEY in your .env file.')
+    throw new Error('Groq API Key is not configured. Please set VITE_GROQ_API_KEY in your .env file or Vercel Environment Variables.')
   }
 
-  const model = options?.model || import.meta.env.VITE_GROQ_MODEL || DEFAULT_MODEL
+  const primaryModel = options?.model || import.meta.env.VITE_GROQ_MODEL || PROD_GROQ_MODEL || DEFAULT_MODEL
   const temperature = options?.temperature ?? 0.2
   const max_tokens = options?.max_tokens ?? 800
 
@@ -81,8 +83,8 @@ export async function sendGroqChatMessage(
     content: msg.content
   }))
 
-  const payload = {
-    model,
+  const requestBody = (modelName: string) => ({
+    model: modelName,
     messages: [
       { role: 'system', content: systemPrompt },
       ...conversationHistory,
@@ -90,34 +92,58 @@ export async function sendGroqChatMessage(
     ],
     temperature,
     max_tokens
-  }
-
-  const response = await fetch(GROQ_API_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey.trim()}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
   })
 
-  if (!response.ok) {
-    let errorDetail = ''
+  // Prioritize configured model, followed by tested fallbacks
+  const candidateModels = [primaryModel, ...FALLBACK_MODELS.filter(m => m !== primaryModel)]
+
+  let lastError: Error | null = null
+  for (let i = 0; i < candidateModels.length; i++) {
+    const currentModel = candidateModels[i]
     try {
-      const errJson = await response.json()
-      errorDetail = errJson?.error?.message || JSON.stringify(errJson)
-    } catch {
-      errorDetail = await response.text()
+      const response = await fetch(GROQ_API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody(currentModel))
+      })
+
+      if (!response.ok) {
+        let errorDetail = ''
+        try {
+          const errJson = await response.json()
+          errorDetail = errJson?.error?.message || JSON.stringify(errJson)
+        } catch {
+          errorDetail = await response.text()
+        }
+
+        // If the model is not found (404) or decommissioned (400), try fallback models
+        if ((response.status === 404 || response.status === 400) && i < candidateModels.length - 1) {
+          console.warn(`[Groq Failover] Model '${currentModel}' returned status ${response.status}. Trying '${candidateModels[i + 1]}'`)
+          continue
+        }
+
+        throw new Error(`Groq API Error (${response.status}): ${errorDetail}`)
+      }
+
+      const data = await response.json()
+      const content = data.choices?.[0]?.message?.content
+
+      if (!content) {
+        throw new Error('Received an empty response from Groq LLM.')
+      }
+
+      return content.trim()
+    } catch (err: any) {
+      lastError = err
+      if (err?.message?.includes('model') && i < candidateModels.length - 1) {
+        continue
+      }
+      throw err
     }
-    throw new Error(`Groq API Error (${response.status}): ${errorDetail}`)
   }
 
-  const data = await response.json()
-  const content = data.choices?.[0]?.message?.content
-
-  if (!content) {
-    throw new Error('Received an empty response from Groq LLM.')
-  }
-
-  return content.trim()
+  throw lastError || new Error('Failed to obtain a response from Groq LLM.')
 }

@@ -1,4 +1,12 @@
 {
+  "buildCommand": "npm run build:frontend",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
   "github": {
     "silent": true
   }

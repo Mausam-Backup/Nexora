@@ -259,12 +259,7 @@ export default function MainContent() {
                 </svg>
               </div>
               <div className="menu-button__bg"></div>
-            </a><img src="/images/app-laptop.webp" loading="lazy" sizes="(max-width: 479px) 100vw, 61vw" srcSet="
-                  /images/app-laptop-p-500.webp   500w,
-                  /images/app-laptop-p-800.webp   800w,
-                  /images/app-laptop-p-1080.webp 1080w,
-                  /images/app-laptop-p-1600.webp 1600w,
-                  /images/app-laptop-p-2000.webp 2000w,/images/app-laptop.webp        2330w" alt="" className="_5s-ipad" /><img src="/images/app-phone.webp" loading="lazy" sizes="(max-width: 479px) 100vw, 30vw" srcSet="
+            </a><img src="/images/app-dashboard.png" loading="lazy" alt="Nexora Executive ERP Dashboard" className="_5s-ipad" /><img src="/images/app-phone.webp" loading="lazy" sizes="(max-width: 479px) 100vw, 30vw" srcSet="
                   /images/app-phone-p-500.webp   500w,
                   /images/app-phone-p-800.webp   800w,
                   /images/app-phone-p-1080.webp 1080w,/images/app-phone.webp        1127w" alt="" className="_5s-iphone" />

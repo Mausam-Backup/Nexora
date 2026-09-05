@@ -436,4 +436,14 @@
         .hero-slide__fill-side-2 {
           background-color: #101a55 !important;
         }
-        /* -------- >Hero Initial State & Visibility Fix -------- */
+        /* -------- >Hero Initial State & Visibility Fix -------- */
+
+        /* -------- Section 5 Fullscreen Dashboard Image Presentation -------- */
+        ._5s-ipad {
+          height: auto !important;
+          max-width: 60vw !important;
+          border-radius: 14px !important;
+          box-shadow: -20px 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
+          bottom: 0 !important;
+        }
+

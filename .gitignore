@@ -28,5 +28,8 @@ dist-ssr
 
 # Large media files (exceeds GitHub 100MB limit)
 *.mp4
+!frontend/public/videos/vit-video.mp4
+*.bak
 output_frames/
 lion_frames/
+

@@ -1,54 +1,58 @@
 # ============================================================
-# Nexora ERP — Root Dockerfile (Monorepo)
-# Multi-stage build: builds frontend, then runs both services
+# Nexora ERP — Root Dockerfile
+#
+# Each service has its own Dockerfile:
+#   frontend/Dockerfile  →  React + Nginx
+#   backend/Dockerfile   →  Express.js API
+#
+# This root Dockerfile is the combined production image that
+# serves the full stack from a single container (alternative
+# to docker-compose for single-server deployments).
 # ============================================================
 
 # ─── Stage 1: Build Frontend ────────────────────────────────
 FROM node:20-alpine AS frontend-builder
-
-LABEL maintainer="Nexora Team"
-LABEL description="CampusSync ERP Platform – Frontend Builder"
-
 WORKDIR /app/frontend
-
-# Copy frontend dependencies first (layer cache optimisation)
 COPY frontend/package*.json ./
 RUN npm install --frozen-lockfile
-
-# Copy source and build the Vite/React app
 COPY frontend/ ./
 RUN npm run build
 
-# ─── Stage 2: Backend Runtime ───────────────────────────────
-FROM node:20-alpine AS backend
+# ─── Stage 2: Backend + Bundled Frontend ────────────────────
+FROM node:20-alpine AS production
+
+LABEL maintainer="Nexora Team"
+LABEL description="CampusSync ERP – Full Stack (single container)"
+
+RUN addgroup -S nexora && adduser -S nexora -G nexora
 
 WORKDIR /app
 
-# Install backend production dependencies only
-COPY backend/package*.json ./backend/
-RUN cd backend && npm install --omit=dev
+# Backend dependencies
+COPY backend/package*.json ./
+RUN npm install --omit=dev && npm cache clean --force
 
-# Copy backend source
-COPY backend/ ./backend/
+# Backend source and data
+COPY backend/src/ ./src/
+COPY backend/data/ ./data/
 
-# Copy built frontend into backend's static serving directory
-COPY --from=frontend-builder /app/frontend/dist ./backend/public
+# Frontend built assets — served as static files by Express
+COPY --from=frontend-builder /app/frontend/dist ./public
 
-# Copy backend data (JSON ERP state)
-COPY backend/data/ ./backend/data/
+RUN chown -R nexora:nexora /app
+USER nexora
 
-# ─── Runtime Configuration ──────────────────────────────────
-WORKDIR /app/backend
-
-# Environment defaults (override via docker-compose or -e flags)
 ENV NODE_ENV=production \
     PORT=5000 \
     HOST=0.0.0.0
 
 EXPOSE 5000
 
-# Health check — ensures the API is responding before routing traffic
-HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
     CMD wget -qO- http://localhost:5000/api/health || exit 1
 
 CMD ["node", "src/server.js"]
+
+# ─── Preferred for multi-service deployments: ───────────────
+# Use docker-compose.yml which builds frontend/ and backend/
+# as independent containers (better scalability + separation).

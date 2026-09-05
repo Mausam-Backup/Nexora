@@ -1,6 +1,6 @@
 # ============================================================
 # Nexora ERP — docker-compose.dev.yml
-# Development override: hot-reload, volume mounts, debug ports
+# Development override — hot reload + debug ports
 #
 # Usage:
 #   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
@@ -10,41 +10,41 @@ version: "3.9"
 
 services:
 
-  app:
+  # ─── Frontend Dev — Vite HMR ───────────────────────────────
+  frontend:
     build:
-      target: backend          # Skip frontend build stage in dev
-    container_name: nexora_app_dev
-    environment:
-      NODE_ENV: development
-    volumes:
-      # Mount source for live reload (nodemon watches changes)
-      - ./backend/src:/app/backend/src:rw
-      - ./backend/data:/app/backend/data:rw
-    command: ["node_modules/.bin/nodemon", "src/server.js"]
-    ports:
-      - "5000:5000"            # API
-      - "9229:9229"            # Node.js inspector (--inspect)
-
-  # Vite dev server runs separately in dev (not served by Express)
-  frontend-dev:
-    image: node:20-alpine
+      context: ./frontend
+      target: builder              # Stop at the build stage (no Nginx)
     container_name: nexora_frontend_dev
-    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    ports:
+      - "5173:5173"                # Vite HMR at http://localhost:5173
     volumes:
       - ./frontend:/app:rw
-      - /app/node_modules        # Anonymous volume prevents host node_modules override
-    ports:
-      - "5173:5173"              # Vite default HMR port
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+      - /app/node_modules          # Prevent host node_modules override
     environment:
       VITE_API_BASE_URL: http://localhost:5000
     networks:
       - nexora_network
 
+  # ─── Backend Dev — nodemon hot reload ──────────────────────
+  backend:
+    container_name: nexora_backend_dev
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./backend/src:/app/src:rw
+      - ./backend/data:/app/data:rw
+    command: ["node_modules/.bin/nodemon", "src/server.js"]
+    ports:
+      - "5000:5000"                # API
+      - "9229:9229"                # Node.js inspector (--inspect flag)
+
+  # ─── Expose DB ports for GUI tools ─────────────────────────
   mongo:
     ports:
-      - "27017:27017"            # Expose Mongo to host for GUI tools (Compass, etc.)
+      - "27017:27017"              # MongoDB Compass / Studio 3T
 
   redis:
     ports:
-      - "6379:6379"              # Expose Redis to host for debugging (RedisInsight, etc.)
+      - "6379:6379"                # RedisInsight / redis-cli on host

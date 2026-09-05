@@ -11,6 +11,7 @@ import { ProfileSkeleton } from "@/components/ui/profile-skeleton"
 import { usePageLoading } from "@/hooks/use-page-loading"
 import { SEO } from "@/components/SEO"
 import { useTeacherIDData } from "@/hooks/useTeacherIDData"
+import { generatePrintableIDCard } from "@/utils/exportUtils"
 
 export default function TeacherID() {
   const isLoading = usePageLoading()
@@ -43,7 +44,18 @@ export default function TeacherID() {
 
   const handleDownloadID = () => {
     toast({ title: "Downloading ID Card", description: "Your teacher ID card is being prepared for download." })
-    setTimeout(() => toast({ title: "Download Complete", description: "Your teacher ID card has been downloaded successfully." }), 1500)
+    generatePrintableIDCard({
+      type: 'faculty',
+      name: idCardData.name,
+      id: idCardData.facultyId,
+      department: idCardData.department,
+      validUntil: idCardData.validUntil,
+      bloodGroup: idCardData.bloodGroup,
+      emergencyContact: idCardData.emergencyContact,
+      avatar: idCardData.avatar,
+      officeRoom: idCardData.officeRoom,
+      joiningYear: idCardData.joiningYear
+    })
   }
 
   return (

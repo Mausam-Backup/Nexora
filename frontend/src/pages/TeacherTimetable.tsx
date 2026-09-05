@@ -136,15 +136,26 @@ const TeacherTimetable = () => {
     description: ""
   });
   const weekDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  const timeSlots = ["08:30", "10:05", "11:40", "13:15", "14:50", "16:25", "18:00"];
-  const timeLabels = [
-    { start: "08:30", end: "10:00" },
-    { start: "10:05", end: "11:35" },
-    { start: "11:40", end: "13:10" },
-    { start: "13:15", end: "14:45" },
-    { start: "14:50", end: "16:20" },
-    { start: "16:25", end: "17:55" },
-    { start: "18:00", end: "19:30" }
+  
+  const timetableSlots = [
+    { id: "slot-1", start: "08:30", end: "10:00", isLunch: false },
+    { id: "slot-2", start: "10:05", end: "11:35", isLunch: false },
+    { id: "slot-3", start: "11:40", end: "13:10", isLunch: false },
+    { id: "slot-lunch", start: "13:10", end: "13:15", isLunch: true },
+    { id: "slot-4", start: "13:15", end: "14:45", isLunch: false },
+    { id: "slot-5", start: "14:50", end: "16:20", isLunch: false },
+    { id: "slot-6", start: "16:25", end: "17:55", isLunch: false },
+    { id: "slot-7", start: "18:00", end: "19:30", isLunch: false }
+  ];
+
+  const selectableTimeSlots = [
+    { start: "08:30", end: "10:00", label: "08:30 - 10:00 (Period 1)" },
+    { start: "10:05", end: "11:35", label: "10:05 - 11:35 (Period 2)" },
+    { start: "11:40", end: "13:10", label: "11:40 - 13:10 (Period 3)" },
+    { start: "13:15", end: "14:45", label: "13:15 - 14:45 (Period 4)" },
+    { start: "14:50", end: "16:20", label: "14:50 - 16:20 (Period 5)" },
+    { start: "16:25", end: "17:55", label: "16:25 - 17:55 (Period 6)" },
+    { start: "18:00", end: "19:30", label: "18:00 - 19:30 (Period 7)" }
   ];
 
   const getClassTypeStyle = (type: string) => {
@@ -345,13 +356,23 @@ const TeacherTimetable = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="startTime">Start Time *</Label>
-                  <Select value={newClass.startTime || ""} onValueChange={(value) => setNewClass(prev => ({ ...prev, startTime: value }))}>
+                  <Select 
+                    value={newClass.startTime || ""} 
+                    onValueChange={(value) => {
+                      const matched = selectableTimeSlots.find(s => s.start === value);
+                      setNewClass(prev => ({ 
+                        ...prev, 
+                        startTime: value,
+                        endTime: matched ? matched.end : prev.endTime || "10:00"
+                      }));
+                    }}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select start time" />
                     </SelectTrigger>
                     <SelectContent>
-                      {timeSlots.map((time) => (
-                        <SelectItem key={time} value={time}>{time}</SelectItem>
+                      {selectableTimeSlots.map((slot) => (
+                        <SelectItem key={slot.start} value={slot.start}>{slot.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -363,8 +384,8 @@ const TeacherTimetable = () => {
                       <SelectValue placeholder="Select end time" />
                     </SelectTrigger>
                     <SelectContent>
-                      {timeSlots.map((time) => (
-                        <SelectItem key={time} value={time}>{time}</SelectItem>
+                      {selectableTimeSlots.map((slot) => (
+                        <SelectItem key={slot.end} value={slot.end}>{slot.end}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -410,14 +431,20 @@ const TeacherTimetable = () => {
                 <TableRow className="bg-background">
                   <TableHead className="w-16 text-center font-bold border-r sticky left-0 bg-background z-20">THEORY</TableHead>
                   <TableHead className="text-center font-semibold border-r">Start<br/>End</TableHead>
-                  <TableHead className="text-center font-semibold border-r">08:30<br/>10:00</TableHead>
-                  <TableHead className="text-center font-semibold border-r">10:05<br/>11:35</TableHead>
-                  <TableHead className="text-center font-semibold border-r">11:40<br/>13:10</TableHead>
-                  <TableHead className="text-center font-semibold border-r">Lunch</TableHead>
-                  <TableHead className="text-center font-semibold border-r">13:15<br/>14:45</TableHead>
-                  <TableHead className="text-center font-semibold border-r">14:50<br/>16:20</TableHead>
-                  <TableHead className="text-center font-semibold border-r">16:25<br/>17:55</TableHead>
-                  <TableHead className="text-center font-semibold">18:00<br/>19:30</TableHead>
+                  {timetableSlots.map((slot) => (
+                    <TableHead 
+                      key={slot.id} 
+                      className={`${slot.isLunch ? 'w-14' : ''} text-center font-semibold border-r last:border-r-0`}
+                    >
+                      {slot.isLunch ? (
+                        <div className="font-bold text-muted-foreground">Lunch</div>
+                      ) : (
+                        <div className="leading-tight">
+                          {slot.start}<br/>{slot.end}
+                        </div>
+                      )}
+                    </TableHead>
+                  ))}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -425,37 +452,41 @@ const TeacherTimetable = () => {
                   <TableRow key={day} className="border-b">
                     <TableCell className="font-semibold text-center bg-background border-r sticky left-0 z-10">{day}</TableCell>
                     <TableCell className="font-medium text-center bg-muted/20 border-r">THEORY</TableCell>
-                    {timeLabels.map((timeSlot, timeIndex) => {
-                      // Special handling for lunch time
-                      if (timeSlot.start === "13:15") {
+                    {timetableSlots.map((slot, slotIdx) => {
+                      if (slot.isLunch) {
                         return (
-                          <TableCell key={`${day}-lunch`} className="text-center border-r bg-secondary/20 py-4">
+                          <TableCell key={`${day}-lunch`} className="text-center border-r bg-secondary/20 py-4 font-semibold text-muted-foreground">
                             Lunch
                           </TableCell>
                         );
                       }
-                      
-                      const classForSlot = classes.find(cls => 
-                        cls.day === dayIndex && 
-                        cls.startTime === timeSlot.start
-                      );
-                      
-                      // Generate room codes for empty slots
-                      const getRoomCode = (dayIdx: number, timeIdx: number) => {
+
+                      const classForSlot = classes.find(cls => {
+                        if (cls.day !== dayIndex) return false;
+                        if (cls.startTime === slot.start) return true;
+                        const [cH, cM] = cls.startTime.split(':').map(Number);
+                        const [sH, sM] = slot.start.split(':').map(Number);
+                        const [eH, eM] = slot.end.split(':').map(Number);
+                        const cMin = (cH || 0) * 60 + (cM || 0);
+                        const sMin = (sH || 0) * 60 + (sM || 0);
+                        const eMin = (eH || 0) * 60 + (eM || 0);
+                        return cMin >= sMin && cMin < eMin;
+                      });
+
+                      const getRoomCode = (dayIdx: number, sIdx: number) => {
                         const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
                         const numbers = ['21', '22', '23', '14', '24', '23'];
-                        if (timeIdx === 5) return letters[dayIdx] + numbers[dayIdx]; // Last column
-                        return letters[dayIdx] + (21 + timeIdx);
+                        return letters[dayIdx % letters.length] + (numbers[dayIdx % numbers.length] || (20 + sIdx));
                       };
-                      
+
                       return (
                         <TableCell 
-                          key={`${day}-${timeSlot.start}`} 
+                          key={`${day}-${slot.id}`} 
                           className={`text-center border-r p-1 cursor-pointer transition-colors min-h-[60px] ${
                             classForSlot 
                               ? classForSlot.type === 'Lab' || classForSlot.type === 'Practical'
-                                ? 'bg-red-100 hover:bg-red-200 text-red-800' 
-                                : 'bg-blue-50 hover:bg-blue-100 text-blue-800'
+                                ? 'bg-red-100 hover:bg-red-200 text-red-800 dark:bg-red-950/50 dark:text-red-300' 
+                                : 'bg-blue-50 hover:bg-blue-100 text-blue-800 dark:bg-blue-950/50 dark:text-blue-300'
                               : 'hover:bg-muted/30'
                           }`}
                           onClick={() => classForSlot && setSelectedClass(classForSlot)}
@@ -467,8 +498,8 @@ const TeacherTimetable = () => {
                               </div>
                             </div>
                           ) : (
-                            <div className="text-xs text-muted-foreground py-3">
-                              {timeIndex !== 3 ? getRoomCode(dayIndex, timeIndex) : ''}
+                            <div className="text-xs text-muted-foreground/60 py-3">
+                              {getRoomCode(dayIndex, slotIdx)}
                             </div>
                           )}
                         </TableCell>

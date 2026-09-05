@@ -24,9 +24,16 @@ export interface GroqChatOptions {
 }
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
-const PROD_GROQ_MODEL = 'openai/gpt-oss-120b'
-const DEFAULT_MODEL = 'llama-3.3-70b-versatile'
-const FALLBACK_MODELS = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'groq/compound-mini']
+const PROD_GROQ_MODEL = 'qwen/qwen3.8-27b'
+const DEFAULT_MODEL = 'qwen/qwen3.8-27b'
+const FALLBACK_MODELS = [
+  'qwen/qwen3.8-27b',
+  'openai/gpt-oss-120b',
+  'openai/gpt-oss-20b',
+  'groq/compound',
+  'groq/compound-mini',
+  'llama-3.3-70b-versatile'
+]
 
 /**
  * Checks if the Groq API key is present in Vite environment

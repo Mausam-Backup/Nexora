@@ -817,7 +817,7 @@ const AskAI = () => {
                       <div className="w-2 h-2 bg-primary/70 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></div>
                     </div>
                     <span className="text-xs text-muted-foreground font-mono">
-                      {hasGroq ? 'Groq Llama 3.3 reasoning...' : 'Analyzing ERP records...'}
+                      {hasGroq ? 'Groq LPU AI reasoning...' : 'Analyzing ERP records...'}
                     </span>
                   </div>
                 </div>

@@ -11,6 +11,7 @@ import { ProfileSkeleton } from "@/components/ui/profile-skeleton"
 import { usePageLoading } from "@/hooks/use-page-loading"
 import { SEO } from "@/components/SEO"
 import { useAdminIDData } from "@/hooks/useAdminIDData"
+import { generatePrintableIDCard } from "@/utils/exportUtils"
 
 export default function AdminID() {
   const isLoading = usePageLoading()
@@ -40,8 +41,18 @@ export default function AdminID() {
   }
 
   const handleDownloadID = () => {
-    toast({ title: "Downloading ID Card", description: "Your admin ID card is being prepared for download." })
-    setTimeout(() => toast({ title: "Download Complete", description: "Your admin ID card has been downloaded successfully." }), 1500)
+    toast({ title: "Opening ID Card Print Pass", description: "Preparing official administrator identity card for print / PDF export." })
+    generatePrintableIDCard({
+      type: 'admin',
+      name: idCardData.name,
+      id: idCardData.adminId,
+      department: idCardData.department,
+      validUntil: idCardData.validUntil,
+      bloodGroup: idCardData.bloodGroup,
+      emergencyContact: idCardData.emergencyContact,
+      avatar: idCardData.avatar,
+      officeRoom: idCardData.officeRoom
+    })
   }
 
   return (

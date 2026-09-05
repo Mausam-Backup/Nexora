@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useUserData } from "@/hooks/useUserData"
 import { useStudentIDData } from "@/hooks/useStudentIDData"
 import { EditStudentIDDialog } from "@/components/profile/EditStudentIDDialog"
+import { generatePrintableIDCard } from "@/utils/exportUtils"
 
 export default function StudentID() {
   const isLoading = usePageLoading()
@@ -62,17 +63,25 @@ export default function StudentID() {
 
   const handleDownloadID = () => {
     toast({
-      title: "Downloading ID Card",
-      description: "Your student ID card is being prepared for download."
+      title: "Opening ID Card Print Pass",
+      description: "Preparing official student identity card for print / PDF export."
     })
     
-    // Simulate ID card generation and download
-    setTimeout(() => {
-      toast({
-        title: "Download Complete",
-        description: "Your student ID card has been downloaded successfully."
-      })
-    }, 2000)
+    generatePrintableIDCard({
+      type: 'student',
+      name: idCardData.name,
+      id: idCardData.studentId,
+      rollNumber: idCardData.rollNumber,
+      department: idCardData.course,
+      course: idCardData.course,
+      year: idCardData.year,
+      section: idCardData.section,
+      validUntil: idCardData.validUntil,
+      bloodGroup: idCardData.bloodGroup,
+      emergencyContact: idCardData.emergencyContact,
+      avatar: idCardData.avatar,
+      libraryId: idCardData.libraryId
+    })
   }
 
   return (

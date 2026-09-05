@@ -224,3 +224,351 @@ export function generatePrintableReport(options: PrintableReportOptions) {
   printWindow.document.write(html)
   printWindow.document.close()
 }
+
+export interface PrintableIDCardOptions {
+  type?: 'student' | 'faculty' | 'admin'
+  name: string
+  id: string
+  rollNumber?: string
+  department: string
+  course?: string
+  year?: string
+  section?: string
+  validUntil: string
+  bloodGroup?: string
+  emergencyContact?: string
+  avatar?: string
+  libraryId?: string
+  officeRoom?: string
+  joiningYear?: string
+}
+
+export function generatePrintableIDCard(options: PrintableIDCardOptions) {
+  const printWindow = window.open('', '_blank', 'width=800,height=900')
+  if (!printWindow) {
+    alert('Please allow popups to download/print your official ID Card')
+    return
+  }
+
+  const roleTitle = options.type === 'faculty' 
+    ? 'FACULTY IDENTITY CARD' 
+    : options.type === 'admin' 
+    ? 'ADMINISTRATIVE IDENTITY CARD' 
+    : 'STUDENT IDENTITY CARD'
+
+  const badgeColor = options.type === 'faculty' ? '#0d9488' : options.type === 'admin' ? '#7c3aed' : '#0284c7'
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>NEXORA ID Card - ${options.name} (${options.id})</title>
+        <style>
+          * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; }
+          body {
+            background: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+          }
+          .actions {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+          }
+          .btn {
+            background: #0f172a;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+          }
+          .btn-outline {
+            background: #ffffff;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+          }
+          .card-container {
+            width: 350px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            position: relative;
+          }
+          .card-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid ${badgeColor};
+          }
+          .univ-logo {
+            width: 36px;
+            height: 36px;
+            background: ${badgeColor};
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 16px;
+            color: white;
+          }
+          .univ-info h1 {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+          }
+          .univ-info p {
+            font-size: 9px;
+            color: #94a3b8;
+            letter-spacing: 0.08em;
+          }
+          .card-type-tag {
+            background: ${badgeColor};
+            color: white;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-align: center;
+            padding: 4px 0;
+            text-transform: uppercase;
+          }
+          .card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .photo-wrapper {
+            position: relative;
+            margin-bottom: 14px;
+          }
+          .photo {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #64748b;
+          }
+          .photo img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+          .name {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2px;
+            text-align: center;
+          }
+          .designation {
+            font-size: 12px;
+            color: ${badgeColor};
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+          }
+          .details-grid {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+          }
+          .detail-item {
+            display: flex;
+            flex-direction: column;
+          }
+          .detail-label {
+            font-size: 9px;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+          }
+          .detail-val {
+            font-size: 11px;
+            font-weight: 700;
+            color: #1e293b;
+            font-family: monospace;
+          }
+          .card-footer {
+            width: 100%;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+          .barcode-box {
+            font-family: monospace;
+            font-size: 8px;
+            letter-spacing: 2px;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+          }
+          .qr-box {
+            width: 44px;
+            height: 44px;
+            background: #0f172a;
+            color: white;
+            font-size: 7px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 6px;
+            font-family: monospace;
+          }
+          .hologram {
+            position: absolute;
+            top: 60px;
+            right: 16px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700, #ff8c00, #00ffff, #ff00ff);
+            opacity: 0.85;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6px;
+            font-weight: 900;
+            color: #000;
+          }
+          @media print {
+            body { background: #ffffff; padding: 0; min-height: auto; }
+            .actions { display: none; }
+            .card-container { box-shadow: none; border: 1px solid #94a3b8; page-break-inside: avoid; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="actions">
+          <button class="btn" onclick="window.print()">Print / Save PDF</button>
+          <button class="btn btn-outline" onclick="window.close()">Close</button>
+        </div>
+
+        <div class="card-container">
+          <div class="hologram">NX-SEC</div>
+          <div class="card-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="univ-logo">NX</div>
+              <div class="univ-info">
+                <h1>NEXORA UNIVERSITY</h1>
+                <p>INSTITUTION OF EXCELLENCE</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card-type-tag">${roleTitle}</div>
+
+          <div class="card-body">
+            <div class="photo-wrapper">
+              <div class="photo">
+                ${options.avatar && !options.avatar.includes('placeholder')
+                  ? `<img src="${options.avatar}" alt="${options.name}" />`
+                  : `<span>${options.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}</span>`
+                }
+              </div>
+            </div>
+
+            <div class="name">${options.name}</div>
+            <div class="designation">${options.course || options.department}</div>
+
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">ID Number</span>
+                <span class="detail-val">${options.id}</span>
+              </div>
+              ${options.rollNumber ? `
+                <div class="detail-item">
+                  <span class="detail-label">Roll Number</span>
+                  <span class="detail-val">${options.rollNumber}</span>
+                </div>
+              ` : ''}
+              ${options.year ? `
+                <div class="detail-item">
+                  <span class="detail-label">Batch / Section</span>
+                  <span class="detail-val">${options.year} • Sec ${options.section || 'A'}</span>
+                </div>
+              ` : ''}
+              ${options.officeRoom ? `
+                <div class="detail-item">
+                  <span class="detail-label">Office Room</span>
+                  <span class="detail-val">${options.officeRoom}</span>
+                </div>
+              ` : ''}
+              ${options.bloodGroup ? `
+                <div class="detail-item">
+                  <span class="detail-label">Blood Group</span>
+                  <span class="detail-val" style="color: #dc2626;">${options.bloodGroup}</span>
+                </div>
+              ` : ''}
+              <div class="detail-item">
+                <span class="detail-label">Valid Through</span>
+                <span class="detail-val">${options.validUntil}</span>
+              </div>
+              ${options.emergencyContact ? `
+                <div class="detail-item" style="grid-column: span 2;">
+                  <span class="detail-label">Emergency Helpline</span>
+                  <span class="detail-val">${options.emergencyContact}</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="card-footer">
+              <div class="barcode-box">||| | |||| ||| || | |</div>
+              <div class="qr-box">
+                <div>QR PASS</div>
+                <div style="font-size: 6px; opacity: 0.8;">AUTH-OK</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 350);
+          };
+        </script>
+      </body>
+    </html>
+  `
+
+  printWindow.document.open()
+  printWindow.document.write(html)
+  printWindow.document.close()
+}

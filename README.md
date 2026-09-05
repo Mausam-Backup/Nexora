@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./frontend/public/favicon.ico" alt="Nexora ERP Logo" width="80" height="80" />
+<img src="./frontend/public/nexora-logo.svg" alt="Nexora ERP Logo" width="80" height="80" />
 
 # Nexora — Enterprise ERP for Collegiate Institutions
 

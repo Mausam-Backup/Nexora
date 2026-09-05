@@ -9,7 +9,8 @@ import {
   ArrowUpRight, 
   Menu, 
   X,
-  Sparkles
+  Sparkles,
+  Home
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -81,7 +82,7 @@ export const MainHeader: React.FC = () => {
         
         {/* Left: Brand Identity & Geometric Clover Logo */}
         <Link 
-          to={role === 'admin' ? '/admin/overview' : role === 'teacher' ? '/teacher' : '/'} 
+          to={role === 'admin' ? '/admin/overview' : role === 'teacher' ? '/teacher/attendance' : role === 'examination_controller' ? '/examination-controller' : '/student/dashboard'} 
           className="flex items-center gap-2.5 group shrink-0"
           title="Nexora ERP"
         >
@@ -153,6 +154,16 @@ export const MainHeader: React.FC = () => {
               </div>
             </PopoverContent>
           </Popover>
+
+          {/* Return to Landing Page */}
+          <Link
+            to="/"
+            className="h-8 px-2.5 rounded-full bg-[#341B16] hover:bg-[#43231D] text-[#E8C5BE] hover:text-white border border-[#4E2A23] flex items-center gap-1.5 text-xs font-medium transition-colors"
+            title="Return to Public Landing Page"
+          >
+            <Home className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Landing</span>
+          </Link>
 
           {/* Theme Toggle in warm pill */}
           <div className="[&_button]:h-8 [&_button]:w-8 [&_button]:rounded-full [&_button]:bg-[#341B16] [&_button]:border [&_button]:border-[#4E2A23] [&_button]:text-[#E8C5BE] hover:[&_button]:text-white hover:[&_button]:bg-[#43231D]">

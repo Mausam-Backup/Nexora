@@ -30,17 +30,28 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Synchronous initialization prevents race condition on initial render / fast redirects
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const savedUser = localStorage.getItem('campussync-user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (error) {
+      console.error('Error parsing saved user data on init:', error);
+      return null;
+    }
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in (from localStorage)
+    // Secondary sync verification
     const savedUser = localStorage.getItem('campussync-user');
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsed = JSON.parse(savedUser);
+        if (!user || user.id !== parsed.id || user.role !== parsed.role) {
+          setUser(parsed);
+        }
       } catch (error) {
-        console.error('Error parsing saved user data:', error);
         localStorage.removeItem('campussync-user');
       }
     }
@@ -48,13 +59,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = (userData: User) => {
+    // Write to storage immediately so route guards immediately see the session
+    try {
+      localStorage.setItem('campussync-user', JSON.stringify(userData));
+    } catch (e) {
+      console.error('Failed to write user to localStorage:', e);
+    }
     setUser(userData);
-    localStorage.setItem('campussync-user', JSON.stringify(userData));
   };
 
   const logout = () => {
+    try {
+      localStorage.removeItem('campussync-user');
+    } catch (e) {}
     setUser(null);
-    localStorage.removeItem('campussync-user');
   };
 
   const value = {

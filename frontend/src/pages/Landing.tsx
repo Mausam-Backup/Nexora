@@ -16,11 +16,24 @@ export default function Landing() {
     document.documentElement.setAttribute("data-wf-page", "64357e0972ffee1e51c2b876");
     document.documentElement.setAttribute("data-wf-site", "636022c4862798e85d43e71e");
 
+    const isReturning = (() => {
+      try {
+        return sessionStorage.getItem("nexora_preloader_seen") === "true";
+      } catch (e) {
+        return false;
+      }
+    })();
+
+    if (isReturning) {
+      document.body.classList.remove("landing-preloading");
+      document.documentElement.classList.add("is-loaded");
+    }
+
     // Dismiss preloader class after initial reveal
     const timer = setTimeout(() => {
       document.body.classList.remove("landing-preloading");
       document.documentElement.classList.add("is-loaded");
-    }, 1000);
+    }, isReturning ? 50 : 700);
 
     // If restored from browser back-forward cache (bfcache), reload cleanly to re-mount WebGL & Webflow animations
     const handlePageShow = (event: PageTransitionEvent) => {

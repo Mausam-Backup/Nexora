@@ -108,6 +108,7 @@ export const AdminRoutes: React.FC = () => {
           <AdminOverview />
         </RoleRoute>
       } />
+      <Route path="*" element={<Navigate to="/admin/overview" replace />} />
     </Routes>
   )
 }

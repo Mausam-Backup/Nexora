@@ -19,13 +19,33 @@ export const RoleRoute: React.FC<RoleRouteProps> = ({ allowedRoles, children }) 
     )
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />
+  // Fallback to localStorage in case of fast redirect before React state update
+  let activeUser = user
+  if (!activeUser) {
+    try {
+      const saved = localStorage.getItem('campussync-user')
+      if (saved) activeUser = JSON.parse(saved)
+    } catch (e) {}
   }
 
-  const role = user?.role
+  const isAuthed = isAuthenticated || !!activeUser
+
+  if (!isAuthed) {
+    return <Navigate to="/auth" state={{ from: location }} replace />
+  }
+
+  const role = activeUser?.role
   if (!role || !allowedRoles.includes(role)) {
-    return <Navigate to="/" replace />
+    // Instead of bouncing to '/', send the user to their own valid portal!
+    const roleHome = 
+      role === 'admin' 
+        ? '/admin/overview' 
+        : role === 'teacher' 
+        ? '/teacher/attendance' 
+        : role === 'examination_controller' 
+        ? '/examination-controller' 
+        : '/student/dashboard'
+    return <Navigate to={roleHome} replace />
   }
 
   return <>{children}</>

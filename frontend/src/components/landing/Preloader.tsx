@@ -2,29 +2,52 @@ import React, { useEffect, useState } from "react";
 
 export default function Preloader() {
   const [isExiting, setIsExiting] = useState(false);
-  const [isGone, setIsGone] = useState(false);
+  const [isGone, setIsGone] = useState(() => {
+    try {
+      return sessionStorage.getItem("nexora_preloader_seen") === "true";
+    } catch (e) {
+      return false;
+    }
+  });
 
   useEffect(() => {
-    // 1. Initial display timer: start fading out after 900ms
+    if (isGone) {
+      document.body.classList.remove("landing-preloading");
+      document.documentElement.classList.add("is-loaded");
+      return;
+    }
+
+    try {
+      sessionStorage.setItem("nexora_preloader_seen", "true");
+    } catch (e) {}
+
+    // 1. Initial display timer: start fading out after 600ms
     const exitTimer = setTimeout(() => {
       setIsExiting(true);
-    }, 900);
+      document.body.classList.remove("landing-preloading");
+      document.documentElement.classList.add("is-loaded");
+    }, 600);
 
     // 2. Unmount from DOM completely after fade-out transition completes
     const removeTimer = setTimeout(() => {
       setIsGone(true);
-    }, 1500);
+      document.body.classList.remove("landing-preloading");
+      document.documentElement.classList.add("is-loaded");
+    }, 1100);
 
     // 3. User interaction dismiss (scroll, wheel, touch, click)
     const handleImmediateDismiss = () => {
       setIsExiting(true);
-      setTimeout(() => setIsGone(true), 300);
+      document.body.classList.remove("landing-preloading");
+      document.documentElement.classList.add("is-loaded");
+      setTimeout(() => setIsGone(true), 200);
     };
 
     window.addEventListener("scroll", handleImmediateDismiss, { passive: true, once: true });
     window.addEventListener("wheel", handleImmediateDismiss, { passive: true, once: true });
     window.addEventListener("touchmove", handleImmediateDismiss, { passive: true, once: true });
     window.addEventListener("keydown", handleImmediateDismiss, { passive: true, once: true });
+    window.addEventListener("click", handleImmediateDismiss, { passive: true, once: true });
 
     return () => {
       clearTimeout(exitTimer);
@@ -33,8 +56,9 @@ export default function Preloader() {
       window.removeEventListener("wheel", handleImmediateDismiss);
       window.removeEventListener("touchmove", handleImmediateDismiss);
       window.removeEventListener("keydown", handleImmediateDismiss);
+      window.removeEventListener("click", handleImmediateDismiss);
     };
-  }, []);
+  }, [isGone]);
 
   if (isGone) {
     return null;

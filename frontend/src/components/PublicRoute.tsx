@@ -22,8 +22,24 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({
   }
 
   if (isAuthenticated) {
-    // Redirect authenticated users away from login/signup pages
-    return <Navigate to={redirectTo} replace />;
+    let activeUser = user;
+    if (!activeUser) {
+      try {
+        const saved = localStorage.getItem('campussync-user');
+        if (saved) activeUser = JSON.parse(saved);
+      } catch (e) {}
+    }
+    const role = activeUser?.role;
+    const dest = redirectTo !== '/' ? redirectTo : (
+      role === 'admin' 
+        ? '/admin/overview' 
+        : role === 'teacher' 
+        ? '/teacher/attendance' 
+        : role === 'examination_controller' 
+        ? '/examination-controller' 
+        : '/student/dashboard'
+    );
+    return <Navigate to={dest} replace />;
   }
 
   return <>{children}</>;

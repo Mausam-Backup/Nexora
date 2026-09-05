@@ -89,7 +89,7 @@ export const DemoRoleSwitcher: React.FC<DemoRoleSwitcherProps> = ({ customTrigge
       branch: s.department
     })
     toast.success(`Switched to Student Persona: ${s.name} (${label})`)
-    navigate('/')
+    navigate('/student/dashboard')
   }
 
   const handleOpenSplitView = () => {

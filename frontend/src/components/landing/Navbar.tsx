@@ -12,12 +12,12 @@ export default function Navbar() {
 
   const portalDestination = isAuthenticated
     ? user?.role === 'admin'
-      ? '/admin'
+      ? '/admin/overview'
       : user?.role === 'teacher'
-      ? '/teacher'
-      : user?.role === 'examination-controller'
+      ? '/teacher/attendance'
+      : user?.role === 'examination_controller' || (user?.role as any) === 'examination-controller'
       ? '/examination-controller'
-      : '/dashboard'
+      : '/student/dashboard'
     : '/auth';
 
   return (

@@ -349,7 +349,7 @@ export default function Auth() {
           </div>
 
           {/* Main Center Content */}
-          <div className="w-full max-w-[420px] mx-auto my-auto py-6 sm:py-8">
+          <div className="w-full max-w-[480px] mx-auto my-auto py-6 sm:py-8">
             
             {/* Form Title */}
             <h2 className="text-3xl sm:text-[38px] font-bold text-neutral-900 tracking-tight mb-2">
@@ -362,6 +362,103 @@ export default function Auth() {
                 : "Access your dashboard with institutional credentials"
               }
             </p>
+
+            {/* ================= HACKATHON EVALUATOR QUICK PASS (ABOVE FORM) ================= */}
+            <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-blue-50/60 to-purple-50/90 border-2 border-indigo-200/90 shadow-sm space-y-3.5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+                    <Zap className="h-3.5 w-3.5 fill-current" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-neutral-900 tracking-tight flex items-center gap-1.5">
+                      Hackathon Evaluator Quick Pass
+                      <span className="inline-flex items-center px-1.5 py-0.5 bg-indigo-600 text-white text-[9px] font-extrabold rounded uppercase tracking-wider">
+                        Fast Track
+                      </span>
+                    </span>
+                    <p className="text-[10px] text-neutral-500">1-click instant persona access • no password required</p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-semibold text-indigo-700 bg-indigo-100/80 px-2.5 py-1 rounded-full border border-indigo-200">
+                  ⚡ 4 Live Roles
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => handleJudgeLogin('admin', 'ADM001', 'Dr. Sarah Jenkins (Registrar)')}
+                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-blue-50/80 border border-blue-200/80 hover:border-blue-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group cursor-pointer"
+                  title="Login as Administrator (Overview)"
+                >
+                  <span className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <UserCog className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-neutral-900 leading-tight">Admin Overview</div>
+                    <div className="text-[10px] text-neutral-500 truncate">Institutional Governance</div>
+                  </div>
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={() => handleJudgeLogin('teacher', 'T101', 'Prof. Rajesh Iyer (Faculty)')}
+                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-purple-50/80 border border-purple-200/80 hover:border-purple-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group cursor-pointer"
+                  title="Login as Faculty (Attendance & Grading)"
+                >
+                  <span className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-600 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                    <Users className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-neutral-900 leading-tight">Faculty View</div>
+                    <div className="text-[10px] text-neutral-500 truncate">Attendance & Marks</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleJudgeLogin('student', '20CS001', 'Aarav Sharma (Cleared)')}
+                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-emerald-50/80 border border-emerald-200/80 hover:border-emerald-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group cursor-pointer"
+                  title="Login as Cleared Student (AskAI & Schedule)"
+                >
+                  <span className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                    <GraduationCap className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-neutral-900 leading-tight">Student Portal</div>
+                    <div className="text-[10px] text-neutral-500 truncate">Aarav Sharma (Cleared)</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleJudgeLogin('examination_controller')}
+                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-amber-50/80 border border-amber-200/80 hover:border-amber-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group cursor-pointer"
+                  title="Login as Controller of Examinations"
+                >
+                  <span className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                    <Award className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-neutral-900 leading-tight">Exam Controller</div>
+                    <div className="text-[10px] text-neutral-500 truncate">Hall Tickets & Debarment</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Separator Divider */}
+            <div className="relative my-6 text-center">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-neutral-200"></div>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-3 text-neutral-400 font-semibold text-[10px] tracking-wider">
+                  Or manual credential sign in
+                </span>
+              </div>
+            </div>
 
             {/* Institutional Role Selector Segmented Pills */}
             <div className="mb-6 space-y-2">
@@ -461,9 +558,9 @@ export default function Auth() {
 
               {/* SIGN UP FORM */}
               {isSignUp && (
-                <div className="space-y-3">
-                  {formStep === 1 ? (
-                    <>
+                <>
+                  <div className="space-y-3">
+                    <div>
                       <input
                         type="text"
                         placeholder="Full Name"
@@ -472,109 +569,101 @@ export default function Auth() {
                         className="w-full h-[52px] rounded-full px-6 text-sm text-neutral-900 bg-white border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 outline-none transition-all placeholder:text-neutral-400 shadow-sm"
                         required
                       />
+                    </div>
+
+                    <div>
                       <input
                         type="email"
-                        placeholder="Email Address"
+                        placeholder="Institutional Email Address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full h-[52px] rounded-full px-6 text-sm text-neutral-900 bg-white border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 outline-none transition-all placeholder:text-neutral-400 shadow-sm"
                         required
                       />
+                    </div>
+
+                    <div>
                       <input
                         type="text"
-                        placeholder="College / University Name"
+                        placeholder="College or University Name"
                         value={collegeName}
                         onChange={(e) => setCollegeName(e.target.value)}
                         className="w-full h-[52px] rounded-full px-6 text-sm text-neutral-900 bg-white border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 outline-none transition-all placeholder:text-neutral-400 shadow-sm"
                         required
                       />
+                    </div>
+
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Create Password (min. 6 characters)"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full h-[52px] rounded-full px-6 pr-12 text-sm text-neutral-900 bg-white border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 outline-none transition-all placeholder:text-neutral-400 shadow-sm"
+                        required
+                        minLength={6}
+                      />
                       <button
                         type="button"
-                        onClick={() => {
-                          if (name && email && collegeName) setFormStep(2)
-                        }}
-                        disabled={!name || !email || !collegeName}
-                        className="w-full h-[52px] rounded-full bg-neutral-900 hover:bg-neutral-800 disabled:opacity-50 text-white font-medium text-sm transition-all flex items-center justify-center gap-2 mt-2"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 transition-colors p-1"
+                        aria-label="Toggle password visibility"
                       >
-                        Continue
-                        <ArrowRight className="h-4 w-4" />
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
-                    </>
-                  ) : (
-                    <>
-                      <div className="relative">
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Create Password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="w-full h-[52px] rounded-full px-6 pr-12 text-sm text-neutral-900 bg-white border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 outline-none transition-all placeholder:text-neutral-400 shadow-sm"
-                          required
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 transition-colors p-1"
-                        >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                      </div>
+                    </div>
 
-                      <div className="relative">
-                        <input
-                          type={showConfirmPassword ? "text" : "password"}
-                          placeholder="Confirm Password"
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="w-full h-[52px] rounded-full px-6 pr-12 text-sm text-neutral-900 bg-white border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 outline-none transition-all placeholder:text-neutral-400 shadow-sm"
-                          required
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 transition-colors p-1"
-                        >
-                          {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                      </div>
-
-                      <div className="flex gap-2 pt-1">
-                        <button
-                          type="button"
-                          onClick={() => setFormStep(1)}
-                          className="w-1/3 h-[52px] rounded-full border border-neutral-200 text-neutral-700 hover:bg-neutral-50 text-sm font-medium transition-colors"
-                        >
-                          Back
-                        </button>
-                        <button
-                          type="submit"
-                          disabled={isLoading || !password || !confirmPassword || password !== confirmPassword}
-                          className="w-2/3 h-[52px] rounded-full bg-gradient-to-r from-[#022336] via-[#1e3a5f] to-[#5162ff] hover:opacity-95 text-white font-medium text-sm transition-all shadow-md shadow-blue-500/20 disabled:opacity-50"
-                        >
-                          {isLoading ? "Creating..." : "Create Account"}
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
+                    <div className="relative">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full h-[52px] rounded-full px-6 pr-12 text-sm text-neutral-900 bg-white border border-neutral-200 focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 outline-none transition-all placeholder:text-neutral-400 shadow-sm"
+                        required
+                        minLength={6}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 transition-colors p-1"
+                        aria-label="Toggle confirm password visibility"
+                      >
+                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+                </>
               )}
 
-              {/* Primary CTA Gradient Button (Sign In) */}
-              {(!isSignUp || formStep === 2) && (
-                !isSignUp && (
+              {/* Submit Button */}
+              {isSignUp ? (
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full h-[52px] mt-2 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-medium text-sm hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-[0.99] disabled:opacity-50"
+                >
+                  {isLoading ? (
+                    <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <span>Create Account</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
+              ) : (
+                (
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-[52px] rounded-full text-white font-medium text-sm sm:text-base shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:brightness-105 active:scale-[0.99] transition-all flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#022336] via-[#1e3a5f] to-[#5162ff] mt-6"
+                    className="w-full h-[52px] mt-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium text-sm hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-[0.99] disabled:opacity-50"
                   >
                     {isLoading ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>Signing In...</span>
-                      </div>
+                      <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
                       <>
-                        <LogIn className="h-4 w-4 stroke-[2.5]" />
+                        <LogIn className="h-4 w-4" />
                         <span>Sign In</span>
                       </>
                     )}
@@ -582,93 +671,8 @@ export default function Auth() {
                 )
               )}
             </form>
-
-            {/* ================= HACKATHON EVALUATOR QUICK PASS ================= */}
-            <div className="mt-7 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-blue-50/60 to-purple-50/90 border-2 border-indigo-200/90 shadow-sm space-y-3.5">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm">
-                    <Zap className="h-3.5 w-3.5 fill-current" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-neutral-900 tracking-tight flex items-center gap-1.5">
-                      Hackathon Evaluator Quick Pass
-                      <span className="inline-flex items-center px-1.5 py-0.5 bg-indigo-600 text-white text-[9px] font-extrabold rounded uppercase tracking-wider">
-                        Fast Track
-                      </span>
-                    </span>
-                    <p className="text-[10px] text-neutral-500">1-click instant persona access • no password required</p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-semibold text-indigo-700 bg-indigo-100/80 px-2.5 py-1 rounded-full border border-indigo-200">
-                  ⚡ 4 Live Roles
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => handleJudgeLogin('admin', 'ADM001', 'Dr. Sarah Jenkins (Registrar)')}
-                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-blue-50/80 border border-blue-200/80 hover:border-blue-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group"
-                  title="Login as Administrator (Overview)"
-                >
-                  <span className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    <UserCog className="h-4 w-4" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-xs font-bold text-neutral-900 leading-tight">Admin Overview</div>
-                    <div className="text-[10px] text-neutral-500 truncate">Institutional Governance</div>
-                  </div>
-                </button>
-                
-                <button
-                  type="button"
-                  onClick={() => handleJudgeLogin('teacher', 'T101', 'Prof. Rajesh Iyer (Faculty)')}
-                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-purple-50/80 border border-purple-200/80 hover:border-purple-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group"
-                  title="Login as Faculty (Attendance & Grading)"
-                >
-                  <span className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-600 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                    <Users className="h-4 w-4" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-xs font-bold text-neutral-900 leading-tight">Faculty View</div>
-                    <div className="text-[10px] text-neutral-500 truncate">Attendance & Marks</div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleJudgeLogin('student', '20CS001', 'Aarav Sharma (Cleared)')}
-                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-emerald-50/80 border border-emerald-200/80 hover:border-emerald-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group"
-                  title="Login as Cleared Student (AskAI & Schedule)"
-                >
-                  <span className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                    <GraduationCap className="h-4 w-4" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-xs font-bold text-neutral-900 leading-tight">Student Portal</div>
-                    <div className="text-[10px] text-neutral-500 truncate">Aarav Sharma (Cleared)</div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleJudgeLogin('examination_controller')}
-                  className="p-2.5 sm:p-3 rounded-xl bg-white hover:bg-amber-50/80 border border-amber-200/80 hover:border-amber-400 text-neutral-900 transition-all text-left flex items-start gap-2.5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-98 group"
-                  title="Login as Controller of Examinations"
-                >
-                  <span className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                    <Award className="h-4 w-4" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-xs font-bold text-neutral-900 leading-tight">Exam Controller</div>
-                    <div className="text-[10px] text-neutral-500 truncate">Hall Tickets & Debarment</div>
-                  </div>
-                </button>
-              </div>
-            </div>
           </div>
-
+          
           {/* Bottom Footer Row */}
           <div className="pt-6 border-t border-neutral-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-400">
             <p className="font-normal">

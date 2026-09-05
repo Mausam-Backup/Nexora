@@ -57,7 +57,7 @@ export function NavUser({
 
   const handleLogout = () => {
     logout()
-    navigate('/login')
+    navigate('/auth', { replace: true })
   }
 
   const activeName = authUser?.name || userData.name || user.name || "Set your name"

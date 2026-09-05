@@ -82,7 +82,7 @@ export const MainHeader: React.FC = () => {
         
         {/* Left: Brand Identity & Geometric Clover Logo */}
         <Link 
-          to={role === 'admin' ? '/admin/overview' : role === 'teacher' ? '/teacher/attendance' : role === 'examination_controller' ? '/examination-controller' : '/student/dashboard'} 
+          to={role === 'admin' ? '/admin/overview' : role === 'teacher' ? '/teacher' : role === 'examination_controller' ? '/examination-controller' : '/student/dashboard'} 
           className="flex items-center gap-2.5 group shrink-0"
           title="Nexora ERP"
         >
@@ -103,7 +103,10 @@ export const MainHeader: React.FC = () => {
         {/* Center: Perfectly Spaced Navigation Links */}
         <nav className="hidden lg:flex items-center gap-7 xl:gap-9 text-xs sm:text-sm font-medium text-[#D8B4AD]">
           {navLinks.map((link) => {
-            const isActive = location.pathname === link.to || (link.to !== '/' && location.pathname.startsWith(link.to))
+            const isRootPrefix = link.to === '/teacher' || link.to === '/admin' || link.to === '/student' || link.to === '/dashboard';
+            const isActive = isRootPrefix
+              ? (location.pathname === link.to || location.pathname === `${link.to}/` || (link.to === '/teacher' && location.pathname === '/teacher/overview') || (link.to === '/dashboard' && location.pathname === '/overview'))
+              : (location.pathname === link.to || location.pathname.startsWith(`${link.to}/`));
             return (
               <NavLink
                 key={link.to}

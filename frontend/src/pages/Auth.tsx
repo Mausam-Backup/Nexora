@@ -64,6 +64,20 @@ export default function Auth() {
   
   const [isSignUp, setIsSignUp] = useState(searchParams.get('mode') === 'signup')
 
+  // Ensure browser back button while on /auth cleanly returns to main home page ('/')
+  useEffect(() => {
+    const handlePopState = () => {
+      window.location.href = "/"
+    }
+
+    window.history.pushState({ authPage: true }, "", window.location.href)
+    window.addEventListener("popstate", handlePopState)
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState)
+    }
+  }, [])
+
   // Sync mode with URL query params
   useEffect(() => {
     const mode = searchParams.get('mode')
@@ -75,9 +89,9 @@ export default function Auth() {
     setIsSignUp(signUp)
     setFormStep(1)
     if (signUp) {
-      setSearchParams({ mode: 'signup' })
+      setSearchParams({ mode: 'signup' }, { replace: true })
     } else {
-      setSearchParams({})
+      setSearchParams({}, { replace: true })
     }
   }
 

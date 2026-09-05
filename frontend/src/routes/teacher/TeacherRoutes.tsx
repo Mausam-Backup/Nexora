@@ -78,7 +78,7 @@ export const TeacherRoutes: React.FC = () => {
           <TeacherAttendance />
         </RoleRoute>
       } />
-      <Route path="*" element={<Navigate to="/teacher/attendance" replace />} />
+      <Route path="*" element={<Navigate to="/teacher" replace />} />
     </Routes>
   )
 }

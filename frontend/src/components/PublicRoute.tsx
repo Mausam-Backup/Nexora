@@ -34,7 +34,7 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({
       role === 'admin' 
         ? '/admin/overview' 
         : role === 'teacher' 
-        ? '/teacher/attendance' 
+        ? '/teacher' 
         : role === 'examination_controller' 
         ? '/examination-controller' 
         : '/student/dashboard'

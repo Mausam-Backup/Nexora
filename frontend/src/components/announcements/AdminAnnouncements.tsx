@@ -35,9 +35,22 @@ const mockAdminAnnouncements = [
 ]
 
 export const AdminAnnouncements: React.FC = () => {
-  const [announcements, setAnnouncements] = useState(mockAdminAnnouncements)
+  const [announcements, setAnnouncements] = useState<any[]>(() => {
+    const saved = localStorage.getItem('campussync_announcements')
+    if (saved) {
+      try {
+        return JSON.parse(saved)
+      } catch (e) {}
+    }
+    return mockAdminAnnouncements
+  })
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const isMobile = useIsMobile()
+
+  const persist = (updated: any[]) => {
+    setAnnouncements(updated)
+    localStorage.setItem('campussync_announcements', JSON.stringify(updated))
+  }
 
   const handleCreateAnnouncement = (newAnnouncement: any) => {
     const announcement = {
@@ -46,11 +59,13 @@ export const AdminAnnouncements: React.FC = () => {
       author: 'Administration',
       date: new Date()
     }
-    setAnnouncements([announcement, ...announcements])
+    const updated = [announcement, ...announcements]
+    persist(updated)
   }
 
   const handleDeleteAnnouncement = (id: string) => {
-    setAnnouncements(announcements.filter(a => a.id !== id))
+    const updated = announcements.filter(a => a.id !== id)
+    persist(updated)
   }
 
   return (

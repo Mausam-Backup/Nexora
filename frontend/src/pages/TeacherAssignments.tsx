@@ -150,36 +150,52 @@ export default function TeacherAssignments() {
       'CS304-THU-3': []
     }
     
+    const savedAssignments = localStorage.getItem('campussync_teacher_assignments')
+    if (savedAssignments) {
+      try {
+        setAssignments(JSON.parse(savedAssignments))
+        return
+      } catch (e) {}
+    }
     setAssignments(sampleAssignments)
+    localStorage.setItem('campussync_teacher_assignments', JSON.stringify(sampleAssignments))
   }, [])
+
+  const persistAssignments = (updated: Record<string, Assignment[]>) => {
+    setAssignments(updated)
+    localStorage.setItem('campussync_teacher_assignments', JSON.stringify(updated))
+  }
 
   const handleCreateAssignment = () => {
     setIsCreateDialogOpen(true)
   }
 
   const handleAssignmentCreated = (newAssignment: Assignment) => {
-    setAssignments(prev => ({
-      ...prev,
-      [selectedSlot]: [...(prev[selectedSlot] || []), newAssignment]
-    }))
+    const updated = {
+      ...assignments,
+      [selectedSlot]: [...(assignments[selectedSlot] || []), newAssignment]
+    }
+    persistAssignments(updated)
   }
 
   const handleAssignmentUpdated = (updatedAssignment: Assignment) => {
-    setAssignments(prev => ({
-      ...prev,
-      [selectedSlot]: (prev[selectedSlot] || []).map(assignment => 
+    const updated = {
+      ...assignments,
+      [selectedSlot]: (assignments[selectedSlot] || []).map(assignment => 
         assignment.id === updatedAssignment.id ? updatedAssignment : assignment
       )
-    }))
+    }
+    persistAssignments(updated)
   }
 
   const handleAssignmentDeleted = (assignmentId: string) => {
-    setAssignments(prev => ({
-      ...prev,
-      [selectedSlot]: (prev[selectedSlot] || []).filter(assignment => 
+    const updated = {
+      ...assignments,
+      [selectedSlot]: (assignments[selectedSlot] || []).filter(assignment => 
         assignment.id !== assignmentId
       )
-    }))
+    }
+    persistAssignments(updated)
   }
 
   const handleViewAssignment = (assignment: Assignment) => {

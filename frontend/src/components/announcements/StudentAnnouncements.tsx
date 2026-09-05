@@ -110,7 +110,18 @@ export const StudentAnnouncements: React.FC = () => {
       })
     }
 
-    return [...list, ...mockAnnouncements]
+    let savedCustom: any[] = []
+    const saved = localStorage.getItem('campussync_announcements')
+    if (saved) {
+      try {
+        savedCustom = JSON.parse(saved).map((a: any) => ({
+          ...a,
+          date: new Date(a.date || a.created_at || Date.now())
+        }))
+      } catch (e) {}
+    }
+
+    return [...list, ...savedCustom, ...mockAnnouncements]
   }, [student])
 
   const filteredAnnouncements = erpAnnouncements

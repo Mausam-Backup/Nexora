@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./frontend/public/nexora-logo.svg" alt="Nexora ERP Logo" width="80" height="80" />
+<img src="./frontend/public/nexora-logo.svg" alt="Nexora ERP Logo" width="100" height="100" />
 
 # Nexora — Enterprise ERP for Collegiate Institutions
 
@@ -54,6 +54,77 @@
 | 📈 | **Scalability & Future Improvements** | Current status and planned enhancements | [Go](#15-scalability--future-improvements) |
 | 🤝 | **Contributing** | Team AC-DC members and contribution guidelines | [Go](#16-contributing) |
 | 📜 | **License** | ISC open-source licensing terms | [Go](#17-license) |
+
+---
+
+## 📸 UI Showcase
+
+> *Nexora ERP — live at **[nexora-frontend-five-tan.vercel.app](https://nexora-frontend-five-tan.vercel.app/)***.
+
+<!-- Row 1 — Full-width: Landing Page Hero -->
+<table width="100%">
+  <tr>
+    <td align="center">
+      <img
+        src="./Project%20Docs/screenshots/01-landing-page.png"
+        alt="Nexora Landing Page — Hero section with VIT Bhopal campus backdrop, navigation bar (Overview · Architecture · Core Modules · 3D Campus Tour · Ledger Specs · Whitepapers), and dual CTA buttons: Explore Architecture & Contact Us"
+        width="100%"
+      />
+      <br />
+      <sub><b>🏠 Landing Page</b> — Public-facing marketing site with 3D Campus Tour, Architecture deep-dive, and Ledger Spec downloads</sub>
+    </td>
+  </tr>
+</table>
+
+<!-- Row 2 — 2-column: Admin Dual-View Mockup · Sign In / Auth -->
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <img
+        src="./Project Docs/screenshots/Screenshot (554).png"
+        alt="Nexora Admin Dashboard — mobile and desktop dual-view mockup showing the Executive ERP Console with Dr. R. K. Sharma (Dean Academics), Weekly Attendance Heatmap, Student Growth & Admissions Trajectory chart, Collegiate Infrastructure stats (1,650 Students · 50 Faculty · 94.6% Avg Att), and Financial Overview panel"
+        width="100%"
+      />
+      <br />
+      <sub><b>📱 Admin Console — Mobile & Desktop</b> — Responsive dual-view of the Executive ERP Console with attendance heatmap, student growth chart, and financial overview</sub>
+    </td>
+    <td width="50%" align="center">
+      <img
+        src="./Project Docs/screenshots/Screenshot (555).png"
+        alt="Nexora Sign In Page — role-selector login UI with tabs for Student · Faculty · Admin · CoE · Parent, email/password fields, Forgot Password link, and Hackathon Evaluator Quick Pass shortcuts (Admin Overview · Faculty View · Student Cle · Exam Contr)"
+        width="100%"
+      />
+      <br />
+      <sub><b>🔐 Sign In / Role Select</b> — Unified auth portal with role-based quick-access for Admin, Faculty, Student, CoE, and Parent — plus one-click Hackathon Evaluator Pass</sub>
+    </td>
+  </tr>
+</table>
+
+<!-- Row 3 — 2-column: Executive Admin Overview · Billing Management -->
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <img
+        src="./Project Docs/screenshots/Screenshot (556).png"
+        alt="Nexora Executive Admin Overview — PS-6 ERP Core Operations sidebar (Spreadsheet Audit Ledger · Manage Students · Manage Faculty Roster · Institutional Fees · Academic Operations · Branch Directories · Digital Admin ID Pass · Campus Broadcasts · AI ERP Copilot), main panel with Dr. R. K. Sharma executive card, Student Growth & Admissions Trajectory line chart, Live Classroom Broadcast (CS301 Section A), Collegiate Infrastructure widget, Weekly Attendance Heatmap (CSE/ECE/MECH/IT), and Financial Overview bar chart"
+        width="100%"
+      />
+      <br />
+      <sub><b>👑 Executive Admin Overview</b> — Full command centre: live broadcast feed, student growth analytics, department-wise attendance heatmap, and financial KPIs</sub>
+    </td>
+    <td width="50%" align="center">
+      <img
+        src="./Project Docs/screenshots/Screenshot (557).png"
+        alt="Nexora Billing Management — header KPI strip (Total Revenue ₹45.2L · Student Bills 284 · Teacher Payroll 67 · Collection Rate 94.2%), tabbed view (Overview · Student Billing · Teacher Payroll · Analytics), Recent Student Bills table (John Doe ₹75,000 paid · Jane Smith ₹5,000 pending · Mike Johnson ₹45,000 overdue), and Recent Teacher Payments (Dr. Sarah Johnson ₹85,000 paid · Prof. Michael Brown ₹25,000 pending · Dr. Emily Davis ₹78,000 pending)"
+        width="100%"
+      />
+      <br />
+      <sub><b>💰 Billing Management</b> — Comprehensive fee ledger: ₹45.2L total revenue, 94.2% collection rate, student invoicing, teacher payroll, and Export CSV / Print Financial Ledger</sub>
+    </td>
+  </tr>
+</table>
+
+> 📂 **Add screenshots**: Save the 5 UI screenshots as `01-landing-page.png`, `02-admin-dashboard-mockup.png`, `03-sign-in-page.png`, `04-executive-admin-overview.png`, `05-billing-management.png` inside `Project Docs/screenshots/`.
 
 ---
 

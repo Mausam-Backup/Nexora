@@ -18,6 +18,19 @@ export default defineConfig(({ mode }) => ({
     allowedHosts: true,
     cors: true,
   },
+  envPrefix: ['VITE_', 'SUPABASE_'],
+  define: {
+    'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(
+      process.env.VITE_SUPABASE_URL ||
+      process.env.SUPABASE_URL ||
+      'https://nyfcwrctaijipmaqozes.supabase.co'
+    ),
+    'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(
+      process.env.VITE_SUPABASE_ANON_KEY ||
+      process.env.SUPABASE_ANON_KEY ||
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55ZmN3cmN0YWlqaXBtYXFvemVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1NDgyMjcsImV4cCI6MjEwNDEyNDIyN30.xq6MMy-lHASOy_8SRz-8HniH2jp-MJuUEbrKxvRws-4'
+    ),
+  },
   plugins: [
     react(),
   ].filter(Boolean),

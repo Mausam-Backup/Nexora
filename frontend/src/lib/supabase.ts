@@ -6,8 +6,20 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const SUPABASE_URL = (import.meta.env?.VITE_SUPABASE_URL || '').trim()
-const SUPABASE_ANON_KEY = (import.meta.env?.VITE_SUPABASE_ANON_KEY || '').trim()
+const PROD_SUPABASE_URL = 'https://nyfcwrctaijipmaqozes.supabase.co'
+const PROD_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55ZmN3cmN0YWlqaXBtYXFvemVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1NDgyMjcsImV4cCI6MjEwNDEyNDIyN30.xq6MMy-lHASOy_8SRz-8HniH2jp-MJuUEbrKxvRws-4'
+
+const SUPABASE_URL = (
+  import.meta.env?.VITE_SUPABASE_URL ||
+  import.meta.env?.SUPABASE_URL ||
+  PROD_SUPABASE_URL
+).trim()
+
+const SUPABASE_ANON_KEY = (
+  import.meta.env?.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env?.SUPABASE_ANON_KEY ||
+  PROD_SUPABASE_ANON_KEY
+).trim()
 
 export const isSupabaseConfigured = Boolean(
   SUPABASE_URL && 
@@ -16,15 +28,13 @@ export const isSupabaseConfigured = Boolean(
   !SUPABASE_ANON_KEY.includes('placeholder')
 )
 
-// Raw real Supabase client instance (if configured)
-export const rawSupabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-      },
-    })
-  : null
+// Live Supabase client instance (connected to production Supabase)
+export const rawSupabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+})
 
 interface QueryFilter {
   column: string

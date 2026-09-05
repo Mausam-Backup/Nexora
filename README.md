@@ -1,410 +1,738 @@
 <div align="center">
 
-# 🏛️ Nexora — CampusSync ERP
-### Enterprise-Grade Integrated Student Management & Reconciliation System
-**Problem Statement PS-6: ERP-based Integrated Student Management System**  
-*Category: Pure Hard Development • Hackathon Finalist Edition*
+<img src="./frontend/public/favicon.ico" alt="Nexora ERP Logo" width="80" height="80" />
 
-[![React](https://img.shields.io/badge/Frontend-React%2018%20%7C%20TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Bundler-Vite%205.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Node.js](https://img.shields.io/badge/Backend-Node.js%20%7C%20Express-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Storage](https://img.shields.io/badge/Database-PostgreSQL%20Schema%20%2B%20Offline%20Cache-336791?style=for-the-badge&logo=postgresql&logoColor=white)](db.sql)
-[![Realtime](https://img.shields.io/badge/Sync-BroadcastChannel%20Bus%20%280ms%29-FF4154?style=for-the-badge&logo=webrtc&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel)
-[![Tailwind](https://img.shields.io/badge/Styling-Tailwind%20CSS%20%7C%20shadcn-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+# Nexora — Enterprise ERP for Collegiate Institutions
 
-<p align="center">
-  <b>A unified collegiate platform replacing disconnected spreadsheets, paper attendance registers, cash collection receipts, and isolated mark sheets with a single, synchronized relational ledger.</b>
-</p>
+**Open-Source · Anti-Mismatch Reconciliation Engine · Hackathon Edition — SMART VIThackathon(SVH)-2026**
 
----
+*A full-stack, single-ledger ERP platform replacing disconnected spreadsheets, paper attendance registers, cash receipts, and isolated mark sheets with a unified relational system. Powered by an Anti-Mismatch Reconciliation Engine, it bridges the gap between academic, financial, and administrative data — with real-time BroadcastChannel sync, cryptographic hall-ticket gating, and a role-based three-panel command centre for 1,650+ students across four departments.*
 
-[🚀 Quick Start](#-quick-start--installation) •
-[🏛️ Problem & Solution](#-the-problem-statement--our-solution) •
-[👑 Master Judge Evaluation Mode](#-master-judge-evaluation-mode) •
-[⚡ 10 High-Impact Cross-Module Features](#-10-high-impact-cross-module-features) •
-[📐 System Architecture](#-system-architecture--data-flow) •
-[📊 Database Schema (db.sql)](#-relational-database-schema-dbsql) •
-[📑 Export Engine & Watermarking](#-institutional-report--export-engine) •
-[🎯 3-Minute Judge Demo Script](#-judge--evaluator-3-minute-walkthrough-script)
-
----
+<!-- Frontend -->
+[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
+<br />
+<!-- Backend -->
+[![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-4.18-000000?style=for-the-badge&logo=express)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-7.x-47A248?style=for-the-badge&logo=mongodb)](https://mongodb.com)
+[![Redis](https://img.shields.io/badge/Redis-7.x-DC382D?style=for-the-badge&logo=redis)](https://redis.io)
+<br />
+<!-- Infrastructure -->
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker)](https://docker.com)
+[![Supabase](https://img.shields.io/badge/Supabase-Auth%20%26%20DB-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com)
+[![JWT](https://img.shields.io/badge/Auth-JWT%20Bearer-000000?style=for-the-badge&logo=jsonwebtokens)](https://jwt.io/)
+[![BroadcastChannel](https://img.shields.io/badge/Sync-BroadcastChannel%20Bus-FF4154?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel)
+<br />
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg?style=for-the-badge)](./package.json)
 
 </div>
 
-## 📌 The Problem Statement & Our Solution
+---
 
-### The Industry Challenge (PS-6)
-> *"Colleges run admissions, attendance, fees, exams, and results on disconnected spreadsheets and legacy tools, causing data mismatches and manual reconciliation work."*
+## 📑 Table of Contents
 
-Traditional colleges suffer from departmental silos:
-```
-  [Accounts Dept Excel]           [Faculty Paper Register]         [Exam Cell Spreadsheet]
-          │                                  │                                │
-          ▼                                  ▼                                ▼
-Cash paid omitted in sheet        Absences recorded on paper       Student gets Hall Ticket
-  ➔ Student flagged unpaid          ➔ 62% attendance uncalculated    ➔ Debarred on exam day!
-          │                                  │                                │
-          └──────────────────────────┬───────────────────────────────────────┘
-                                     │
-                 ❌ MANUAL RECONCILIATION NIGHTMARE
-                    • Delays in result processing (3–6 weeks)
-                    • Financial revenue leakage
-                    • Disputed grades and examination hall fraud
-```
-
-### The Nexora Solution
-Nexora unifies all administrative functions onto a **single relational state engine**. A mutation in any department immediately and automatically cascades across the entire institution:
-
-```
-                                  ╔═══════════════════════════════════╗
-                                  ║   NEXORA UNIFIED STATE ENGINE     ║
-                                  ║   `campussync-unified-erp-v1`     ║
-                                  ╚═══════════════════════════════════╝
-                                                    │
-                 ┌──────────────────────────────────┼──────────────────────────────────┐
-                 │                                  │                                  │
-                 ▼                                  ▼                                  ▼
-      [FACULTY ATTENDANCE]                [STUDENT BILLING]                 [EXAMINATION CELL]
-  • Professor marks 1 absence.        • Student clears pending fees.    • Evaluates Attendance ≥ 75%
-  • CS301 drops below 75%.            • Receipt auto-generated.        • Evaluates Fee Clearance = True
-  • `attendanceClearance: false`.     • `feeClearance: true`.           • Unlocks Hall Ticket + QR Code.
-                 │                                  │                                  ▲
-                 └──────────────────────────────────┴──────────────────────────────────┘
-                                                    │
-                                  ✅ 100% AUTOMATED CROSS-MODULE GATE
-                                     Zero manual reconciliation needed
-```
+| Icon | Section | Link |
+| :---: | :--- | :--- |
+| 🎯 | **Hackathon Problem Statement & Solution Mapping** | [Go](#-hackathon-problem-statement--solution-mapping) |
+| 📝 | **Executive Summary** | [Go](#1-executive-summary) |
+| 🏗️ | **System Architecture & Data Flow** | [Go](#2-system-architecture--data-flow) |
+| 🏛️ | **Three-Panel ERP Architecture** | [Go](#3-three-panel-erp-architecture) |
+| ⚙️ | **Anti-Mismatch Reconciliation Engine** | [Go](#4-anti-mismatch-reconciliation-engine) |
+| 💻 | **Technology Stack** | [Go](#5-technology-stack) |
+| 🔄 | **Application Workflow** | [Go](#6-application-workflow) |
+| 🌊 | **Data Flow & State Management** | [Go](#7-data-flow--state-management) |
+| 📁 | **Project Structure** | [Go](#8-project-structure) |
+| 🔌 | **API Reference** | [Go](#9-api-reference) |
+| ⚙️ | **Environment Configuration** | [Go](#10-environment-configuration) |
+| 🚀 | **Installation & Local Setup** | [Go](#11-installation--local-setup) |
+| 🐳 | **Docker Deployment** | [Go](#12-docker-deployment) |
+| 🔒 | **Security Considerations** | [Go](#13-security-considerations) |
+| 📖 | **Feature Documentation** | [Go](#14-feature-documentation) |
+| 📈 | **Scalability & Future Improvements** | [Go](#15-scalability--future-improvements) |
+| 🤝 | **Contributing** | [Go](#16-contributing) |
+| 📜 | **License** | [Go](#17-license) |
 
 ---
 
-## 👑 Master Judge Evaluation Mode
+## 🎯 Hackathon Problem Statement & Solution Mapping
 
-To enable instant, frictionless evaluation by hackathon judges, Nexora features a dedicated **Master Judge Suite**:
+> **Problem Track**: *PS-6 — ERP-Based Integrated Student Management System*
+> **Mission**: Replace disconnected spreadsheets, paper attendance registers, cash collection receipts, and isolated mark sheets with a single, synchronized relational ERP ledger.
 
-1. **"Login as Hackathon Judge (Master Auditor)"**: One-click login giving unrestricted super-admin privileges across Admissions, Faculty, Billing, Examination Controller, and AI tools.
-2. **"Judge Split View" Launcher**: Opens dual synchronized browser windows side-by-side (`/teacher/attendance` and `/view-marks`) to verify **0ms multi-window BroadcastChannel state propagation**.
-3. **Live Anti-Mismatch Status Pill**: Header indicator pulsing `Audit: 100% Reconciled` (clickable for an instant real-time audit scan).
-4. **REST Service Sync Badge**: Live health badge displaying `REST: Synced` (or `REST: Offline Cache`) verifying active communication with `http://localhost:5001/api/erp/health`.
-
----
-
-## ⚡ 10 High-Impact Cross-Module Features
-
-| # | Feature Name | Location | Description & Judge Impact |
-| :---: | :--- | :--- | :--- |
-| **1** | **Interactive Spreadsheet Ingestion & Anomaly Reconciliation** | [`AdminOverview.tsx`](frontend/src/pages/AdminOverview.tsx) | Simulates importing 3 legacy Excel spreadsheets with 3 deliberate mismatches, instantly flagging discrepancies and auto-reconciling into the single unified ledger. |
-| **2** | **Statutory Parent Notice Generator** | [`ManageStudents.tsx`](frontend/src/pages/ManageStudents.tsx) | 3-tab dialog producing official PDF warning letters, SMS alerts, and email notifications for debarred candidates citing AICTE/UGC regulations. |
-| **3** | **Zero-Latency Dual-Window Live Sync** | [`DemoRoleSwitcher.tsx`](frontend/src/components/layout/DemoRoleSwitcher.tsx) | Changes made in Faculty attendance instantly lock or unlock hall tickets in the Student/CoE window in 0ms without page reload via `BroadcastChannel`. |
-| **4** | **Debarred Lock & Filter in Marks Upload** | [`UploadMarks.tsx`](frontend/src/pages/UploadMarks.tsx) | Quick filter buttons (`All`, `Cleared for Exam`, `Debarred`) with red statutory locks preventing faculty from uploading external scores for ineligible students. |
-| **5** | **Candidate QR Gatekeeper Scanner** | [`HallTicketGatekeeper.tsx`](frontend/src/pages/examination-controller/HallTicketGatekeeper.tsx) | Door barcode/QR scanner simulating exam hall entry checks (`20CS001` granted vs `20CS003` denied with statutory cause). |
-| **6** | **Unified Fee Payment to Hall Ticket Clearance** | [`StudentBilling.tsx`](frontend/src/pages/StudentBilling.tsx) | Settling an overdue tuition invoice immediately lifts financial hold flags and releases the official semester hall ticket. |
-| **7** | **Grace Marks Batch Moderation Engine** | [`MarksTrackerModeration.tsx`](frontend/src/pages/examination-controller/MarksTrackerModeration.tsx) | Batch applies configurable grace marks (+3) to near-pass candidates (37–39/100), recalculates SGPA/CGPA, and generates a formal moderation audit log. |
-| **8** | **Automated Watermarked Grade Cards** | [`StudentMarks.tsx`](frontend/src/pages/StudentMarks.tsx) | Exports official semester grade cards with cryptographic verification IDs, dynamic QR codes, and `CAMPUSSYNC UNIVERSITY • OFFICIAL` watermarks. |
-| **9** | **Full Institutional Audit CSV Export** | [`AdminOverview.tsx`](frontend/src/pages/AdminOverview.tsx) | Downloads the complete institutional anti-mismatch compliance log (`Institutional_Anti_Mismatch_Audit_Ledger.csv`). |
-| **10** | **Domain-Tuned ERP AI Copilot** | [`AskAI.tsx`](frontend/src/pages/AskAI.tsx) | Context-aware institutional assistant answering questions regarding attendance gates, fee holds, and graduation SGPA formulas. |
-
----
-
-## 📐 System Architecture & Data Flow
-
-Nexora is built as a **High-Reliability Hybrid Architecture**: an offline-first reactive frontend combined with zero-latency browser bus synchronization, backed by a persistent Node.js/Express REST server with Bearer token authentication.
-
-```
-┌─────────────────────────────────────────────────────────────────────────────────────────┐
-│                                    PRESENTATION LAYER                                   │
-│   React 18  •  TypeScript  •  Tailwind CSS  •  shadcn/ui  •  Lucide Icons  •  Vite 5   │
-├─────────────────────────────────────────────────────────────────────────────────────────┤
-│    Admin Dashboard    │   Faculty Attendance   │   Student Gradebook   │   Exams & Fees │
-│   (Reconciliation)    │   (Batch Marking)      │   (Live SGPA/CGPA)    │   (Gatekeeper) │
-└──────────────────────────────────────────┬──────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌─────────────────────────────────────────────────────────────────────────────────────────┐
-│                           REACTIVE EVENT & MUTATION ENGINE                              │
-│                                 `useERPData.ts`                                         │
-│  • Atomic student mutations               • Real-time SGPA/CGPA recomputation           │
-│  • Statutory 75% threshold evaluation      • Cross-module referral constraint checks     │
-│  • Bearer Token Headers for REST calls    • BroadcastChannel multi-tab dispatcher       │
-└──────────────────┬───────────────────────────────────────────────┬──────────────────────┘
-                   │                                               │
-                   ▼ (0ms Event Bus)                               ▼ (Token-Authorized REST)
-┌──────────────────────────────────────────────┐  ┌───────────────────────────────────────┐
-│         BROWSER BROADCAST BUS                │  │         EXPRESS REST BACKEND          │
-│    `BroadcastChannel('campussync_bus')`      │  │        Port 5001  •  Node.js          │
-│  • Window 1 (Faculty) ➔ Window 2 (Student)   │  │  • `authMiddleware.js` (Bearer Auth)  │
-│  • Real-time tab sync without page reload    │  │  • `GET  /api/erp/health`             │
-│  • Fallback: Window `storage` event listener │  │  • `GET  /api/erp/state`              │
-│                                              │  │  • `POST /api/erp/sync`               │
-└──────────────────────────────────────────────┘  └───────────────────┬───────────────────┘
-                                                                      │
-                                                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────────────────┐
-│                               PERSISTENT STORAGE ENGINE                                 │
-│  Client Tier: `localStorage` (`campussync-unified-erp-v1`)                              │
-│  Server Tier: Resilient File-Backed Store (`backend/data/erp_state.json`)               │
-│  Relational Standard: Production-Grade PostgreSQL Schema (`db.sql` with Foreign Keys)   │
-└─────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 📊 Relational Database Schema (`db.sql`)
-
-While the demo uses an offline-first reactive client cache and Express REST synchronization for hackathon resilience, the complete production relational data model is documented in **[`db.sql`](db.sql)** (1,287 lines).
-
-Key relational structures:
-* `profiles` (Primary Key: `id`, Role-based clearance constraints)
-* `courses` & `branches` (Foreign Key relations to departments)
-* `attendance_records` (Foreign Keys: `student_id` ➔ `profiles(id)`, `subject_id` ➔ `courses(id)`)
-* `student_marks` (Foreign Keys: `student_id`, `course_code`, statutory SGPA grading constraints)
-* `student_bills` & `transaction_records` (Financial ledger with foreign keys to student profiles)
-* `exam_hall_tickets` (Statutory gatekeeper table linked to attendance % and fee clearance triggers)
-
----
-
-## 📑 Institutional Report & Export Engine
-
-Nexora includes a dedicated institutional export suite in **[`exportUtils.ts`](frontend/src/utils/exportUtils.ts)**:
-
-1. **RFC 4180-Compliant CSV Downloads**: Direct client-side binary Blob generation.
-2. **Official Print-to-PDF Engine**: Features `@media print` styling, background watermarking (`CAMPUSSYNC UNIVERSITY • OFFICIAL`), cryptographic verification hash codes, and Registrar signature stamps.
-
-```
-                              EXPORT MATRIX
-  ┌───────────────────────┬──────────────┬───────────────────┐
-  │ Module                │ CSV Export   │ Styled Print/PDF  │
-  ├───────────────────────┼──────────────┼───────────────────┤
-  │ Anti-Mismatch Audit   │ Supported    │ Institutional CSV │
-  │ Marks & Transcripts   │ Supported    │ Watermarked Grade │
-  │ Faculty Attendance    │ Supported    │ Register Ledger   │
-  │ Student Attendance    │ Supported    │ Personal Record   │
-  │ Fee Bills & Payments  │ Supported    │ Official Voucher  │
-  │ Student Directory     │ Supported    │ Registry Ledger   │
-  │ Examination Schedules │ Supported    │ Admit Card / Pass │
-  └───────────────────────┴──────────────┴───────────────────┘
-```
-
----
-
-## 🎯 Judge & Evaluator 3-Minute Walkthrough Script
-
-Follow this exact sequence for a high-impact demonstration:
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ MINUTE 1: The Problem & Spreadsheet Ingestion Reconciliation               │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 1. Open http://localhost:5000 and click "Login as Hackathon Judge".         │
-│ 2. Point to the top card: "Colleges run on disconnected spreadsheets..."    │
-│ 3. Click "Simulate Legacy Spreadsheets Ingestion" -> Click "Resolve & Sync" │
-│ 4. Click "Export Audit CSV" to show immediate regulatory compliance.        │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ MINUTE 2: Live Dual-Window Real-Time Concurrency                           │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 1. Click "Judge Split View" in the top header (opens two side-by-side tabs). │
-│ 2. Window A: Faculty "Take Attendance" -> Mark student Rohan Verma Absent.  │
-│ 3. Window B: CoE "Hall Ticket Gatekeeper" -> Instantly see Rohan drop below │
-│    75% and his Hall Ticket turn RED / DEBARRED in 0ms without page reload.  │
-│ 4. Click "Parent Notice" on the student row to show the statutory AICTE     │
-│    notice with SMS/Email preview.                                           │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ MINUTE 3: Controller of Examinations & Official Transcripts                 │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 1. Switch to "Marks Submission & Moderation Engine".                        │
-│ 2. Click "Apply Grace Marks Moderation" -> Add +3 grace marks to borderline │
-│    failing students and authorize policy.                                   │
-│ 3. Open Student "View Marks & SGPA" -> Click "Print Official Grade Card"     │
-│    to showcase the official institutional watermark and QR verification.    │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🚀 Quick Start & Installation
-
-### Prerequisites
-- **Node.js**: v18.0.0 or higher
-- **npm**: v9.0.0 or higher
-
-### 1. Clone & Install
-```bash
-git clone https://github.com/Mausam5055/Nexora.git
-cd Nexora
-
-# Install root dependencies
-npm install
-
-# Install workspace dependencies (frontend & backend)
-npm run install:all
-```
-
-### 2. Launch the Application
-```bash
-# Runs both the React Vite frontend (Port 5000) and the Node.js Express backend (Port 5001) concurrently:
-npm run dev
-```
-
-### 3. Build Verification
-```bash
-# Validates TypeScript compilation and builds minified assets
-npm run build
-```
-*(Verified: Compiles in ~14s with 0 errors across 3,200+ modules).*
-
----
-
-## 🏆 Hackathon Competitive Differentiation Matrix
-
-| Evaluation Dimension | Typical Hackathon ERP Submission | Nexora (CampusSync) |
+| Hackathon Requirement | Target Benchmark | Nexora ERP Implementation |
 | :--- | :--- | :--- |
-| **Data Architecture** | Separate mock arrays in each file with mismatched IDs | **Single relational store** (`campussync-unified-erp-v1`) linking all modules |
-| **Multi-Window Sync** | Requires manual page reload; data desynchronizes | **0ms instantaneous live sync** via `BroadcastChannel` event bus |
-| **Role-Based Access** | Single student dashboard with cosmetic role switcher | **Dedicated routes** (`/admin`, `/teacher`, `/student`, `/coe`) + Master Judge Mode |
-| **Problem Alignment** | Generic CRUD forms ignoring the problem statement | **Anti-Mismatch Ledger & Excel Ingestion Simulator** solving PS-6 directly |
-| **Reports & Exports** | Dead buttons triggering alerts | **Watermarked print-to-PDF transcripts, official receipts, & CSV audits** |
-| **AI Integration** | Disconnected ChatGPT wrapper | **Context-aware copilot** aware of live GPA, attendance %, and fee holds |
-| **Security & Auth** | Pure client-side state without backend verification | **Bearer token authentication headers** with Express role middleware |
+| **Admissions & Enrollment** | Unified student registry | **Single-source student master** with branch, section, programme, contact data; CSV bulk import; debarment flag propagation |
+| **Attendance Management** | Digital attendance with threshold alerts | **Faculty daily roster submission**, 75% threshold auto-debarment, Admin real-time feed, subject-wise breakdown |
+| **Fee Management** | Digital fee collection and tracking | **Invoicing, receipt generation, pending ledger**, due-date tracking, collection-rate KPIs, CSV export |
+| **Examination & Results** | Hall-ticket gating and result publishing | **Cryptographic SHA-256 hall-ticket tokens**, CoE controller workflow, admit-card gating at 75% + fee-cleared |
+| **Anti-Mismatch Reconciliation** | Zero manual reconciliation | **Anti-Mismatch Engine** cross-validates Admissions ↔ Attendance ↔ Fees ↔ Exams; 0-discrepancy audit ledger as CSV |
+| **Role-Based Access** | Admin / Faculty / Student separation | **Three distinct dashboards** with JWT-authenticated role routing; CoE, Finance, Library sub-roles |
 
 ---
 
-## 👨‍💻 Team & Authorship
+## 📝 1. Executive Summary
 
-Developed for the **12-Hour College Hackathon — Problem Statement PS-6 (ERP-based Integrated Student Management System)**.
+Nexora is an open-source, production-grade **collegiate ERP platform** built for SMART VIThackathon(SVH)-2026, solving PS-6. It deploys a unified relational state layer — persisted via Supabase PostgreSQL and mirrored in a local offline cache — synchronized across all browser tabs via a zero-latency **BroadcastChannel event bus**.
 
-- **Lead Full-Stack Architect & Core Developer**: [Mausam Kar](https://github.com/Mausam5055)
-- **Affiliation**: Computer Science & Engineering, VIT Bhopal University
-- **License**: MIT Open Source
+**The platform solves three critical institutional data failures:**
+
+1. **Attendance-Fee Mismatch**: A student clears fees but the attendance register is not updated. Nexora's Anti-Mismatch Engine cross-validates both, raises automated discrepancies, and blocks hall-ticket issuance until cleared.
+
+2. **Hall Ticket Gating Failure**: Students receive exam admit cards despite failing attendance or having pending fees. Nexora implements a **cryptographic SHA-256 gating layer** — every hall ticket is a signed token verifiable by the invigilator.
+
+3. **No Single Source of Truth**: Marks in Excel, attendance in paper registers, fees in Tally — three systems, three versions of reality. Nexora provides a **single relational ledger** where every entity links back to a student master record.
+
+The platform delivers:
+- Real-time 0-discrepancy institutional audit across all modules
+- Role-based three-panel command centres (Admin / Faculty / Student / CoE)
+- Cryptographic hall-ticket generation with QR scanning
+- Fee invoicing, receipt generation, and pending ledger
+- Subject-wise attendance with department-level heatmaps and radar charts
+- CoE examination workflow (seating plans, invigilators, results publishing)
+- Watermarked PDF export engine for all institutional reports
+- Three.js WebGL global animated background with pastel shredder column system
 
 ---
 
-<div align="center">
-  <b>Built with architectural rigor, domain authenticity, and extreme performance.</b><br>
-  <sub>Designed to eliminate spreadsheets and modernize campus administration.</sub>
-</div>
+## 🏗️ 2. System Architecture & Data Flow
 
-## 🤖 Context-Aware ERP AI Copilot
+### 🏛️ Backend Architecture Diagram
 
-Located in **[AskAI.tsx](frontend/src/pages/AskAI.tsx)**, the AI assistant is not just a generic chatbot—it is an **integrated ERP copilot**.
+![Nexora ERP Backend Architecture](./Project%20Docs/CampusSync%20Backend%20Architecture.png)
+
+*Multi-layer architecture: Client Panels (Teacher · Admin · Student) → Express.js Server (Middleware Layer: Auth JWT · Validation · Logging · Rate Limiting · Error Handling) → Controller Layer (Admin Ctrl · Teacher Ctrl · Student Ctrl · Shared Ctrl · CoE Ctrl · Media Ctrl · Blog Ctrl · Billing Ctrl) → Service Layer → Database Layer (MongoDB + Redis + Email SMTP) → External Services (OpenAI · Stripe).*
+
+### 🔹 Layer Breakdown
 
 ```
-                   User Query: "Am I eligible for exams?"
-                                    │
-                                    ▼
-                     Is it an ERP query or offline?
-                                    │
-                   ┌────────────────┴────────────────┐
-                   ▼                                 ▼
-             [YES / OFFLINE]                   [NO / OPEN-ENDED]
-        ⚡ Local ERP Rules Engine           🌐 Gemini 1.5 Flash API
-      • Reads live attendance (87%)       • Injects live student transcript
-      • Checks fee dues (₹0)              • Returns rich educational advice
-      • Verifies hall ticket clearance
-                   │                                 │
-                   └────────────────┬────────────────┘
-                                    │
-                                    ▼
-       "Assessment for Aarav Sharma (20CS001):
-        Status: CLEARED FOR EXAMS ✅
-        • Attendance: 87.2% (Passes ≥75% standard)
-        • Financials: Cleared (₹0 due)
-        • Hall Ticket: Active & Unlocked in Exams portal."
+┌─────────────────────────────────────────────────────────────────────┐
+│  CLIENT PANELS                                                      │
+│  ┌──────────┐  ┌─────────────┐  ┌─────────┐                        │
+│  │ Teacher  │  │ Admin Panel │  │ Student │  ← Role-gated React UI │
+│  └──────────┘  └─────────────┘  └─────────┘                        │
+│  Mobile Client · Desktop Client · Web Client                        │
+└─────────────────────┬───────────────────────────────────────────────┘
+                      │  HTTP + Bearer JWT
+┌─────────────────────▼───────────────────────────────────────────────┐
+│  EXPRESS.JS SERVER                                                  │
+│  ┌──────────────────────────────────────┐                           │
+│  │ MIDDLEWARE LAYER                     │                           │
+│  │ Auth(JWT) · Validation · Logging     │                           │
+│  │ Error Handling · Rate Limiting       │                           │
+│  └──────────────────────────────────────┘                           │
+│  ┌───────────────────────────────────────────────────────────────┐  │
+│  │ CONTROLLER LAYER                                              │  │
+│  │ Admin Ctrl · Teacher Ctrl · Student Ctrl · Shared Ctrl        │  │
+│  │ Course Ctrl · Media Ctrl · Blog Ctrl · Billing Ctrl           │  │
+│  └───────────────────────────────────────────────────────────────┘  │
+└─────────────────────┬───────────────────────────────────────────────┘
+                      │
+┌─────────────────────▼───────────────────────────────────────────────┐
+│  DATABASE LAYER                                                     │
+│  ┌──────────────────────────────────────┐  ┌────────┐  ┌─────────┐ │
+│  │ MONGODB                              │  │ Redis  │  │  SMTP   │ │
+│  │ Users · Students · Teachers · Admins │  │ Cache  │  │  Email  │ │
+│  │ Courses · Attendance · Grades        │  └────────┘  └─────────┘ │
+│  │ Exams · Billing · Expenses · Notes   │                           │
+│  └──────────────────────────────────────┘                           │
+└─────────────────────┬───────────────────────────────────────────────┘
+                      │
+┌─────────────────────▼───────────────────────────────────────────────┐
+│  EXTERNAL SERVICES                                                  │
+│  OpenAI (AI Copilot)  ·  Stripe (Payment Processing)               │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-### Quick Action Suggestion Prompts
-- 🛡️ *"Am I eligible to sit for the upcoming end-semester exams?"*
-- 💳 *"What are my outstanding fee dues and clearance status?"*
-- 📅 *"What is my current attendance percentage and do I have course shortages?"*
-- 🎓 *"Can you summarize my current CGPA, SGPA, and subject marks?"*
+---
+
+## 🏛️ 3. Three-Panel ERP Architecture
+
+Nexora renders three independent, role-gated command centres inside the same **AppLayout** shell: collapsible left navigation, central data feed/analytics grid, and right-side alert panel.
+
+### 👑 3.1 Admin Executive Dashboard
+
+| Section | Capability |
+| :--- | :--- |
+| **KPI Command Strip** | Total Students · Total Faculty · Today's Attendance · Fee Collections |
+| **Student Growth Chart** | Annotated line chart with labeled bubble callouts and target reference line |
+| **Weekly Attendance Heatmap** | Dept × Day color-intensity grid — blue ≥90%, teal 80–89%, amber 75–79%, coral <75% |
+| **Attendance Radar Chart** | Mon–Sat spider/radar chart: Present / Absent / Late weekly pattern |
+| **Financial Overview** | Tabbed bar chart with gradient fills: Total Earned / Total Due / Expenses |
+| **Anti-Mismatch Audit Ledger** | Cross-module reconciliation table; Re-Run Audit · Export CSV |
+| **Department Performance Table** | HOD · Students · Avg Attendance · Fee Rate · Status pills per branch |
+| **Attention Alerts Sidebar** | Unpaid fees · Debarment triggers · Pending attendance · Hall-ticket queue |
+
+### 👨‍🏫 3.2 Faculty Dashboard
+
+| Section | Capability |
+| :--- | :--- |
+| **Daily Attendance Roster** | One-click present / absent / late marking with BroadcastChannel publish |
+| **Subject-Wise Overview** | Attendance % per subject across sections |
+| **Grade Entry** | Marks submission per subject, moderation log |
+| **Faculty Digital ID** | QR-coded faculty ID card with role badge; PDF download |
+| **Timetable View** | Weekly lecture schedule grid |
+
+### 🎓 3.3 Student Dashboard
+
+| Section | Capability |
+| :--- | :--- |
+| **Attendance Tracker** | Subject-wise attendance % with 75% threshold progress bars |
+| **Fee Statement** | Invoices, receipts, pending balance, semester breakdown |
+| **Hall Ticket** | Cryptographic admit card (SHA-256 signed token) — gated by attendance + fee clearance |
+| **Exam Results** | Published marks per subject, SGPA / CGPA calculation |
+| **Student Digital ID** | QR-coded ID card with course, branch, and validity |
+| **Debarred Status** | Red alert banner if attendance < 75% with resolution path |
+
+### 🔐 3.4 Examination Controller (CoE)
+
+| Section | Capability |
+| :--- | :--- |
+| **Seating Arrangement** | Room-wise student allocation with auto-generation |
+| **Invigilator Assignment** | Faculty-to-room mapping with conflict detection |
+| **Hall-Ticket Gatekeeper** | Batch approve / reject with cryptographic SHA-256 token issuance |
+| **Malpractice Registry** | Incident logging with student, subject, invigilator |
+| **Result Publishing** | Subject-wise marks release, SGPA computation, bulk CSV upload |
+| **Revaluation Requests** | Student-initiated revaluation workflow |
 
 ---
 
-## 👥 Role-Based Access Hierarchy
-- **Administrator / Judge** (`judge_master` / `ADM001`) ➔ `/admin/overview` (Spreadsheet Reconciliation, Master Directory, Finances)
-- **Faculty** (`teacher_001`) ➔ `/teacher/attendance` (Lecture Rosters, Marks Entry, Scheduling)
-- **Examination Controller** (`coe_001`) ➔ `/examination-controller/hall-tickets` (Door Gatekeeper, Moderation Engine)
-- **Student** (`20CS001`) ➔ `/student/dashboard` (Academic Transcripts, Hall Ticket, Billing)
+## ⚙️ 4. Anti-Mismatch Reconciliation Engine
+
+The core innovation of Nexora ERP is its **Anti-Mismatch Engine** — a cross-module integrity validator that replaces manual end-of-semester reconciliation work entirely.
+
+```
+Student Master Record (Admissions)  ─┐
+Attendance Ledger (Faculty Roster)   ─┤──▶ Anti-Mismatch Engine ──▶ Discrepancy?
+Fee Invoices (Accounts)              ─┤                                │
+Exam Eligibility (CoE)              ─┘                     YES ──▶ Raise + Suggest Fix
+                                                            NO  ──▶ ✅ RECONCILED
+                                                                     │
+                                                                     ▼
+                                                        Issue Cryptographic Hall Ticket
+```
+
+### 🔍 Discrepancy Categories
+
+| Code | Domain | Problem Detected | Automated Resolution |
+| :--- | :--- | :--- | :--- |
+| `ATT-MISMATCH-001` | Attendance | Faculty roster ≠ student attendance % in system | Re-sync from BroadcastChannel event; flag for HOD review |
+| `FEE-PENDING-002` | Finance | Student active in admissions but fee invoice unpaid | Block hall-ticket issuance; send email reminder |
+| `EXAM-GATE-003` | Examination | Hall ticket requested but attendance < 75% | Reject token; generate condonation form link |
+| `ADMIT-ORPHAN-004` | Admissions | Fee record exists with no matching student master | Flag as ghost record; prompt admin verification |
+| `MARKS-MISSING-005` | Results | Exam conducted; marks not submitted by faculty | Escalate to CoE; lock result publish pipeline |
 
 ---
 
-## 📁 Repository Structure
+## 💻 5. Technology Stack
+
+### 🖥️ 5.1 Frontend
+
+| Technology | Version | Purpose |
+| :--- | :--- | :--- |
+| **React** | 18.x | UI component model, hooks, context providers |
+| **TypeScript** | 5.x | Type safety across the entire frontend codebase |
+| **Vite** | 5.4 | Ultra-fast bundler, HMR dev server |
+| **Tailwind CSS** | 3.x | Utility-first styling, design tokens, responsive layout |
+| **shadcn/ui** | latest | Accessible, composable component primitives |
+| **Recharts** | 2.x | RadarChart, LineChart, BarChart, AreaChart for ERP analytics |
+| **Three.js** | r128–r160 | `ExpanseBackground` — global persistent WebGL shader |
+| **React Router** | 6.x | Client-side routing with role-based protected routes |
+| **Lucide React** | latest | Consistent ERP iconography |
+| **clsx / tailwind-merge** | latest | Conditional class composition |
+
+### ⚙️ 5.2 Backend
+
+| Technology | Version | Purpose |
+| :--- | :--- | :--- |
+| **Node.js** | 20.x | JavaScript runtime for the Express server |
+| **Express.js** | 4.18 | REST API framework, middleware stack, route controllers |
+| **Mongoose** | 7.x | MongoDB ODM for schema validation and querying |
+| **jsonwebtoken** | 9.x | JWT Bearer token issuance and verification |
+| **bcryptjs** | 2.x | Password hashing for user credentials |
+| **Helmet** | 7.x | HTTP security headers |
+| **Morgan** | 1.x | HTTP request logging |
+| **CORS** | 2.x | Cross-Origin Resource Sharing |
+| **dotenv** | 16.x | Environment variable management |
+| **nodemon** | 3.x | Development hot-reload |
+
+### 🗄️ 5.3 Data & Storage
+
+| Technology | Role |
+| :--- | :--- |
+| **MongoDB 7** | Primary document store — Students, Courses, Attendance, Fees, Exams |
+| **Redis 7** | Session cache, BroadcastChannel bridge, rate-limiting store |
+| **Supabase** | PostgreSQL auth and structured data (optional cloud sync) |
+| **localStorage / JSON** | Offline-first ERP state cache (`nexora-unified-erp-v1`) |
+| **BroadcastChannel API** | Zero-latency cross-tab state synchronization (0 ms) |
+
+### 🏗️ 5.4 Infrastructure & DevOps
+
+| Component | Technology | Responsibility |
+| :--- | :--- | :--- |
+| **frontend/Dockerfile** | Node 20 Alpine → Nginx 1.25 Alpine | Vite build, SPA routing, `/api/*` reverse proxy |
+| **backend/Dockerfile** | Node 20 Alpine | Express API, non-root `nexora` user, health check |
+| **MongoDB Container** | mongo:7.0-jammy | ERP document store with named volume persistence |
+| **Redis Container** | redis:7.2-alpine | Session + event cache, 256 MB LRU eviction |
+| **docker-compose.yml** | Compose v3.9 | Full stack with health-check dependency ordering |
+
+### 🔗 5.5 Third-Party Services
+
+| Provider | Category | Usage |
+| :--- | :--- | :--- |
+| **Supabase** | Auth + PostgreSQL | User authentication, optional cloud persistence |
+| **Vercel** | Hosting | Frontend deployment (`vercel.json`) |
+| **OpenAI** | AI Copilot | AI-assisted ERP insights (configured) |
+| **Stripe** | Payments | Fee payment processing gateway (configured) |
+
+---
+
+## 🔄 6. Application Workflow
+
+### 🛤️ End-to-End Request Pipeline
+
+```
+User (Admin / Faculty / Student)
+        │
+        ▼  HTTP + Bearer JWT
+Middleware Layer
+  ├── JWT Verify → extract role + user ID
+  ├── Rate Limiter (per-IP + per-route)
+  └── Input Validation
+        │
+        ▼  if authorised
+Role Controller
+  (Admin Ctrl / Teacher Ctrl / Student Ctrl / CoE Ctrl)
+        │
+        ▼
+Service Layer (Business Logic + Anti-Mismatch checks)
+        │
+        ▼
+MongoDB (Mongoose) ←→ Redis (cache lookup / write-through)
+        │
+        ▼  JSON response
+React Frontend → re-render dashboard panel
+        │
+        ▼
+BroadcastChannel.postMessage('nexora_erp_bus')
+        │
+        ▼
+All open browser tabs sync instantly (0 ms latency)
+```
+
+### 🏷️ Role-Based Route Mapping
+
+| Role | Route Prefix | JWT Claim | Access Scope |
+| :--- | :--- | :--- | :--- |
+| `admin` | `/admin/*` | `role: admin` | All modules, audit ledger, user management |
+| `teacher` | `/teacher/*` | `role: teacher` | Attendance roster, grade entry, timetable |
+| `student` | `/student/*` | `role: student` | Own records, fee statement, hall ticket |
+| `coe` | `/examination-controller/*` | `role: coe` | Seating, hall-ticket gating, results |
+| `finance` | `/admin/billing` | `role: finance` | Fee invoices, payment tracking |
+
+---
+
+## 🌊 7. Data Flow & State Management
+
+```
+Login (AuthContext)
+    │ JWT issued
+    ▼
+localStorage  ──────────────────────────────────────▶  BroadcastChannel (nexora_erp_bus)
+(nexora-unified-erp-v1)                                       │
+    │                                                          ▼
+    │                                               All open tabs sync (0 ms)
+    ▼
+Express API (/api/**)
+    ├──▶ MongoDB  (read / write documents)
+    └──▶ Redis    (session cache / invalidation)
+          │
+          ▼
+    React State (hooks + context) → UI re-render
+```
+
+### 💾 Unified ERP State Schema
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `students` | `Student[]` | Master registry — all enrolled students |
+| `courses` | `Course[]` | Subject catalogue with branch and faculty mapping |
+| `attendance` | `AttendanceRecord[]` | Daily roster, subject-wise, faculty-submitted |
+| `fees` | `FeeInvoice[]` | Semester invoices with receipt and status |
+| `exams` | `ExamRecord[]` | Hall tickets, seating plans, malpractice, results |
+| `teachers` | `Teacher[]` | Faculty registry with department and subjects |
+| `stats` | `SystemStats` | Aggregated KPIs — debarred count, collection rate |
+
+---
+
+## 📁 8. Project Structure
 
 ```
 Nexora/
-├── backend/
-│   ├── src/
-│   │   ├── middleware/
-│   │   │   └── authMiddleware.js     # Bearer token validation middleware
-│   │   ├── routes/
-│   │   │   └── erpRoutes.js          # REST State Sync API (/health, /state, /sync, /reset)
-│   │   ├── app.js                    # Express app configuration & middleware
-│   │   └── server.js                 # HTTP server listening on Port 5001
-│   ├── data/
-│   │   └── erp_state.json            # File-backed persistence store for zero-setup demo
-│   └── package.json
+├── Dockerfile                        ← Root multi-stage (single-container fallback)
+├── docker-compose.yml                ← Full stack: frontend + backend + MongoDB + Redis
+├── docker-compose.dev.yml            ← Dev override: Vite HMR + nodemon hot-reload
+├── .dockerignore
+├── db.sql                            ← PostgreSQL schema (Supabase reference)
+├── package.json                      ← Monorepo root (npm workspaces)
 │
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── layout/
-│   │   │   │   ├── DemoRoleSwitcher.tsx # Master Judge mode, split view, live health pills
-│   │   │   │   └── navigationData.ts # Streamlined top-to-bottom ERP sidebar
-│   │   ├── data/
-│   │   │   └── unifiedERPData.ts     # Canonical mock student relational records (20CS001-20CS008)
-│   │   ├── hooks/
-│   │   │   └── useERPData.ts         # Core state store, BroadcastChannel bus & token-aware REST sync
-│   │   ├── pages/
-│   │   │   ├── AdminOverview.tsx     # KPI metrics, Spreadsheet Ingestion, CSV Audit Export
-│   │   │   ├── ManageStudents.tsx    # Registry with AICTE Statutory Parent Notice Dialog
-│   │   │   ├── TeacherAttendance.tsx # Class roster batch attendance & register print
-│   │   │   ├── UploadMarks.tsx       # Marks entry with Debarred locks & filters
-│   │   │   ├── StudentMarks.tsx      # Live transcript with watermarked print export
-│   │   │   ├── StudentBilling.tsx    # Dues payment & auto-print fee voucher
-│   │   │   ├── AskAI.tsx             # Context-aware offline & Gemini AI Copilot
-│   │   │   └── examination-controller/
-│   │   │       ├── HallTicketGatekeeper.tsx   # Candidate QR exam door scanner
-│   │   │       └── MarksTrackerModeration.tsx # Grace marks batch calculator
-│   │   └── utils/
-│   │       └── exportUtils.ts        # Watermarked Print-to-PDF & CSV generator
-│   └── package.json
+├── frontend/                         ← React 18 + Vite Application
+│   ├── Dockerfile                    ← Node 20 → Nginx multi-stage build
+│   ├── nginx.conf                    ← SPA routing + /api/* reverse proxy
+│   └── src/
+│       ├── App.tsx                   ← Root router with role-based protected routes
+│       ├── pages/
+│       │   ├── AdminOverview.tsx     ← Executive admin dashboard (KPIs, charts, audit)
+│       │   ├── ManageStudents.tsx    ← Student master registry + bulk import
+│       │   ├── TeacherDashboard.tsx  ← Faculty attendance + grade entry
+│       │   ├── StudentDashboard.tsx  ← Student portal (attendance, fees, hall ticket)
+│       │   ├── BillingPage.tsx       ← Fee invoicing and payment tracking
+│       │   ├── ExamController.tsx    ← CoE workflow (seating, gating, results)
+│       │   └── Auth.tsx              ← Login with role-demo shortcuts
+│       ├── components/
+│       │   ├── layout/
+│       │   │   ├── AppLayout.tsx          ← Shell: sidebar + main feed + right panel
+│       │   │   ├── SidebarNavigation.tsx  ← Role-aware collapsible sidebar
+│       │   │   └── navigationData.ts      ← Role-based nav item definitions
+│       │   ├── background/
+│       │   │   └── ExpanseBackground.tsx  ← Three.js persistent WebGL shader
+│       │   └── ui/                        ← shadcn/ui component library
+│       ├── contexts/
+│       │   └── AuthContext.tsx       ← JWT auth state provider
+│       ├── hooks/
+│       │   ├── useERPData.ts         ← Unified ERP state + BroadcastChannel sync
+│       │   ├── useAdminData.ts       ← Admin-specific hooks (branches, stats)
+│       │   ├── useAdminIDData.ts     ← Admin ID card data
+│       │   ├── useStudentIDData.ts   ← Student ID card data
+│       │   └── useTeacherIDData.ts   ← Faculty ID card data
+│       ├── services/
+│       │   ├── coeService.ts         ← CoE localStorage service layer
+│       │   └── meetService.ts        ← Google Meet integration bus
+│       └── lib/
+│           └── supabase.ts           ← Supabase client + offline fallback
 │
-├── db.sql                            # Production PostgreSQL Schema with 1,287 lines
-├── package.json                      # Monorepo workspaces & concurrent scripts
-└── README.md                         # Comprehensive project documentation
+├── backend/                          ← Express.js API Server
+│   ├── Dockerfile                    ← Node 20 Alpine, non-root user
+│   ├── src/
+│   │   └── server.js                 ← Express entrypoint (all routes + middleware)
+│   └── data/
+│       └── erp_state.json            ← Seeded ERP demo state (1,650+ students)
+│
+├── Project Docs/
+│   └── CampusSync Backend Architecture.png  ← Official system architecture diagram
+│
+└── supabase/                          ← Supabase migrations and config
 ```
 
 ---
 
-## 🏆 Hackathon Competitive Differentiation Matrix
+## 🔌 9. API Reference
 
-| Evaluation Dimension | Typical Hackathon ERP Submission | Nexora (CampusSync) |
+All endpoints served at `http://localhost:5000/api`.
+
+### 🔐 Authentication
+
+| Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| **Data Architecture** | Separate mock arrays in each file with mismatched IDs | **Single relational store** (`campussync-unified-erp-v1`) linking all modules |
-| **Multi-Window Sync** | Requires manual page reload; data desynchronizes | **0ms instantaneous live sync** via `BroadcastChannel` event bus |
-| **Role-Based Access** | Single student dashboard with cosmetic role switcher | **Dedicated routes** (`/admin`, `/teacher`, `/student`, `/coe`) + Master Judge Mode |
-| **Problem Alignment** | Generic CRUD forms ignoring the problem statement | **Anti-Mismatch Ledger & Excel Ingestion Simulator** solving PS-6 directly |
-| **Reports & Exports** | Dead buttons triggering alerts | **Watermarked print-to-PDF transcripts, official receipts, & CSV audits** |
-| **AI Integration** | Disconnected ChatGPT wrapper | **Context-aware copilot** aware of live GPA, attendance %, and fee holds |
-| **Security & Auth** | Pure client-side state without backend verification | **Bearer token authentication headers** with Express role middleware |
+| `POST` | `/api/auth/login` | Role-based login; returns JWT Bearer token |
+| `POST` | `/api/auth/logout` | Invalidate session, clear Redis entry |
+| `GET` | `/api/auth/me` | Return current authenticated user from JWT |
+
+### 👑 Admin
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/admin/students` | Paginated student master registry |
+| `POST` | `/api/admin/students` | Create / bulk-import students |
+| `PUT` | `/api/admin/students/:id` | Update student record |
+| `DELETE` | `/api/admin/students/:id` | Soft-delete student |
+| `GET` | `/api/admin/stats` | System KPIs — debarred count, collection rate |
+| `GET` | `/api/admin/audit` | Run Anti-Mismatch reconciliation; return discrepancies |
+| `GET` | `/api/admin/audit/export` | Download audit ledger as CSV |
+
+### 👨‍🏫 Faculty
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/teacher/attendance` | Today's roster for teacher's subjects |
+| `POST` | `/api/teacher/attendance` | Submit attendance roster (triggers BroadcastChannel sync) |
+| `GET` | `/api/teacher/grades` | Grade entry sheet for assigned subjects |
+| `POST` | `/api/teacher/grades` | Submit student marks |
+
+### 🎓 Student
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/student/:id/attendance` | Subject-wise attendance percentage |
+| `GET` | `/api/student/:id/fees` | Fee invoices and payment history |
+| `GET` | `/api/student/:id/hall-ticket` | Cryptographic hall-ticket token (gated) |
+| `GET` | `/api/student/:id/results` | Published exam results and SGPA |
+
+### 🔐 Examination Controller (CoE)
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/coe/hall-tickets/approve` | Batch approve + issue SHA-256 tokens |
+| `POST` | `/api/coe/seating` | Generate seating arrangement |
+| `POST` | `/api/coe/results/publish` | Publish results for a subject |
+| `POST` | `/api/coe/malpractice` | Log malpractice incident |
+| `POST` | `/api/coe/revaluation` | Process revaluation request |
+
+### 💰 Finance
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/billing/invoices` | All fee invoices with status |
+| `POST` | `/api/billing/pay` | Mark payment received + generate receipt |
+| `GET` | `/api/billing/export` | Download fee ledger as CSV |
 
 ---
 
-## 👨‍💻 Team & Authorship
+## ⚙️ 10. Environment Configuration
 
-Developed for the **12-Hour College Hackathon — Problem Statement PS-6 (ERP-based Integrated Student Management System)**.
+Copy `backend/.env.example` to `backend/.env`. The platform runs fully offline without any third-party keys — Supabase, OpenAI, and Stripe are all optional.
 
-- **Lead Full-Stack Architect & Core Developer**: [Mausam Kar](https://github.com/Mausam5055)
-- **Affiliation**: Computer Science & Engineering, VIT Bhopal University
-- **License**: MIT Open Source
+| Category | Variable | Required | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Server** | `PORT` | ✅ Yes | Express port (default: `5000`) |
+| **Server** | `NODE_ENV` | ✅ Yes | `development` or `production` |
+| **JWT** | `JWT_SECRET` | ✅ Yes | Secret for signing Bearer tokens |
+| **MongoDB** | `MONGODB_URI` | Optional | MongoDB connection string |
+| **Redis** | `REDIS_URL` | Optional | Redis connection string |
+| **Supabase** | `SUPABASE_URL` | Optional | Supabase project URL |
+| **Supabase** | `SUPABASE_ANON_KEY` | Optional | Supabase anonymous public key |
+| **OpenAI** | `OPENAI_API_KEY` | Optional | AI Copilot features |
+| **Stripe** | `STRIPE_SECRET_KEY` | Optional | Payment processing |
+
+---
+
+## 🚀 11. Installation & Local Setup
+
+### ✅ Prerequisites
+
+| Tool | Version | Purpose |
+| :--- | :--- | :--- |
+| Node.js | ≥20.x | Frontend + Backend runtime |
+| npm | ≥9.x | Package management (monorepo workspaces) |
+| Docker + Compose | Latest | Containerized deployment |
+| Git | ≥2.40 | Repository cloning |
+
+### ⚡ Quick Start
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/KrishnaNsingh/Nexora.git
+cd Nexora
+
+# 2. Install all dependencies (monorepo — installs frontend + backend)
+npm install
+
+# 3. Configure environment
+cp backend/.env.example backend/.env
+# Open backend/.env and set JWT_SECRET at minimum
+
+# 4. Start both servers concurrently
+npm run dev
+# → Frontend: http://localhost:5173  (Vite HMR)
+# → Backend:  http://localhost:5000  (Express API)
+```
+
+### Alternative: Start separately
+
+```bash
+# Backend only
+npm run dev:backend
+
+# Frontend only
+npm run dev:frontend
+
+# Build for production
+npm run build:frontend
+npm run build:backend
+```
+
+### 🔑 Demo Credentials
+
+| Role | Email | Notes |
+| :--- | :--- | :--- |
+| Admin (Dean) | `admin@nexora.edu` | Full access — audit, manage, billing |
+| Faculty | `sarah.johnson@college.edu` | Attendance + grade entry |
+| Student | `demo@university.edu` | Own records, fees, hall ticket |
+| CoE Controller | `coe@nexora.edu` | Seating, gating, result publishing |
+
+> Use the role-switcher shortcuts on the login page for instant demo access.
+
+---
+
+## 🐳 12. Docker Deployment
+
+### File Layout
+
+```
+Nexora/
+├── Dockerfile                 ← Single-container full-stack (alternative)
+├── docker-compose.yml         ← Multi-service (recommended for production)
+├── docker-compose.dev.yml     ← Dev override (HMR + nodemon + debug ports)
+├── frontend/
+│   ├── Dockerfile             ← Stage 1: Vite build → Stage 2: Nginx serve
+│   └── nginx.conf             ← SPA routing + /api/* proxy to backend
+└── backend/
+    └── Dockerfile             ← Node 20 Alpine, non-root user
+```
+
+### 🐳 Full Stack — Production
+
+```bash
+# Build all images and start all services
+docker compose up --build
+
+# Detached (background) mode
+docker compose up -d
+
+# Follow logs
+docker compose logs -f frontend
+docker compose logs -f backend
+
+# Stop and remove containers
+docker compose down
+```
+
+| Service | Image | Port | Health Check |
+| :--- | :--- | :--- | :--- |
+| `frontend` | Node 20 Alpine → Nginx 1.25 | `3000` | `wget http://localhost:80` |
+| `backend` | Node 20 Alpine | `5000` | `wget http://localhost:5000/api/health` |
+| `mongo` | mongo:7.0-jammy | `27017` | `mongosh --eval db.ping()` |
+| `redis` | redis:7.2-alpine | `6379` | `redis-cli ping` |
+
+### 🛠️ Development Override
+
+```bash
+# Hot-reload: Vite HMR for frontend + nodemon for backend
+# Exposes port 9229 (Node.js inspector) and DB ports for GUI tools
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+```
+
+---
+
+## 🔒 13. Security Considerations
+
+| Area | Implementation | Status |
+| :--- | :--- | :--- |
+| **JWT Authentication** | Bearer token on all protected routes via `jsonwebtoken` | ✅ |
+| **Role-Based Access** | Controller-level role guard before any data access | ✅ |
+| **HTTP Security Headers** | `helmet` middleware on all Express routes | ✅ |
+| **CORS Policy** | Allowlist-based origin control in Express | ✅ |
+| **Non-Root Container** | Backend Docker image runs as `nexora` (UID non-root) | ✅ |
+| **Cryptographic Hall Tickets** | SHA-256 signed token — tamper-evident admit card | ✅ |
+| **Rate Limiting** | Per-route and per-IP rate limiter middleware | ✅ |
+| **Password Hashing** | `bcryptjs` with salt rounds for user credentials | ✅ |
+| **Environment Secrets** | All via `.env` — no hardcoded credentials in source | ✅ |
+| **Audit Trail** | Every Anti-Mismatch run logged with timestamp and actor | ✅ |
+
+---
+
+## 📖 14. Feature Documentation
+
+| Module | Feature | Key Technology |
+| :--- | :--- | :--- |
+| **Admin Dashboard** | Executive KPI strip — 4 real-time metrics | React, Recharts |
+| **Attendance Heatmap** | Dept × Day color-intensity grid (blue/teal/amber/coral) | CSS grid, JS |
+| **Attendance Radar Chart** | Mon–Sat spider chart: Present / Absent / Late | Recharts RadarChart |
+| **Student Growth Chart** | Annotated line chart with bubble callout labels | Recharts LineChart |
+| **Financial Bar Chart** | Tabbed: Earned / Due / Expenses with gradient fills | Recharts BarChart |
+| **Anti-Mismatch Ledger** | Cross-module reconciliation + CSV export | React, Express |
+| **Department Table** | HOD · Students · Avg Attendance · Fee Rate · Status | React, Tailwind |
+| **Attendance Roster** | Faculty daily submit + BroadcastChannel 0 ms sync | BroadcastChannel API |
+| **Fee Invoicing** | Invoice generation, payment tracking, receipts | Express, MongoDB |
+| **Hall-Ticket Gating** | SHA-256 cryptographic admit card with QR code | crypto, QRCode |
+| **CoE Seating Planner** | Room-wise auto-allocation with conflict detection | React, coeService |
+| **Result Publisher** | Marks entry, SGPA calc, bulk CSV publish | Express, Mongoose |
+| **Digital ID Cards** | QR-coded ID for Admin / Faculty / Student roles | React |
+| **WebGL Background** | `ExpanseBackground` — Three.js persistent shader | Three.js r128–r160 |
+| **Shredder Columns** | 14-bar pastel vertical-band gradient on all cards/panels | CSS linear-gradient |
+| **PDF Export** | Watermarked institutional reports for all modules | jsPDF / html2canvas |
+| **BroadcastChannel Sync** | 0 ms cross-tab state update on any data mutation | BroadcastChannel API |
+| **CSV Bulk Import** | Student master batch upload via spreadsheet | papaparse |
+| **Dark / Light Theme** | System-aware with Tailwind CSS variables | ThemeProvider |
+| **Debarment Engine** | Auto-flag students < 75% attendance; block hall ticket | Express, Mongoose |
+
+---
+
+## 📈 15. Scalability & Future Improvements
+
+### ✅ Currently Implemented
+- Three-panel role-based ERP (Admin / Faculty / Student / CoE)
+- Anti-Mismatch Reconciliation Engine with 0-discrepancy audit
+- Docker Compose full-stack — 4 services with health-check dependency ordering
+- BroadcastChannel 0 ms cross-tab state synchronization
+- Cryptographic SHA-256 hall-ticket token system
+- Offline-first JSON cache with optional Supabase cloud sync
+- Award-winning analytics: Radar Chart · Heatmap · Annotated Line Chart · Financial Tabs
+- Three.js WebGL global animated background
+
+### 🚀 Planned Future Improvements
+
+| Area | Improvement | Complexity |
+| :--- | :--- | :--- |
+| **AI / ML** | AI-powered attendance anomaly detection (LSTM) | High |
+| **Notifications** | Email / SMS alerts for debarment and fee due-dates | Medium |
+| **Mobile App** | React Native companion for faculty attendance submission | High |
+| **CI/CD** | GitHub Actions — automated tests + Docker build + deploy | Medium |
+| **Blockchain** | NFT-based degree certificates on Ethereum Sepolia | High |
+| **Kubernetes** | K8s manifests with HPA auto-scaling for production | Medium |
+| **Multi-Institution** | SaaS multi-tenant mode for college consortium | High |
+| **Voice Commands** | AI voice assistant for faculty attendance marking | Medium |
+| **Analytics** | Advanced cohort retention and pivot-table reporting | Medium |
+| **ABHA Integration** | ABDM health linkage for institutional health records | High |
+
+---
+
+## 🤝 16. Contributing
+
+We welcome contributions from developers, educators, and institutional technology researchers.
+
+### 📝 Contribution Workflow
+
+1. **Understand the architecture**: Read [System Architecture](#2-system-architecture--data-flow) and [Three-Panel ERP](#3-three-panel-erp-architecture) sections first.
+
+2. **Fork and branch**:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Follow project conventions**:
+   - **Backend routes**: Add to `backend/src/server.js` with a role middleware guard before any handler.
+   - **Frontend components**: TypeScript strict mode, Tailwind utilities, semantic pastel palette tokens from `src/index.css`.
+   - **New ERP modules**: Expose state through `useERPData.ts` and broadcast all mutations via `BroadcastChannel`.
+
+4. **Test your changes**:
+   ```bash
+   cd backend && npm test
+   cd frontend && npm run build
+   ```
+
+5. **Open a pull request** with description, motivation, and screenshots for any UI changes.
+
+---
+
+## 📜 17. License
+
+Licensed under **ISC**.
+
+Submitted for **SMART VIThackathon(SVH)-2026**. For usage beyond hackathon evaluation, please open an issue to discuss licensing terms with the maintainers.
 
 ---
 
 <div align="center">
-  <b>Built with architectural rigor, domain authenticity, and extreme performance.</b><br>
-  <sub>Designed to eliminate spreadsheets and modernize campus administration.</sub>
+
+---
+
+### 🔹 Built with ❤️ by Team **Nexora** for SMART VIThackathon(SVH)-2026
+
+*Nexora ERP — One Ledger. Zero Mismatches. Total Control.*
+
+*Anti-Mismatch Engine · Cryptographic Hall Tickets · Real-Time BroadcastChannel Sync · Docker-Deployed*
+
 </div>

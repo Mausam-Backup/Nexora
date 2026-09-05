@@ -68,6 +68,14 @@ export default function MarzipanoViewer({
         await loadMarzipanoScript();
         if (!isMounted || !containerRef.current) return;
 
+        // Ensure container has rendered with layout dimensions
+        let attempts = 0;
+        while ((!containerRef.current || containerRef.current.clientWidth === 0 || containerRef.current.clientHeight === 0) && attempts < 20) {
+          await new Promise((r) => setTimeout(r, 50));
+          attempts++;
+        }
+        if (!isMounted || !containerRef.current) return;
+
         const Marzipano = window.Marzipano;
         const viewerOpts = {
           controls: {
@@ -77,6 +85,7 @@ export default function MarzipanoViewer({
 
         const viewer = new Marzipano.Viewer(containerRef.current, viewerOpts);
         viewerRef.current = viewer;
+        viewer.updateSize();
 
         // Autorotate instance
         const autorotate = Marzipano.autorotate({
@@ -174,16 +183,26 @@ export default function MarzipanoViewer({
           setCurrentSceneId(startScene.data.id);
         }
 
+        // Final resize check
+        viewer.updateSize();
         setIsLoaded(true);
       } catch (err) {
         console.error('Error initializing Marzipano viewer:', err);
       }
     }
 
+    const handleWindowResize = () => {
+      if (viewerRef.current) {
+        viewerRef.current.updateSize();
+      }
+    };
+    window.addEventListener('resize', handleWindowResize);
+
     init();
 
     return () => {
       isMounted = false;
+      window.removeEventListener('resize', handleWindowResize);
       if (viewerRef.current) {
         viewerRef.current.destroy();
       }
@@ -240,10 +259,14 @@ export default function MarzipanoViewer({
   return (
     <div
       className="relative w-full h-full bg-stone-100 overflow-hidden select-none"
-      style={{ fontFamily: '"Times New Roman", Times, Georgia, serif' }}
+      style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, fontFamily: '"Times New Roman", Times, Georgia, serif' }}
     >
       {/* 360 Viewport Container */}
-      <div ref={containerRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+      <div
+        ref={containerRef}
+        className="w-full h-full cursor-grab active:cursor-grabbing"
+        style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}
+      />
 
       {/* Loading Screen */}
       {!isLoaded && (

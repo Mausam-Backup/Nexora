@@ -235,11 +235,17 @@ export default function ResponseFooter() {
             {[
               { label: "System Architecture", href: "#platform" },
               { label: "360° Campus Tour", href: "/explore" },
-              { label: "Live ERP Portals", href: "http://localhost:5000" },
+              { label: "Live ERP Portals", href: "/auth" },
             ].map((item) => (
               <a
                 key={item.label}
                 href={item.href}
+                onClick={(e) => {
+                  if (item.href === "/auth" || item.href === "/explore") {
+                    e.preventDefault();
+                    window.location.href = item.href;
+                  }
+                }}
                 target={item.href.startsWith("http") ? "_blank" : undefined}
                 style={{
                   color: "#ffffff",

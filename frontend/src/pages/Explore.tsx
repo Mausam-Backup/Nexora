@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import MarzipanoViewer from '@/components/landing/MarzipanoViewer';
@@ -12,8 +12,15 @@ function ExploreContent() {
 
   return (
     <div
-      className="relative w-screen h-screen overflow-hidden bg-stone-100"
-      style={{ fontFamily: '"Times New Roman", Times, Georgia, serif' }}
+      className="fixed inset-0 w-screen h-screen overflow-hidden bg-stone-100"
+      style={{
+        width: '100vw',
+        height: '100vh',
+        position: 'fixed',
+        inset: 0,
+        overflow: 'hidden',
+        fontFamily: '"Times New Roman", Times, Georgia, serif',
+      }}
     >
       <Helmet>
         <title>VIT Bhopal — 360° Interactive Campus Virtual Tour | Nexora</title>
@@ -23,9 +30,13 @@ function ExploreContent() {
       {/* Top Header Bar */}
       {!isEmbed && (
         <header className="absolute top-4 left-4 z-40 flex items-center gap-3">
-          <Link
-            to="/"
-            className="flex items-center gap-2 px-4 py-2 rounded-full transition-all text-xs font-semibold group hover:scale-105 active:scale-95"
+          <a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.href = "/";
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-full transition-all text-xs font-semibold group hover:scale-105 active:scale-95 cursor-pointer"
             style={{
               textDecoration: 'none',
               backgroundColor: '#ffffff',
@@ -36,7 +47,7 @@ function ExploreContent() {
           >
             <ArrowLeft className="w-3.5 h-3.5 text-stone-700 group-hover:-translate-x-0.5 transition-transform" />
             <span>Back to Home</span>
-          </Link>
+          </a>
 
           <div
             className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold"

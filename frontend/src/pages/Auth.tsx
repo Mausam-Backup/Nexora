@@ -9,6 +9,7 @@ import {
   User, 
   ChevronDown, 
   ArrowRight, 
+  ArrowLeft,
   LogIn, 
   Zap, 
   GraduationCap, 
@@ -248,17 +249,39 @@ export default function Auth() {
 
           {/* Top Navigation Bar */}
           <div className="flex items-center justify-between w-full">
-            {/* Brand Logo with Gradient Ring */}
-            <Link to="/" className="flex items-center gap-2 group">
-              <PayoneerRingLogo size={32} className="group-hover:scale-105 transition-transform" />
-              <span className="text-2xl font-bold text-neutral-900 tracking-tight">Nexora</span>
-            </Link>
+            {/* Back to Home & Brand Logo with Gradient Ring */}
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.href = "/";
+                }}
+                className="inline-flex items-center justify-center gap-1.5 text-xs font-medium text-neutral-600 hover:text-neutral-950 px-3 py-1.5 rounded-full border border-neutral-200 hover:bg-neutral-100 transition-all cursor-pointer shadow-sm active:scale-95"
+                title="Back to Landing Page"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Back to Home</span>
+              </button>
+
+              <a
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = "/";
+                }}
+                className="flex items-center gap-2 group cursor-pointer"
+                title="Nexora Home"
+              >
+                <PayoneerRingLogo size={32} className="group-hover:scale-105 transition-transform" />
+                <span className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight">Nexora</span>
+              </a>
+            </div>
 
             {/* Sign In / Sign Up Mode Switcher */}
             <button
               type="button"
               onClick={() => toggleMode(!isSignUp)}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-700 hover:text-neutral-950 transition-colors px-3.5 py-1.5 rounded-full hover:bg-neutral-100"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-700 hover:text-neutral-950 transition-colors px-3.5 py-1.5 rounded-full hover:bg-neutral-100 cursor-pointer"
             >
               <User className="h-4 w-4 text-neutral-600" />
               <span>{isSignUp ? "Sign In" : "Sign Up"}</span>
@@ -303,7 +326,7 @@ export default function Auth() {
                       }`}
                       title={role.label}
                     >
-                      <Icon className={`h-3 w-3 ${isSelected ? 'text-orange-400' : 'text-neutral-500'}`} />
+                      <Icon className={`h-3 w-3 ${isSelected ? 'text-[#5162ff]' : 'text-neutral-500'}`} />
                       <span className="text-[11px] truncate">{role.shortLabel}</span>
                     </button>
                   )
@@ -348,11 +371,11 @@ export default function Auth() {
                       </button>
                     </div>
 
-                    {/* Forgot Password Link in vibrant orange */}
+                    {/* Forgot Password Link */}
                     <div className="pt-0.5">
                       <Link
                         to="/forgot-password"
-                        className="text-xs font-semibold text-[#FF4820] hover:text-[#E03A15] transition-colors"
+                        className="text-xs font-semibold text-[#5162ff] hover:text-[#3b82f6] transition-colors"
                       >
                         Forgot password?
                       </Link>
@@ -451,7 +474,7 @@ export default function Auth() {
                         <button
                           type="submit"
                           disabled={isLoading || !password || !confirmPassword || password !== confirmPassword}
-                          className="w-2/3 h-[52px] rounded-full bg-gradient-to-r from-[#FF3B22] via-[#FF5528] to-[#FA2A64] hover:opacity-95 text-white font-medium text-sm transition-all shadow-md shadow-orange-500/20 disabled:opacity-50"
+                          className="w-2/3 h-[52px] rounded-full bg-gradient-to-r from-[#022336] via-[#1e3a5f] to-[#5162ff] hover:opacity-95 text-white font-medium text-sm transition-all shadow-md shadow-blue-500/20 disabled:opacity-50"
                         >
                           {isLoading ? "Creating..." : "Create Account"}
                         </button>
@@ -467,7 +490,7 @@ export default function Auth() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-[52px] rounded-full text-white font-medium text-sm sm:text-base shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:brightness-105 active:scale-[0.99] transition-all flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#FF3B22] via-[#FF5528] to-[#FA2A64] mt-6"
+                    className="w-full h-[52px] rounded-full text-white font-medium text-sm sm:text-base shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:brightness-105 active:scale-[0.99] transition-all flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#022336] via-[#1e3a5f] to-[#5162ff] mt-6"
                   >
                     {isLoading ? (
                       <div className="flex items-center gap-2">
@@ -489,11 +512,11 @@ export default function Auth() {
             <div className="mt-8 pt-5 border-t border-neutral-200/80 space-y-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-800">
-                  <div className="w-5 h-5 rounded-full bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-600 text-[10px] shadow-sm">
+                  <div className="w-5 h-5 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-[#5162ff] text-[10px] shadow-sm">
                     ✦
                   </div>
                   <span className="flex items-center gap-1 text-neutral-900 font-bold">
-                    <Zap className="h-3.5 w-3.5 text-orange-500" />
+                    <Zap className="h-3.5 w-3.5 text-[#5162ff]" />
                     Hackathon Evaluator Quick Pass:
                   </span>
                 </div>

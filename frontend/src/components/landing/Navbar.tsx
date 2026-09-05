@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import LionFullscreenModal from "./LionFullscreenModal";
 import VrFullscreenModal from "./VrFullscreenModal";
@@ -47,11 +46,10 @@ export default function Navbar() {
           <div className="menu-text">Core Modules</div>
         </a>
         <a
-          href="#tour"
-          role="button"
+          href="/explore"
           onClick={(e) => {
             e.preventDefault();
-            setIsVrModalOpen(true);
+            window.location.href = "/explore";
           }}
           className="menu-item nav-vr w-inline-block"
           suppressHydrationWarning
@@ -79,23 +77,74 @@ export default function Navbar() {
           <div className="menu-text-non-hover">Contact Us</div>
           <div data-w-id="8312a1a5-dae7-16a1-8cec-e79ee9e966df" suppressHydrationWarning style={{ transform: "translate3d(0, 0, 0) scale3d(1, 1, 1)" }} className="menu-button__bg"></div>
         </a>
-        <Link
-          to={portalDestination}
-          className="menu-button w-inline-block"
-          style={{
-            cursor: "pointer",
-            backgroundColor: "#0f172a",
-            color: "#ffffff",
-            marginLeft: "6px",
-            border: "1px solid rgba(255, 255, 255, 0.2)",
-          }}
-          title={isAuthenticated ? "Open Dashboard" : "Sign in to ERP Portal"}
-        >
-          <div className="menu-text-non-hover" style={{ color: "#ffffff", display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: isAuthenticated ? "#34d399" : "#60a5fa" }} />
-            {isAuthenticated ? "Dashboard" : "Sign In"}
-          </div>
-        </Link>
+        {isAuthenticated ? (
+          <a
+            href={portalDestination}
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.href = portalDestination;
+            }}
+            className="menu-button w-inline-block"
+            style={{
+              cursor: "pointer",
+              backgroundColor: "#022336",
+              color: "#ffffff",
+              marginLeft: "6px",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
+            }}
+            title="Open Dashboard"
+          >
+            <div className="menu-text-non-hover" style={{ color: "#ffffff", display: "flex", alignItems: "center", gap: "6px" }}>
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#cafcc4" }} />
+              Dashboard
+            </div>
+          </a>
+        ) : (
+          <>
+            <a
+              href="/auth"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = "/auth";
+              }}
+              className="menu-button w-inline-block"
+              style={{
+                cursor: "pointer",
+                backgroundColor: "#022336",
+                color: "#ffffff",
+                marginLeft: "6px",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+              }}
+              title="Sign in to ERP Portal"
+            >
+              <div className="menu-text-non-hover" style={{ color: "#ffffff", display: "flex", alignItems: "center", gap: "6px" }}>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#cafcc4" }} />
+                Sign In
+              </div>
+            </a>
+            <a
+              href="/auth?mode=signup"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = "/auth?mode=signup";
+              }}
+              className="menu-button w-inline-block"
+              style={{
+                cursor: "pointer",
+                backgroundColor: "#5162ff",
+                color: "#ffffff",
+                marginLeft: "6px",
+                border: "1px solid rgba(255, 255, 255, 0.25)",
+              }}
+              title="Sign up for Nexora"
+            >
+              <div className="menu-text-non-hover" style={{ color: "#ffffff", display: "flex", alignItems: "center", gap: "6px", fontWeight: 600 }}>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#cafcc4" }} />
+                Sign Up
+              </div>
+            </a>
+          </>
+        )}
       </div>
     </div>
     <div no-click="" className="container-menu__light-is-back" suppressHydrationWarning>
@@ -133,11 +182,10 @@ export default function Navbar() {
         <div className="menu-text">Whitepapers</div>
       </a>
       <a
-        href="#tour"
-        role="button"
+        href="/explore"
         onClick={(e) => {
           e.preventDefault();
-          setIsVrModalOpen(true);
+          window.location.href = "/explore";
         }}
         className="m-open-menu__link nav-vr w-inline-block"
         suppressHydrationWarning
@@ -161,19 +209,66 @@ export default function Navbar() {
           <div className="button-text-t black">Contact Us</div>
           <img src="/images/Vector-18.svg" loading="lazy" alt="" className="m-open-menu__ic" />
         </a>
-        <Link
-          to={portalDestination}
-          className="m-open-menu__button w-inline-block"
-          style={{
-            cursor: "pointer",
-            marginTop: "10px",
-            backgroundColor: "#0f172a",
-            color: "#ffffff",
-            border: "1px solid rgba(255,255,255,0.2)",
-          }}
-        >
-          <div className="button-text-t" style={{ color: "#ffffff" }}>{isAuthenticated ? "Open Dashboard" : "Sign In to ERP"}</div>
-        </Link>
+        {isAuthenticated ? (
+          <a
+            href={portalDestination}
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.href = portalDestination;
+            }}
+            className="m-open-menu__button w-inline-block"
+            style={{
+              cursor: "pointer",
+              marginTop: "10px",
+              backgroundColor: "#022336",
+              color: "#ffffff",
+              border: "1px solid rgba(255,255,255,0.2)",
+            }}
+          >
+            <div className="button-text-t" style={{ color: "#ffffff" }}>Open Dashboard</div>
+          </a>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%", marginTop: "10px" }}>
+            <a
+              href="/auth"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = "/auth";
+              }}
+              className="m-open-menu__button w-inline-block"
+              style={{
+                cursor: "pointer",
+                backgroundColor: "#022336",
+                color: "#ffffff",
+                border: "1px solid rgba(255,255,255,0.2)",
+              }}
+            >
+              <div className="button-text-t" style={{ color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#cafcc4" }} />
+                Sign In to ERP
+              </div>
+            </a>
+            <a
+              href="/auth?mode=signup"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = "/auth?mode=signup";
+              }}
+              className="m-open-menu__button w-inline-block"
+              style={{
+                cursor: "pointer",
+                backgroundColor: "#5162ff",
+                color: "#ffffff",
+                border: "none",
+              }}
+            >
+              <div className="button-text-t" style={{ color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", fontWeight: 600 }}>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#cafcc4" }} />
+                Sign Up
+              </div>
+            </a>
+          </div>
+        )}
       </div>
     </div>
     <LionFullscreenModal

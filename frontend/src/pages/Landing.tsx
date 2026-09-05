@@ -21,8 +21,17 @@ export default function Landing() {
       document.body.classList.remove("landing-preloading");
     }, 1400);
 
+    // If restored from browser back-forward cache (bfcache), reload cleanly to re-mount WebGL & Webflow animations
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    };
+    window.addEventListener("pageshow", handlePageShow);
+
     return () => {
       clearTimeout(timer);
+      window.removeEventListener("pageshow", handlePageShow);
       document.documentElement.classList.remove("w-mod-js", "nexora-landing-active", "is-loaded");
       document.body.classList.remove("nexora-landing-active", "landing-preloading");
       document.body.removeAttribute("data-w-id");

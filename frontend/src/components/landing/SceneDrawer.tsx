@@ -155,13 +155,12 @@ export default function SceneDrawer({
                         padding: 0,
                       }}
                     >
-                      <div className="relative aspect-[16/10]" style={{ backgroundColor: '#f1f5f9' }}>
-                        <Image
+                      <div className="relative aspect-[16/10] overflow-hidden" style={{ backgroundColor: '#f1f5f9' }}>
+                        <img
                           src={loc.thumbnail}
                           alt={loc.displayName}
-                          fill
-                          sizes="140px"
-                          className="object-cover"
+                          className="w-full h-full object-cover"
+                          loading="lazy"
                         />
                       </div>
                       <div className="p-2.5" style={{ backgroundColor: '#ffffff' }}>

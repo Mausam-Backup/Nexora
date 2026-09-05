@@ -20,9 +20,9 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
-            <ExpanseBackground />
-            <BrowserRouter>
+            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <ScrollToTop />
+              <ExpanseBackground />
               <AppRoutes />
             </BrowserRouter>
           </TooltipProvider>

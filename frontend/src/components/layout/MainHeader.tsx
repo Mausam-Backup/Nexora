@@ -40,7 +40,7 @@ export const MainHeader: React.FC = () => {
         { label: 'Timetable', to: '/teacher/timetable' },
       ]
     : [
-        { label: 'Dashboard', to: '/' },
+        { label: 'Dashboard', to: '/dashboard' },
         { label: 'Academics', to: '/view-marks' },
         { label: 'Attendance', to: '/attendance/student' },
         { label: 'Exams', to: '/schedule/exams' },
